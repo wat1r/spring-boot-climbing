@@ -1,0 +1,39 @@
+# Created by .ignore support plugin (hsz.mobi)
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+### VS Code ###
+.vscode/
+pom.xml
+spring-boot-rabbitmq/.gitignore
+spring-boot-rabbitmq/.mvn/
+spring-boot-rabbitmq/mvnw
+spring-boot-rabbitmq/mvnw.cmd
+spring-boot-rabbitmq/pom.xml
+spring-boot-rabbitmq/src/
