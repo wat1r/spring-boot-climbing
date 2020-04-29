@@ -32,10 +32,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.251-b08, mixed mode)
 
 ```shell
 hadoop-2.7.5
-
 ```
-
-
 
 - 下载Hadoop
 
