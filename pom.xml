@@ -16,6 +16,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>spring-boot-rabbitmq</module>
+        <module>data-climbing-manuscripts</module>
     </modules>
 
     <packaging>pom</packaging>
