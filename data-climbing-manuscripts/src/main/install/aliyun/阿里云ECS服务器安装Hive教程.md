@@ -13,6 +13,54 @@ mysql 5.7
 
 ### 1.安装
 
+- 下载hive解压重命名
+
+```shell
+wget http://archive.apache.org/dist/hive/hive-2.3.0/apache-hive-2.3.0-bin.tar.gz
+tar -zxvf apache-hive-2.3.0-bin.tar.gz
+mv apache-hive-2.3.0-bin /usr/local/hive
+```
+
+- 配置环境变量
+
+```shell
+vim /etc/profile
+#HIVE_HOME
+export HIVE_HOME=/usr/local/hive
+export PATH=$PATH:$HIVE_HOME/bin
+source /etc/profile
+```
+
+- 新建hive-site.xml,添加配置文件,`vim /usr/local/hive/conf/hive-site.xml`
+- **这个配置文件有几次错的，下面会讲到**
+
+```xml
+<configuration>
+<!-- 连接数据库密码 -->
+<property>
+    <name>javax.jdo.option.ConnectionPassword</name>
+    <value>root</value>
+</property>
+<!-- 连接数据库字符串 -->
+<property>
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true</value>
+</property>
+<!-- 数据库驱动类名 -->
+<property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value>com.mysql.jdbc.Driver</value>
+</property>
+<!-- 连接数据库用户 -->
+<property>
+    <name>javax.jdo.option.ConnectionUserName</name>
+    <value>root</value>
+    </property>
+</configuration>
+```
+
+
+
 #### 扩展:查找安装的路径
 
 ```shell
@@ -37,8 +85,6 @@ mysql: /usr/bin/mysql /usr/lib64/mysql /usr/share/mysql /usr/share/man/man1/mysq
 [root@centos7 mysql-connector-java-5.1.30]# 
 ```
 
-
-
 - 在启动hive前，启动hdfs(usr/local/hadoop/sbin/start-dfs.sh)
 
 - 启动hive发生报错 (/usr/local/hive/bin/hive)
@@ -47,8 +93,6 @@ mysql: /usr/bin/mysql /usr/lib64/mysql /usr/share/mysql /usr/share/man/man1/mysq
 hive>  show databases;
 FAILED: SemanticException org.apache.hadoop.hive.ql.metadata.HiveException: java.lang.RuntimeException: Unable to instantiate org.apache.hadoop.hive.ql.metadata.SessionHiveMetaStoreClient
 ```
-
-
 
 #### 在这个启动过程中的报错
 
