@@ -28,6 +28,7 @@
         <java.version>1.8</java.version>
         <lombok.version>1.18.4</lombok.version>
         <fastjson.version>1.2.47</fastjson.version>
+        <common.lang3.version>3.8.1</common.lang3.version>
     </properties>
 
 
@@ -46,6 +47,13 @@
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
+            <!--apache 工具包-->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${common.lang3.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
