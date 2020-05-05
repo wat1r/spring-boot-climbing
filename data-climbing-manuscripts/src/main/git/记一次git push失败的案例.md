@@ -65,3 +65,15 @@ git config remote.origin.url git@github.com:wat1r/geek-algorithm-leetcode.git
 - 因为用的是路由器发出的`WIFI`,对比了手机发出来的热点`WIFI`的效果，应该是这个根源问题：
 ![2020-04-28_224047](D:\Dev\SrcCode\spring-boot-climbing\记一次git push失败的案例.assets\2020-04-28_224047.png)
 
+#### 7.后续
+
+- 这个报错还是没有消失，只是用这个网络在提交的时候无法成功
+
+```verilog
+Connection reset by 140.82.113.3 port 22
+fatal: Could not read from remote repository.
+Please make sure you have the correct access rights
+and the repository exists.
+```
+
+- 有遇到此类的问题的，微信朋友圈留言(公众号的留言板还未开)
