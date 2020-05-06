@@ -17,6 +17,7 @@
     <modules>
         <module>spring-boot-rabbitmq</module>
         <module>data-climbing-manuscripts</module>
+        <module>spring-boot-apollo</module>
     </modules>
 
     <packaging>pom</packaging>
