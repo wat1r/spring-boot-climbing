@@ -58,9 +58,8 @@ chkconfig redis off    	#关闭开机启动
 
 ```
 
-
-
-
+#### 登录Redis界面客户端
+![image-20200506211358193](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\install\aliyun\阿里云ECS服务器安装Redis教程.assets\image-20200506211358193.png)
 
 ### Reference
 
