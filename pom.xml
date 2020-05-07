@@ -18,6 +18,8 @@
         <module>spring-boot-rabbitmq</module>
         <module>data-climbing-manuscripts</module>
         <module>spring-boot-apollo</module>
+        <module>spring-boot-redis</module>
+        <module>spring-boot-websocket</module>
     </modules>
 
     <packaging>pom</packaging>
