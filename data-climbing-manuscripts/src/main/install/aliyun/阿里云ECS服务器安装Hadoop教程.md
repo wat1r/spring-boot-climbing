@@ -198,6 +198,18 @@ vim /usr/local/hadoop/etc/hadoop/hadoop-env.sh
 ./bin/hadoop jar ./share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.5.jar
 ```
 
+- hadoop版本
+
+```shell
+[root@centos7 bin]# ./hadoop version
+Hadoop 2.7.5
+Subversion https://shv@git-wip-us.apache.org/repos/asf/hadoop.git -r 18065c2b6806ed4aa6a3187d77cbe21bb3dba075
+Compiled by kshvachk on 2017-12-16T01:06Z
+Compiled with protoc 2.5.0
+From source with checksum 9f118f95f47043332d51891e37f736e9
+This command was run using /usr/local/hadoop/share/hadoop/common/hadoop-common-2.7.5.jar
+```
+
 
 
 

@@ -99,6 +99,33 @@ mysql -uroot -p
 yum -y remove mysql57-community-release.noarch
 ```
 
-### 2.Reference
+#### 2.MySQL版本
+
+```shell
+mysql> status;
+--------------
+mysql  Ver 14.14 Distrib 5.7.30, for Linux (x86_64) using  EditLine wrapper
+
+Connection id:		394
+Current database:	demo_test
+Current user:		root@localhost
+SSL:			Not in use
+Current pager:		stdout
+Using outfile:		''
+Using delimiter:	;
+Server version:		5.7.30 MySQL Community Server (GPL)
+Protocol version:	10
+Connection:		Localhost via UNIX socket
+Server characterset:	latin1
+Db     characterset:	latin1
+Client characterset:	utf8
+Conn.  characterset:	utf8
+UNIX socket:		/var/lib/mysql/mysql.sock
+Uptime:			7 days 19 hours 3 min 42 sec
+
+Threads: 1  Questions: 61482  Slow queries: 0  Opens: 539  Flush tables: 1  Open tables: 456  Queries per second avg: 0.091
+```
+
+### 3.Reference
 
 [Centos7安装MySQL](https://www.cnblogs.com/bigbrotherer/p/7241845.html)

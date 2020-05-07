@@ -61,7 +61,24 @@ chkconfig redis off    	#关闭开机启动
 #### 登录Redis界面客户端
 ![image-20200506211358193](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\install\aliyun\阿里云ECS服务器安装Redis教程.assets\image-20200506211358193.png)
 
-### Reference
+
+
+- 启动SpringBootApplication
+
+![image-20200507184529596](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\install\aliyun\阿里云ECS服务器安装Redis教程.assets\image-20200507184529596.png)
+
+
+
+
+
+- 测试
+
+发送 `http://localhost:8080/redis/getRedis POST`
+
+
+
+### 2.Reference
 
 [阿里云服务器（ECS）实战--CentOS 7安装redis](https://blog.csdn.net/m0_37903789/article/details/84402930)
 
+[SpringBoot基本操作（五）——SpringBoot使用Jedis整合Redis（有demo）](https://blog.csdn.net/zhulier1124/article/details/82193182)
