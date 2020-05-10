@@ -55,7 +55,17 @@ find -type f -size +100M  -print0 | xargs -0 du -h | sort -nr
 
 - 命令查看正在运行状态的服务及端口:`netstat -tunpl`
 
+- 使用cmd命令查看端口号占用情况，例如查看端口 8014，可以看出进程号为10728；
+
+  ```shell
+  netstat -ano | findstr 端口号
+  ```
 
 
 
+
+
+### 20.Maven命令
+
+- 输出Maven项目的目录结构:`tree >> D:/tree.txt`
 
