@@ -62,3 +62,8 @@ Producer生产消息，创建Exchange，Exchange转发消息，但是不做存�
 ![1588947998471](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\element\message\RabbitMQ\RabbitMQ原理介绍与实战之核心原理.assets\1588947998471.png)
 
 s
+
+
+
+### 关联阅读
+
