@@ -89,6 +89,8 @@ chkconfig iptables off
 # 4:重启防火墙
 systemctl enable firewalld
 service iptables restart
+
+
 # 永久性打开某一端口
 [root@centos7 elasticsearch-head]#  firewall-cmd --zone=public --add-port=9100/tcp --permanent
 # 查看端口开启状态
