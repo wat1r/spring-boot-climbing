@@ -137,9 +137,97 @@ iptables -I INPUT -p tcp --dport 9200 -j ACCEPT
 ### 2.安装Head插件
 
 - 下载head插件
+- https://codeload.github.com/mobz/elasticsearch-head/zip/master 
 
 ```shell
-[root@centos7 software]# wget  https://codeload.github.com/mobz/elasticsearch-head/zip/master 
+
+```
+
+- 安装nodejs
+- https://nodejs.org/download/release/v12.16.0/
+
+```shell
+[root@centos7 software]# wget  https://nodejs.org/download/release/v12.16.0/node-v12.16.0-linux-x64.tar.gz
+[root@centos7 software]# tar -xzvf node-v12.16.0-linux-x64.tar.gz -C /usr/local/
+[root@centos7 local]# mv node-v12.16.0-linux-x64/ node
+
+```
+
+- 配置环境变量
+
+```shell
+[root@centos7 node]# vim /etc/profile
+#NODE_HOME
+export NODE_HOME=/usr/local/node
+export PATH=$PATH:$NODE_HOME/bin
+[root@centos7 node]# source /etc/profile
+[root@centos7 local]# npm  -v
+6.13.4
+[root@centos7 local]# node -v
+v12.16.0
+```
+
+- 安装grant
+
+```shell
+[root@centos7 elasticsearch-head]# pwd
+/usr/local/elasticsearch-head
+[root@centos7 elasticsearch-head]#  npm install -g grunt-cli
+执行下载依赖包
+[root@centos7 elasticsearch-head]# npm install
+
+```
+
+
+
+```shell
+[root@centos7 elasticsearch-head]# vim Gruntfile.js 
+```
+
+
+
+```json
+                connect: {
+                        server: {
+                                options: {
+                                        hostname: '*',
+                                        port: 9100,
+                                        base: '.',
+                                        keepalive: true
+                                }
+                        }
+                }
+
+```
+
+
+
+
+
+- 防火墙相关
+
+```shell
+[root@centos7 elasticsearch-head]#  firewall-cmd --zone=public --add-port=9100/tcp --permanent
+[root@centos7 elasticsearch-head]# firewall-cmd --query-port=9100/tcp
+no
+[root@centos7 elasticsearch-head]# firewall-cmd --reload
+```
+
+
+
+
+
+![image-20200511105831019](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\install\aliyun\阿里云ECS服务器安装Elasticsearch教程.assets\image-20200511105831019.png)
+
+![image-20200511110755330](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\install\aliyun\阿里云ECS服务器安装Elasticsearch教程.assets\image-20200511110755330.png)
+
+
+
+```shell
+[root@centos7 elasticsearch-head]#  grunt server
+Running "connect:server" (connect) task
+Waiting forever...
+Started connect web server on http://localhost:9100
 ```
 
 
@@ -153,4 +241,7 @@ iptables -I INPUT -p tcp --dport 9200 -j ACCEPT
 ### Reference
 
 - https://www.cnblogs.com/yijialong/p/9707238.html
+
+- https://blog.csdn.net/weixin_41844824/article/details/103938756
+- https://www.bbsmax.com/A/KE5Q4KWPJL/
 

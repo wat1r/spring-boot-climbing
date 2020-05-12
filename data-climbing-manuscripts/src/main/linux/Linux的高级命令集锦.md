@@ -51,8 +51,9 @@ find -type f -size +100M  -print0 | xargs -0 du -h | sort -nr
 - 查看端口使用情况:`lsof -i:8080`
 - ping通ip地址：`ping github.com`
 - 测试ip对应的端口是否开启:`telnet 140.82.113.3 22 `
-  - 提示不是内部命令的报错信息的话，windows系统的话可能需要开启`telnet`服务
-
+  
+- 提示不是内部命令的报错信息的话，windows系统的话可能需要开启`telnet`服务
+  
 - 命令查看正在运行状态的服务及端口:`netstat -tunpl`
 
 - 使用cmd命令查看端口号占用情况，例如查看端口 8014，可以看出进程号为10728；
@@ -60,6 +61,43 @@ find -type f -size +100M  -print0 | xargs -0 du -h | sort -nr
   ```shell
   netstat -ano | findstr 端口号
   ```
+
+- `netstat -nupl`(UDP类型的端口)
+- `netstat -ntpl` (TCP类型的端口)
+- 使用 lsof 命令来查看某一端口是否开放。查看端口可以这样来使用，我就以80端口为例：
+  `lsof -i:80`
+
+
+
+
+
+### 19.防火墙
+
+```shell
+# 1:查看防火状态
+systemctl status firewalld
+service  iptables status
+
+# 2:暂时关闭防火墙
+systemctl stop firewalld
+service  iptables stop
+
+# 3:永久关闭防火墙
+systemctl disable firewalld
+chkconfig iptables off
+
+# 4:重启防火墙
+systemctl enable firewalld
+service iptables restart
+# 永久性打开某一端口
+[root@centos7 elasticsearch-head]#  firewall-cmd --zone=public --add-port=9100/tcp --permanent
+# 查看端口开启状态
+[root@centos7 elasticsearch-head]# firewall-cmd --query-port=9100/tcp
+no
+# 重启防火墙
+[root@centos7 elasticsearch-head]# firewall-cmd --reload
+
+```
 
 
 
