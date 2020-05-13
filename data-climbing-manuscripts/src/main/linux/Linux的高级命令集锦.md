@@ -109,3 +109,21 @@ no
 
 - 输出Maven项目的目录结构:`tree >> D:/tree.txt`
 
+
+
+
+
+
+
+
+
+### Reference
+
+- [Linux中查询当前用户的命令总结](https://blog.csdn.net/csdn1198402320/article/details/84335639)
+
+
+
+
+
+
+
