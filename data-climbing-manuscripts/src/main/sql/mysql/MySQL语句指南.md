@@ -16,12 +16,30 @@ AND TABLE_NAME = 'rpt_cap_ammeter_2018';
 
 
 
+
+
+
+
 #### 建库
 
 ```mysql
 CREATE DATABASE
 IF NOT EXISTS hiveassistant2_test;
 ```
+
+
+
+#### 删除数据库
+
+```mysql
+mysql>drop datase hive;
+```
+
+
+
+
+
+
 
 
 
