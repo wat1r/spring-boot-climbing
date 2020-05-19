@@ -54,6 +54,90 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+![Hive原理图](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\big_data\Hive指南.assets\Hive原理图.jpg)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 2.Hive原理解析
+
+
+
+
+
+
+
+#### Hive的体系结构可以分为以下几部分
+
+（1）用户接口主要有三个：CLI，Client 和 WUI。其中最常用的是CLI，Cli启动的时候，会同时启动一个Hive副本。Client是Hive的客户端，用户连接至Hive Server。在启动 Client模式的时候，需要指出Hive Server所在节点，并且在该节点启动Hive Server。 WUI是通过浏览器访问Hive。
+
+（2）Hive将元数据存储在数据库中，如mysql、derby。Hive中的元数据包括表的名字，表的列和分区及其属性，表的属性（是否为外部表等），表的数据所在目录等。
+
+（3）解释器、编译器、优化器完成HQL查询语句从词法分析、语法分析、编译、优化以及查询计划的生成。生成的查询计划存储在HDFS中，并在随后有MapReduce调用执行。
+
+（4）Hive的数据存储在HDFS中，大部分的查询、计算由MapReduce完成（包含*的查询，比如select * from tbl不会生成MapRedcue任务）。
+
+
+
+
+
+
+
+-  https://www.cnblogs.com/zimo-jing/p/9028949.html 
+
+
+
+
+
+Hive官网
+
+-  https://cwiki.apache.org/confluence/display/Hive/Home 
+
+
+
+
+
+
+
+
+
+
+
  https://blog.csdn.net/qq_37142346/article/details/79873376 
 
  http://www.ccblog.cn/69.htm 
