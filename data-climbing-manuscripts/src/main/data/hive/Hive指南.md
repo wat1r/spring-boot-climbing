@@ -133,3 +133,27 @@ select id,count(*) from test_table group by id;
 
 
  
+
+### 3.Hive常用语句
+
+#### 建表load数据
+
+```mysql
+CREATE TABLE user_test(id INT,name STRING) ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t';
+LOAD DATA LOCAL INPATH '/opt/document/hive_file/hive_test1.txt' OVERWRITE INTO TABLE user_test PARTITION (DS='20200506');
+LOAD DATA LOCAL INPATH '/opt/document/hive_file/hive_test1.txt' OVERWRITE INTO TABLE user_test ;
+```
+
+
+
+```mysql
+CREATE TABLE user_test_mirror AS SELECT * FROM user_test;
+```
+
+
+
+
+
+
+
+- https://blog.csdn.net/louzhu_lz/article/details/90046028
