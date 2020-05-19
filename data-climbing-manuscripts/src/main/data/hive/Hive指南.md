@@ -38,10 +38,6 @@
 
 ![1589464846430](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\big_data\Hive指南.assets\1589464846430.png)
 
-
-
-
-
 #### 1.3. RCFile 
 
 - Row Columnar , RCFile是一种行列存储相结合的存储方式 ,其将数据按行分块，保证同一个record在一个块上，避免读一个记录需要读取多个block。其次，块数据列式存储，有利于数据压缩和快速的列存取。

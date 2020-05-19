@@ -23,11 +23,10 @@ git cherry-pick [commit]
 git merge [branch]
 #显示当前分支的最近几次提交:
 git reflog
-#删除分支:
-git branch -d [branch-name]
-#删除远程分支:
-git push origin --delete [branch-name]
-     git branch -dr [remote/branch]
+
+
+
+ 
 #上传本地指定分支到远程仓库:
 git push [remote] [branch]
 #下载远程仓库的所有变动:
@@ -51,10 +50,6 @@ git checkout test
 git push origin test
 #一句命令:
 git checkout -b issue-13 && git push origin issue-13
-#删除本地分支： 
-git branch -d [branchname] 
-#删除远程分支:
-git push origin --delete [branchname] 
 #切到master分支上，去单独的拿feature分支点的62ecb3 代码
 git checkout master  
 git cherry-pick 62ecb3
@@ -63,8 +58,48 @@ git cherry-pick 62ecb3
  git branch -m oldName  newName
 # 将重命名后的分支推送到远程
 git push origin newName
+
+
+====delete branch
+#删除本地分支： 
+git branch -d [branchname] 
+#删除远程分支:
+git push origin --delete [branchname] 
 # 删除远程的旧分支
 git push --delete origin oldName
+#删除分支:
+git branch -d [branch-name]
+#删除远程分支:
+git push origin --delete [branch-name]
+     git branch -dr [remote/branch]
+## 删除本地分支并且删除远程分支
+ git branch -d issue-18  && git push origin --delete  issue-18
+
+====log
+ git log --pretty=oneline
+
+====tag
+# tag 推送到远程分支上，需要另外执行 tag 的推送命令
+git tag <tagName>   -m "this is a test " //创建本地tag
+git push origin <tagName> //推送到远程仓库
+# 存在很多未推送的本地标签，你想一次全部推送的话，可以使用一下的命令：
+git push origin --tags  
+# 查看本地某个 tag 的详细信息：
+git show <tagName>
+# 检出标签
+git checkout -b <branchName> <tagName>
+# 查看远程所有 tag：
+git ls-remote --tags origin
+# 删除本地tag 并删除 远程tag
+git tag -d 1.0.0  && git push origin -d 1.0.0
+
+
+
+
+
+
+
+
 ```
 
 
@@ -73,3 +108,7 @@ git push --delete origin oldName
 
 ### [Reference]()
 - [如何将新建的项目完整的提交到gitlab上？](https://www.cnblogs.com/ssqq5200936/p/10749201.html)
+- [github Tags和Branch分支相关操作（三）](https://blog.csdn.net/zjws23786/article/details/71159805)
+- [Git的tag作用和使用场景以及branch的区别](https://blog.csdn.net/lcgoing/article/details/86241784)
+- [版本号命名规则](https://blog.csdn.net/yimcarson/article/details/83894841)
+- [搞定Git添加Tag的方法总结](https://www.cnblogs.com/bescheiden/articles/11126319.html)
