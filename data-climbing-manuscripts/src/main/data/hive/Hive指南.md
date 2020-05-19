@@ -126,7 +126,28 @@ select id,count(*) from test_table group by id;
 
 ### 2.几种类型的压缩格式
 
+Hive压缩比较
+Default
+gzip
+zip
+bzip2
+lzo
+ZLip
+Snappy
 
+开发过程中一般使用orc,Parquet存储和snappy压缩,
+
+orc默认使用了ZLIP压缩
+zlip跟snappy比较
+GZIP    13.4%    21 MB/s    118 MB/s
+LZO    20.5%    135 MB/s    410 MB/s
+Zippy/Snappy    22.2%    172 MB/s    409 MB/s
+
+总结
+
+ZLIP压缩最后的文件存储低,但是压缩效率较Snappy低太多了.
+ZLIP压缩率高,缺点压缩过程很慢
+Snappy压缩率相对Zlip低一些,但是比其他高很多了,压缩过程也很快.
 
  
 
@@ -153,3 +174,5 @@ CREATE TABLE user_test_mirror AS SELECT * FROM user_test;
 
 
 - https://blog.csdn.net/louzhu_lz/article/details/90046028
+
+- https://blog.csdn.net/qq_32736999/article/details/90728450
