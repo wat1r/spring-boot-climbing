@@ -89,7 +89,19 @@ select id,count(*) from test_table group by id;
 - sequencefile 存储空间消耗最大,压缩的文件可以分割和合并 需要通过text文件转化来加载
 - rcfile 存储空间小，查询的效率高 ，需要通过text文件转化来加载，加载的速度最低
 - orc 存储空间最小，查询的最高 ，需要通过text文件转化来加载，加载的速度最低（个人建议使用orc）
+#### 实践
+
+ **实践中常用的压缩+存储可以选择（部分）**
+Textfile+Gzip
+SequenceFile+Snappy
+ORC+Snappy 
+
+
+
+
+
 ### 2.几种类型的压缩格式
+
 Hive压缩比较
 Default
 gzip
@@ -108,6 +120,34 @@ Zippy/Snappy    22.2%    172 MB/s    409 MB/s
 ZLIP压缩最后的文件存储低,但是压缩效率较Snappy低太多了.
 ZLIP压缩率高,缺点压缩过程很慢
 Snappy压缩率相对Zlip低一些,但是比其他高很多了,压缩过程也很快.
+
+### **MR支持的压缩编码**
+
+| 压缩格式 | hadoop自带？ | 算法    | 文件扩展名 | 是否可切分 | 换成压缩格式后，原来的程序是否需要修改 |
+| -------- | ------------ | ------- | ---------- | ---------- | -------------------------------------- |
+| DEFAULT  | 是，直接使用 | DEFAULT | .deflate   | 否         | 和文本处理一样，不需要修改             |
+| Gzip     | 是，直接使用 | DEFAULT | .gz        | 否         | 和文本处理一样，不需要修改             |
+| bzip2    | 是，直接使用 | bzip2   | .bz2       | 是         | 和文本处理一样，不需要修改             |
+| LZO      | 否，需要安装 | LZO     | .lzo       | 是         | 需要建索引，还需要指定输入格式         |
+| Snappy   | 否，需要安装 | Snappy  | .snappy    | 否         | 和文本处理一样，不需要修改             |
+
+为了支持多种压缩/解压缩算法，Hadoop引入了编码/解码器，如下表所示
+
+| 压缩格式 | 对应的编码/解码器                          |
+| -------- | ------------------------------------------ |
+| DEFLATE  | org.apache.hadoop.io.compress.DefaultCodec |
+| gzip     | org.apache.hadoop.io.compress.GzipCodec    |
+| bzip2    | org.apache.hadoop.io.compress.BZip2Codec   |
+| LZO      | com.hadoop.compression.lzo.LzopCodec       |
+| Snappy   | org.apache.hadoop.io.compress.SnappyCodec  |
+
+ 压缩性能的比较
+
+| 压缩算法 | 原始文件大小 | 压缩文件大小 | 压缩速度 | 解压速度 |
+| -------- | ------------ | ------------ | -------- | -------- |
+| gzip     | 8.3GB        | 1.8GB        | 17.5MB/s | 58MB/s   |
+| bzip2    | 8.3GB        | 1.1GB        | 2.4MB/s  | 9.5MB/s  |
+| LZO      | 8.3GB        | 2.9GB        | 49.3MB/s | 74.6MB/s |
 
 ### 3.Hive常用语句
 #### 建表load数据
@@ -203,6 +243,30 @@ hive --service metastore -p <port_num>
 
 
 
+### 5.Hive SQL的编译流程
+
+![Hive SQL执行计划](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hive\Hive指南.assets\Hive SQL执行计划.jpg)
+
+(1)Antlr定义SQL的语法规则，完成SQL词法，语法解析，将SQL转化为抽象语法树AST Tree
+(2)遍历AST Tree，抽象出查询的基本组成单元QueryBlock
+(3)遍历QueryBlock，翻译为执行操作树OperatorTree
+(4)逻辑层优化器进行OperatorTree变换，合并不必要的ReduceSinkOperator，减少shuffle数据量
+(5)遍历OperatorTree，翻译为MapReduce任务
+(6)物理层优化器进行MapReduce任务的变换，生成最终的执行计划
+
+
+
+参考文章  Hive指南之Hive SQL的编译过程.md
+
+
+
+
+
+
+
+
+
+
 
 Hive官网
 
@@ -214,3 +278,5 @@ Hive官网
  https://blog.csdn.net/zyzzxycj/article/details/79267635 
  https://blog.csdn.net/u010003835/article/details/88236132 
  https://blog.csdn.net/lifuxiangcaohui/article/details/50252897 
+
+- [Hive SQL的编译过程](https://tech.meituan.com/2014/02/12/hive-sql-to-mapreduce.html)
