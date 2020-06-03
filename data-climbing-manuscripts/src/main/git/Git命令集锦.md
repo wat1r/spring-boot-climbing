@@ -112,3 +112,4 @@ git tag -d 1.0.0  && git push origin -d 1.0.0
 - [Git的tag作用和使用场景以及branch的区别](https://blog.csdn.net/lcgoing/article/details/86241784)
 - [版本号命名规则](https://blog.csdn.net/yimcarson/article/details/83894841)
 - [搞定Git添加Tag的方法总结](https://www.cnblogs.com/bescheiden/articles/11126319.html)
+- [git-merge完全解析](https://www.jianshu.com/p/58a166f24c81)

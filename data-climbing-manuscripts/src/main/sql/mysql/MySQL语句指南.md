@@ -18,8 +18,6 @@ AND TABLE_NAME = 'rpt_cap_ammeter_2018';
 
 
 
-
-
 #### 建库
 
 ```mysql
@@ -39,10 +37,6 @@ mysql>drop datase hive;
 
 
 
-
-
-
-
 #### 重命名数据库名称
 
 #####  **mysqldump导出数据再导入**
@@ -55,6 +49,39 @@ mysql -uxxxx -pxxxx -h xxxx -e “DROP DATABASE db_name”
 ```
 
 
+
+#### mysql 查询表字段信息（字段名、描述、类型、长度)
+
+```mysql
+SELECT 
+  COLUMN_NAME 列名, 
+  COLUMN_TYPE 数据类型, 
+  if(IS_NULLABLE='YES','是','否') 是否为空,
+  COLUMN_DEFAULT 默认值,
+  COLUMN_COMMENT 备注
+FROM 
+ INFORMATION_SCHEMA.COLUMNS 
+where 
+table_schema ='guns'    -- 数据库名称 
+AND 
+table_name  = 'sys_user'    -- 表名
+```
+
+
+
+```mysql
+SHOW FULL COLUMNS 
+FROM
+	functions
+```
+
+
+
+#### 添加字段
+
+```mysql
+ALTER TABLE db.functions ADD func_demo VARCHAR(2000) DEFAULT NULL COMMENT '函数示例';
+```
 
 
 
