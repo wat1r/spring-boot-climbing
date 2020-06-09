@@ -6,7 +6,7 @@
 
 ```mysql
 SELECT
-    CONCAT(COLUMN_NAME,"," )
+    CONCAT(COLUMN_NAME )
 FROM
     information_schema.COLUMNS
 WHERE
@@ -82,6 +82,12 @@ FROM
 ```mysql
 ALTER TABLE db.functions ADD func_demo VARCHAR(2000) DEFAULT NULL COMMENT '函数示例';
 ```
+
+
+
+
+
+
 
 
 

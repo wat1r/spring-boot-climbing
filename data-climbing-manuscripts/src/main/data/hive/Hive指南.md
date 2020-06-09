@@ -262,6 +262,14 @@ hive --service metastore -p <port_num>
 
 
 
+### 6.Hive语句
+
+```sql
+hive (dw)> show create table wodn_newsaleflow_tlog;
+```
+
+
+
 
 
 
