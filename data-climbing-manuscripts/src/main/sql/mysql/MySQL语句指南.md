@@ -96,7 +96,8 @@ ALTER TABLE db.functions ADD func_demo VARCHAR(2000) DEFAULT NULL COMMENT '函�
 ### Reference
 
 - [安全快速修改Mysql数据库名的5种方法](https://m.jb51.net/article/49293.htm)
-- 
+
+- [mysql服务启动、停止、重启](https://www.cnblogs.com/lhj588/p/3268614.html)
 
 
 
