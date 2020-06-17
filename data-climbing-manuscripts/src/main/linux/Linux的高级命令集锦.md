@@ -344,3 +344,4 @@ $ ps axu | grep java
 - [Linux Shell常用技巧(四) awk](https://www.cnblogs.com/mchina/archive/2012/06/30/2571308.html)
 - [每天一个linux命令(11)：nl命令](https://www.cnblogs.com/peida/archive/2012/11/01/2749048.html)
 - [Linux 查询端口被占用命令](https://www.cnblogs.com/ming-blogs/p/11101423.html)
+- [Xshell-grep高亮显示匹配项](https://www.jianshu.com/p/9944f96ea378)
