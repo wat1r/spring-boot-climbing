@@ -81,7 +81,41 @@ FROM
 
 ```mysql
 ALTER TABLE db.functions ADD func_demo VARCHAR(2000) DEFAULT NULL COMMENT '函数示例';
+ALTER TABLE hiveassistant2_private.history_log ADD op_type int(11) DEFAULT NULL COMMENT '操作类型';
+ALTER TABLE hiveassistant2_private.functions ADD func_type_en varchar(50) DEFAULT NULL COMMENT '函数类型英文';
+ALTER TABLE hiveassistant2_dev.functions ADD func_type_en varchar(50) DEFAULT NULL COMMENT '函数类型英文';
 ```
+
+#### 查询建表时的语句
+
+```sql
+SHOW CREATE TABLE TEST
+```
+
+#### mysql 查询表的字段名称，字段类型
+
+```sql
+select column_name,column_comment,data_type 
+from information_schema.columns 
+where table_name='查询表名称' and table_schema='数据库名称'
+```
+
+
+
+#### 删除表数据
+
+```sql
+DELETE FROM hiveassistant2_dev.functions
+WHERE engine_type='hive';
+```
+
+
+
+
+
+
+
+# 
 
 
 
