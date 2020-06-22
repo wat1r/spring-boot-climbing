@@ -84,6 +84,8 @@ ALTER TABLE db.functions ADD func_demo VARCHAR(2000) DEFAULT NULL COMMENT '函�
 ALTER TABLE hiveassistant2_private.history_log ADD op_type int(11) DEFAULT NULL COMMENT '操作类型';
 ALTER TABLE hiveassistant2_private.functions ADD func_type_en varchar(50) DEFAULT NULL COMMENT '函数类型英文';
 ALTER TABLE hiveassistant2_dev.functions ADD func_type_en varchar(50) DEFAULT NULL COMMENT '函数类型英文';
+ALTER TABLE hiveassistant2_private.track_action ADD user_name varchar(100) DEFAULT NULL COMMENT '用户名';
+
 ```
 
 #### 查询建表时的语句
@@ -108,6 +110,18 @@ where table_name='查询表名称' and table_schema='数据库名称'
 DELETE FROM hiveassistant2_dev.functions
 WHERE engine_type='hive';
 ```
+
+#### 更新某个字段的值
+
+```sql
+UPDATE db.functions 
+SET func_method = func_name
+WHERE
+	func_method IS NULL 
+	AND engine_type = 'presto'
+```
+
+
 
 
 
