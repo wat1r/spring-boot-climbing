@@ -107,7 +107,7 @@ where table_name='查询表名称' and table_schema='数据库名称'
 #### 删除表数据
 
 ```sql
-DELETE FROM hiveassistant2_dev.functions
+DELETE FROM hiveassistant2_test.functions
 WHERE engine_type='hive';
 ```
 
