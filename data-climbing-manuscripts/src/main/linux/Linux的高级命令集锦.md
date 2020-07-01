@@ -243,9 +243,18 @@ find -type f -size +100M  -print0 | xargs -0 du -h | sort -nr
 - 使用 lsof 命令来查看某一端口是否开放。查看端口可以这样来使用，我就以80端口为例：
   `lsof -i:80`
 
--  查询端口占用：`netstat -ano` 或 `netstat -ano | grep 8080`
--  查询这个端口的`PID`被哪个进程占用:`tasklist|findstr "9088"`
+- 查询端口占用：`netstat -ano` 或 `netstat -ano | grep 8080`
+
+- 查询这个端口的`PID`被哪个进程占用:`tasklist|findstr "9088"`
+
 -  直接强制杀死指定端口:`taskkill /pid 4136 -t -f`
+
+```shell
+ taskkill //F  //pid 2236
+成功: 已终止 PID 为 2236 的进程。
+```
+
+
 
 
 
