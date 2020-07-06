@@ -95,8 +95,11 @@ git tag -d 1.0.0  && git push origin -d 1.0.0
 
 
 
-
-
+# 将本地未提交更改合并到另一个Git分支中
+git stash
+git checkout branch2
+git stash list    ＃检查在不同分支中创建的各种存储
+git stash apply x   ＃选择正确的一个
 
 
 
@@ -108,18 +111,11 @@ git tag -d 1.0.0  && git push origin -d 1.0.0
 
 ### [Reference]()
 - [如何将新建的项目完整的提交到gitlab上？](https://www.cnblogs.com/ssqq5200936/p/10749201.html)
-
 - [github Tags和Branch分支相关操作（三）](https://blog.csdn.net/zjws23786/article/details/71159805)
-
 - [Git的tag作用和使用场景以及branch的区别](https://blog.csdn.net/lcgoing/article/details/86241784)
-
 - [版本号命名规则](https://blog.csdn.net/yimcarson/article/details/83894841)
-
 - [搞定Git添加Tag的方法总结](https://www.cnblogs.com/bescheiden/articles/11126319.html)
-
 - [git-merge完全解析](https://www.jianshu.com/p/58a166f24c81)
-
 - [Git错误non-fast-forward后的冲突解决](https://blog.csdn.net/QQ736238785/article/details/79767115)
-
 - [*git* *merge*和*git* *merge* --*no-ff*的区别 - 简书](https://www.baidu.com/link?url=huSmFIXBirdxzyYA8XMoGVAFo-5a12QHLWvMj9SaiKSNk52a6KHlknEXqP-UAmaw&ie=UTF-8&f=8&tn=baidu&wd=git merge --no-ff&oq=git merge --no-ff&rqlang=cn)
-
+-  [如何将本地未提交更改合并到另一个Git分支中](https://blog.csdn.net/u013986317/article/details/106967998/)

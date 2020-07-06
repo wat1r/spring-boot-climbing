@@ -86,7 +86,28 @@ ALTER TABLE hiveassistant2_private.functions ADD func_type_en varchar(50) DEFAUL
 ALTER TABLE hiveassistant2_dev.functions ADD func_type_en varchar(50) DEFAULT NULL COMMENT '函数类型英文';
 ALTER TABLE hiveassistant2_private.track_action ADD user_name varchar(100) DEFAULT NULL COMMENT '用户名';
 ALTER TABLE hiveassistant2_private.query_pages ADD source tinyint(1) DEFAULT 0 COMMENT '来源，0或者1:收藏页，2:工作空间';
+
+ALTER TABLE hiveassistant2_private.track_action ADD operate_id int(11) DEFAULT NULL COMMENT '操作编号，细粒度划分操作的动作';
 ```
+
+#### 添加索引
+
+```sql
+ALTER TABLE hiveassistant2_private.track_action ADD INDEX operate_id_index (operate_id);
+ALTER TABLE hiveassistant2_private.track_action ADD INDEX page_id_event_type_index (page_id,event_type);
+ALTER TABLE hiveassistant2_private.history_log ADD INDEX job_id_index (job_id);
+
+```
+
+
+
+
+
+
+
+
+
+
 
 #### 查询建表时的语句
 
