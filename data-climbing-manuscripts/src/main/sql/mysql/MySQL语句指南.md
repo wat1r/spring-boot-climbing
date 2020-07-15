@@ -85,7 +85,10 @@ ALTER TABLE hiveassistant2_private.history_log ADD op_type int(11) DEFAULT NULL 
 ALTER TABLE hiveassistant2_private.functions ADD func_type_en varchar(50) DEFAULT NULL COMMENT '函数类型英文';
 ALTER TABLE hiveassistant2_dev.functions ADD func_type_en varchar(50) DEFAULT NULL COMMENT '函数类型英文';
 ALTER TABLE hiveassistant2_private.track_action ADD user_name varchar(100) DEFAULT NULL COMMENT '用户名';
-ALTER TABLE hiveassistant2_private.query_pages ADD source tinyint(1) DEFAULT 0 COMMENT '来源，0或者1:收藏页，2:工作空间';
+ALTER TABLE hiveassistant2_dev.query_pages ADD source tinyint(1) DEFAULT 0 COMMENT '来源，0或者1:收藏页，2:工作空间';
+ALTER TABLE hiveassistant2_dev.query_pages ADD seed_id int(11) DEFAULT NULL COMMENT '有值的时候是查询收藏页面的id';
+
+
 
 ALTER TABLE hiveassistant2_private.track_action ADD operate_id int(11) DEFAULT NULL COMMENT '操作编号，细粒度划分操作的动作';
 ```
