@@ -38,9 +38,7 @@ git remote show [remote]
 git push origin <本地分支名>/再同步到服务器
 #重置当前分支的HEAD为指定commit，同时重置暂存区和工作区，与指定commit一致:
 git reset --hard [commit]
-#暂时将未提交的变化移除，稍后再移入
-git stash
-git stash pop
+
 #查看分支状态，本地分支远程分支
 git status
 git branch -a 	
@@ -100,7 +98,9 @@ git stash
 git checkout branch2
 git stash list    ＃检查在不同分支中创建的各种存储
 git stash apply x   ＃选择正确的一个
-
+#暂时将未提交的变化移除，稍后再移入
+git stash
+git stash pop
 
 
 ```
