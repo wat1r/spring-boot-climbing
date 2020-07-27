@@ -71,7 +71,7 @@ git branch -d [branch-name]
 git push origin --delete [branch-name]
      git branch -dr [remote/branch]
 ## 删除本地分支并且删除远程分支
- git branch -d issue-18  && git push origin --delete  issue-18
+ git branch -d issue-18  && git push origin -d  issue-18
 
 ====log
  git log --pretty=oneline
