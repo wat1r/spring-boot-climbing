@@ -61,6 +61,18 @@ $.{key}.{params|body}.{path}
 
 
 
+#### 集成Jenkins跑自动化测试脚本后发送邮件
+
+[【1】Yapi集成到Jenkins生成测试报告](https://blog.csdn.net/u010013191/article/details/97913771)
+
+#### MongoDB命令行
+
+https://www.cnblogs.com/zhuawang/p/3965272.html
+
+
+
+
+
 ### Reference
 
 - [YApi Doc](https://hellosean1025.github.io/yapi/index.html)
