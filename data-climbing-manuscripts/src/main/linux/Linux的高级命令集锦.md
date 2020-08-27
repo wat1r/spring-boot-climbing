@@ -172,6 +172,20 @@ s ：取代，可以直接进行取代的工作哩！通常这个 s 的动作可
 - 替换文件的字符串：` sed -i "s/my/Hao Chen's/g" pets.txt   `   其中 `/g` 是全局模式表示每一行出现的符合规则的都被替换掉
 - 删除第2行到末尾行：`sed '2,$d' my.txt`
 
+
+
+> 找到access.log文件中/req/v2/fetch的 请求，拿到7 14 15列，然后按 "切分， 选取大于1s的输出
+
+```shell
+cat access.log | awk -F' ' '/req\/v2\/fetch/{print $7, $14, $NF}'   | awk -F '"' '$4>1' | awk -F' ' '{print $0}' | less
+```
+
+
+
+
+
+
+
 ---
 
 ## 3.nl
@@ -354,3 +368,4 @@ $ ps axu | grep java
 - [每天一个linux命令(11)：nl命令](https://www.cnblogs.com/peida/archive/2012/11/01/2749048.html)
 - [Linux 查询端口被占用命令](https://www.cnblogs.com/ming-blogs/p/11101423.html)
 - [Xshell-grep高亮显示匹配项](https://www.jianshu.com/p/9944f96ea378)
+- https://www.cnblogs.com/weifeng1463/p/9858048.html
