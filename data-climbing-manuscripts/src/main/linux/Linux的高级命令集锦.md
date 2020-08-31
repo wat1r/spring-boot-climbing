@@ -78,7 +78,7 @@ dw, 14338
 + 看看统计每个用户的进程的占了多少内存（注：sum的RSS那一列)
   `ps aux | awk 'NR!=1{a[$1]+=$6;} END { for(i in a) print i ", " a[i]"KB";}'`
 
-+ awk去重：`awk '!x[$0]++' file1 > file2`
++ awk去重：`awk '!x[$0]++' file1awk > file2`
 
 + sh脚本中杀死进程：`ps -ef | grep java | grep -v consumer |awk '{print $2}' | xargs -p kill -9 `
 
@@ -181,6 +181,55 @@ cat access.log | awk -F' ' '/req\/v2\/fetch/{print $7, $14, $NF}'   | awk -F '"'
 ```
 
 
+
+
+
+```shell
+cat hiveassistant3-server-prod-https_access.log | awk -F' ' '/job\/engine\/result/{print $7}' | less  > ../hadoop/hive_server_access_job_engine_result.log
+```
+
+
+
+
+
+```shell
+ awk '/(jobid=)(.*)(&que)/{print $1}' hive_server_access_job_engine_result.log | less
+```
+
+
+
+
+
+提取两个字符之间的字符串
+
+```shell
+ sed -E 's/.*jobid=(.*)&id=.*/\1/' hive_server_access_job_engine_result.log | less
+```
+
+
+
+
+
+去重
+
+```shell
+awk '!x[$0]++' hive_server_access_job_engine_result_job_id_repeative.log > hive_server_access_job_engine_result_job_id.log
+```
+
+
+
+
+
+```shell
+sed -E 's/.*\/tasks\/req\/v2\/fetch\/(.*)\?token=.*/\1/' access_august_prod_more_than_2_seconds.log | less
+
+sed -n '/tasks\/req\/v2\/fetch\/ \?token=/p' access_august_prod_more_than_2_seconds.log | less
+
+sed -E 's/.*\/tasks\/req\/v2\/fetch\/(.*)\?token=.*/\1/' access_august_prod_more_than_2_seconds.log | awk 'length($0)<20'  > seg_1.txt
+sed -E 's/.*\/req\/v2\/fetch\/(.*)\?operatorId=.*/\1/' access_august_prod_more_than_2_seconds.log | awk 'length($0)<20'  > seg_2.txt
+sed -E 's/.*\/req\/v2\/fetch\/hive\/(.*)\?operatorId=.*/\1/' access_august_prod_more_than_2_seconds.log | awk 'length($0)=36'  > seg_3.txt
+sed -E 's/.*\/req\/v2\/fetch\/hive\/page\/(.*)\?operatorId=.*/\1/' access_august_prod_more_than_2_seconds.log | awk 'length($0)<=36'  > seg_4.txt
+```
 
 
 
