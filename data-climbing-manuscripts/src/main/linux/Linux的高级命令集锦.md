@@ -243,6 +243,35 @@ sed -E 's/.*\/req\/v2\/fetch\/hive\/page\/(.*)\?operatorId=.*/\1/' access_august
 
 ----
 
+
+
+
+
+## 4.compress/uncompress
+
+ .**tar.gz** 使用tar命令进行解压
+
+```
+ tar -zxvf java.tar.gz
+
+解压到指定的文件夹
+	tar -zxvf java.tar.gz  -C /usr/java
+```
+
+**gz**文件的解压 gzip 命令
+
+```
+ 	gzip -d java.gz
+```
+
+也可使用**zcat** 命令，然后将标准输出 保存文件
+
+```
+zcat java.gz > java.java
+```
+
+
+
 ## 9.查询文件(du)
 
 - 查找top10的文件或是文件夹
@@ -418,3 +447,5 @@ $ ps axu | grep java
 - [Linux 查询端口被占用命令](https://www.cnblogs.com/ming-blogs/p/11101423.html)
 - [Xshell-grep高亮显示匹配项](https://www.jianshu.com/p/9944f96ea378)
 - https://www.cnblogs.com/weifeng1463/p/9858048.html
+- https://www.cnblogs.com/tianyajuanke/archive/2012/04/25/2470002.html
+
