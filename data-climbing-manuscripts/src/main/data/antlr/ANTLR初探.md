@@ -106,4 +106,4 @@ public class Antlr4Test {
 ##### Reference
 
 - [Spark SQL解析过程以及Antlr4入门](https://baijiahao.baidu.com/s?id=1665087023209206128&wfr=spider&for=pc)
-- [[ANTLR4在windows上的安装(java版)](https://www.cnblogs.com/wynjauu/articles/9872822.html)]
+- [ANTLR4在windows上的安装(java版)](https://www.cnblogs.com/wynjauu/articles/9872822.html)
