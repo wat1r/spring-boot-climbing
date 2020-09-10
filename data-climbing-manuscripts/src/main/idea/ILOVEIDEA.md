@@ -15,3 +15,15 @@
 | alt+F8       | 运行表达式求值          | Evaluate Expression    |
 > 说明：以上F7和Shift+F7的区别，若断点处同一行代码，存在多个方法调用。F7会按调用顺序进入方法体，而Shift+F7则会弹出方法选择，可以自行选择进入的方法体。
 
+
+
+
+
+
+
+### `SpringBoot`热部署
+
+- https://www.cnblogs.com/ming-blogs/p/10289075.html
+
+
+
