@@ -386,6 +386,26 @@ no
 
 
 
+
+
+## 19.find
+
+> 在使用find ／ -name 时，会打印很多含“permission denied”错误无用信息
+>
+> 意思是把 标准错误输出 重定向到 标准输出，grep -v 的意思是“获取相反”，具体参考grep命令
+
+```shell
+find / -name art  2>&1 | grep -v "Permission denied"
+```
+
+
+
+
+
+
+
+
+
 ## 20.Maven命令
 
 - 输出Maven项目的目录结构:`tree >> D:/tree.txt`

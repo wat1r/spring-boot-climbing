@@ -16,6 +16,42 @@ AND TABLE_NAME = 'rpt_cap_ammeter_2018';
 
 
 
+#### 登录
+
+```shell
+mysql -u root -pxxxxx -h 127.0.0.1 -P 23306
+mysql –uusername [–h主机名或者IP地址] –ppassword
+mysql -h主机地址 -u用户名 －p用户密码 
+```
+
+
+
+
+
+#### Grants
+
+```linux
+grant
+创建一个可以从任何地方连接服务器的一个完全的超级用户，但是必须使用一个口令something做这个
+mysql> grant all privileges on *.* to user@localhost identified by ’something’ with
+增加新用户
+格式：grant select on 数据库.* to 用户名@登录主机 identified by “密码”
+GRANT ALL PRIVILEGES ON *.* TO monty@localhost IDENTIFIED BY ’something’ WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO monty@”%” IDENTIFIED BY ’something’ WITH GRANT OPTION;
+删除授权：
+mysql> revoke all privileges on *.* from root@”%”;
+mysql> delete from user where user=”root” and host=”%”;
+mysql> flush privileges;
+创建一个用户custom在特定客户端it363.com登录，可访问特定数据库fangchandb
+mysql >grant select, insert, update, delete, create,drop on fangchandb.* to custom@ it363.com identified by ‘ passwd’
+重命名表:
+mysql > alter table t1 rename t2;
+```
+
+
+
+
+
 
 
 #### 建库
