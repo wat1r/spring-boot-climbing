@@ -171,6 +171,16 @@ DELETE FROM hiveassistant2_test.functions
 WHERE engine_type='hive';
 ```
 
+#### 删除表中的某个字段
+
+```sql
+ALTER TABLE db.table DROP COLUMN currency_unit_type;
+```
+
+
+
+
+
 #### 更新某个字段的值
 
 ```sql

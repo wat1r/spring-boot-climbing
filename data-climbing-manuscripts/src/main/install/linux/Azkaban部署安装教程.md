@@ -14,7 +14,11 @@ azkabanpassword
 
 ![image-20200923134924949](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\install\linux\Azkaban部署安装教程.assets\image-20200923134924949.png)
 
+停止`AzkabanWebServer`与`AzkabanExecutorServer`进程
 
+```shell
+ps -ef | egrep 'AzkabanWebServer|AzkabanExecutorServer' | grep -v grep | awk '{print $2}' | xargs kill -9
+```
 
 
 
