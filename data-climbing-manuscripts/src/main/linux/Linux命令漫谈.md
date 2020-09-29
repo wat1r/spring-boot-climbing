@@ -56,6 +56,148 @@ ps -aux|grep "swoole"|awk '{print "kill -9 "$2}'
 
 
 
+#### `join` 命令
+
+- -a<1或2> 除了显示原来的输出内容之外，还显示指令文件中没有相同栏位的行。
+- -o<格式> 按照指定的格式来显示结果。
+- -t<字符> 使用栏位的分隔字符。
+
+两个文件：`month_cn.txt `  ,`month_en.txt `
+
+```shell
+# cat month_cn.txt 
+1       一月
+2       二月
+3       三月
+4       四月
+5       五月
+6       六月
+7       七月
+8       八月
+9       九月
+10      十月
+11      十一月
+12      十二月
+13      十三月
+```
+
+```shell
+# cat month_en.txt 
+1       January
+2       February
+3       March
+4       April
+5       May
+6       June
+7       July
+8       August
+9       September
+10      October
+11      November
+12      December
+14      MonthUnknown
+```
+
+##### 执行 `join month_cn.txt month_en.txt `
+
+```shell
+# join month_cn.txt month_en.txt 
+1 一月 January
+2 二月 February
+3 三月 March
+4 四月 April
+5 五月 May
+6 六月 June
+7 七月 July
+8 八月 August
+9 九月 September
+10 十月 October
+11 十一月 November
+12 十二月 December
+```
+
+##### 执行`join -a1 month_cn.txt month_en.txt  ` 
+
+> 左连接，显示左边文件的所有记录，右边的没有匹配的显示空白
+
+```shell
+# join -a1 month_cn.txt month_en.txt 
+1 一月 January
+2 二月 February
+3 三月 March
+4 四月 April
+5 五月 May
+6 六月 June
+7 七月 July
+8 八月 August
+9 九月 September
+10 十月 October
+11 十一月 November
+12 十二月 December
+13 十三月
+```
+
+##### 执行`join -a2 month_cn.txt month_en.txt  ` 
+
+> 右连接，显示右边文件的所有记录，左边没有匹配的显示空白
+
+```shell
+# join -a2 month_cn.txt month_en.txt 
+1 一月 January
+2 二月 February
+3 三月 March
+4 四月 April
+5 五月 May
+6 六月 June
+7 七月 July
+8 八月 August
+9 九月 September
+10 十月 October
+11 十一月 November
+12 十二月 December
+14 MonthUnknown
+```
+
+##### 执行`join -a1  -a2 month_cn.txt month_en.txt `
+
+> 全连接，显示左边和右边所有记录
+
+```shell
+# join -a1  -a2 month_cn.txt month_en.txt 
+1 一月 January
+2 二月 February
+3 三月 March
+4 四月 April
+5 五月 May
+6 六月 June
+7 七月 July
+8 八月 August
+9 九月 September
+10 十月 October
+11 十一月 November
+12 十二月 December
+13 十三月
+14 MonthUnknown
+```
+
+##### 输出指定字段
+
+```shell
+# join -o 1.1 2.2 1.2 month_cn.txt month_en.txt 
+1 January 一月
+2 February 二月
+3 March 三月
+4 April 四月
+5 May 五月
+6 June 六月
+7 July 七月
+8 August 八月
+9 September 九月
+10 October 十月
+11 November 十一月
+12 December 十二月
+```
+
 
 
 
