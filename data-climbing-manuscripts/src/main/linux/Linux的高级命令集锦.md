@@ -346,6 +346,26 @@ find -type f -size +100M  -print0 | xargs -0 du -h | sort -nr
 成功: 已终止 PID 为 2236 的进程。
 ```
 
+- 查看默认端口：`ss -lntp`
+- 通过端口好找到服务名
+
+```shell
+[root@centos7 flink]# netstat -antup | grep 8080
+tcp        0      0 0.0.0.0:8080            0.0.0.0:*               LISTEN      15502/java          
+[root@centos7 flink]# ll /proc/15502/cwd 
+lrwxrwxrwx 1 root root 0 Sep 30 10:47 /proc/15502/cwd -> /usr/local/spark
+```
+
+- 查看详细信息
+
+```java
+[root@centos7 flink]# netstat -nltp
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:42214           0.0.0.0:*               LISTEN      11024/java          
+tcp        0      0 0.0.0.0:46727           0.0.0.0:*               LISTEN      11310/java      
+```
+
 
 
 

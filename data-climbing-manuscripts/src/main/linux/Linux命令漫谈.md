@@ -25,6 +25,14 @@ ps -ef | grep "mongod" | grep -v "grep" | awk '{print $2}'
 ps -aux|grep "swoole"|awk '{print "kill -9 "$2}'
 ```
 
+杀掉flink的关联服务
+
+```shell
+ps -ef | egrep "StandaloneSessionClusterEntrypoint|TaskManagerRunner" | grep -v "grep" | awk '{print $2}' | xargs kill -9
+```
+
+
+
 
 
 #### `grep` `egrep` `fgrep`区别
