@@ -9,3 +9,36 @@
 | https://www.elastic.co/cn/downloads/past-releases#elasticsearch |      |      |
 |                                                              |      |      |
 
+
+
+
+
+
+
+
+
+| 项目                           | 分类          | 用途                 | 备注 |
+| ------------------------------ | ------------- | -------------------- | ---- |
+| 谷歌访问助手破解版.2.3.0       | Chrome插件    |                      |      |
+| The Great Suspender 7.1.6      | Chrome插件    | Chrome浏览器内存优化 |      |
+| Vue.js devtools.5.3.3          | Chrome插件    |                      |      |
+| 壹伴 · 小插件7.15.4            | Chrome插件    |        |      |
+| JSON-handle.0.6.2              | Chrome插件    | REST请求格式化 |      |
+| cross-request.3.0              | Chrome插件    | YApi跨域请求         |      |
+| Explorer                       | Notepad++插件 | 文件夹搜索，树状展示 |      |
+| mimeTools                      | Notepad++插件 | 转码                 |      |
+| NppConverter                   | Notepad++插件 |                      |      |
+| NppExport                      | Notepad++插件 | ftp连接工具          |      |
+| NPPJSONViewer                  | Notepad++插件 | json格式化           |      |
+| PoorMansTSqlFormatterNppPlugin | Notepad++插件 | sql格式化            |      |
+| XBrackets                      | Notepad++插件 | 自动括号补全         |      |
+| Everything            | 软件          | 搜索系统文件 |      |
+| Clover | 软件 | Windows窗口tab页多开 |      |
+| Balsamiq_Wireframes_4.1.4 | 软件 | 产品画图工具 |      |
+| FastStone Capture | 软件 | 截图工具 |      |
+| Beyond Compare 4 | 软件 | 文件对比 |      |
+| Notepad++ | 软件 | 文本编辑工具 |      |
+| Typora | 软件 | markdown编辑器 |      |
+| ProcessOn | 网页 | 画图 |      |
+|                       |  |         |      |
+|                       |  |         |      |
