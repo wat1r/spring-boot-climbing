@@ -429,6 +429,7 @@ find / -name art  2>&1 | grep -v "Permission denied"
 ## 20.Maven命令
 
 - 输出Maven项目的目录结构:`tree >> D:/tree.txt`
+- 输出maven依赖结构：`mvn dependency:tree >D:/aa.txt `
 
 
 
