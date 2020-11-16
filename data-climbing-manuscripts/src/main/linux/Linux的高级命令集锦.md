@@ -490,3 +490,4 @@ $ ps axu | grep java
 - https://www.cnblogs.com/weifeng1463/p/9858048.html
 - https://www.cnblogs.com/tianyajuanke/archive/2012/04/25/2470002.html
 
+- [linux下查找java进程所在的目录](https://blog.csdn.net/glw0223/article/details/88823513)
