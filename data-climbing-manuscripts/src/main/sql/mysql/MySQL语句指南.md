@@ -154,6 +154,14 @@ ALTER TABLE hiveassistant2_private.history_log ADD INDEX job_id_index (job_id);
 SHOW CREATE TABLE TEST
 ```
 
+#### 查询blob类型的数据转string
+
+```sql
+select CONVERT(code USING utf8) from table WHERE id =XXX
+```
+
+
+
 #### mysql 查询表的字段名称，字段类型
 
 ```sql
@@ -176,6 +184,8 @@ WHERE engine_type='hive';
 ```sql
 ALTER TABLE db.table DROP COLUMN currency_unit_type;
 ```
+
+
 
 
 
