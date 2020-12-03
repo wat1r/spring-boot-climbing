@@ -61,9 +61,24 @@ Producer生产消息，创建Exchange，Exchange转发消息，但是不做存�
 
 ![1588947998471](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\element\message\RabbitMQ\RabbitMQ原理介绍与实战之核心原理.assets\1588947998471.png)
 
-s
 
 
+
+
+### 2.部署
+
+#### 2.1.端口
+
+- 4369：epmd，RabbitMQ节点和CLI工具使用的对等发现服务
+- 5672、5671：由不带TLS和带TLS的AMQP 0-9-1和1.0客户端使用
+- 25672：用于节点间和CLI工具通信（Erlang分发服务器端口），并从动态范围分配（默认情况下限制为单个端口，计算为AMQP端口+ 20000）。除非确实需要这些端口上的外部连接（例如，群集使用联合身份验证或在子网外部的计算机上使用CLI工具），否则这些端口不应公开。有关详细信息，请参见网络指南。
+- 35672-35682：由CLI工具（Erlang分发客户端端口）用于与节点进行通信，并从动态范围（计算为服务器分发端口+ 10000通过服务器分发端口+ 10010）分配。有关详细信息，请参见网络指南。
+- 15672：HTTP API客户端，管理UI和Rabbitmqadmin （仅在启用了管理插件的情况下）
+- 61613、61614：不带TLS和带TLS的STOMP客户端（仅在启用STOMP插件的情况下）
+- 1883、8883 ：（不带和带有TLS的MQTT客户端，如果启用了MQTT插件
+- 15674：STOMP-over-WebSockets客户端（仅在启用了Web STOMP插件的情况下）
+- 15675：MQTT-over-WebSockets客户端（仅当启用了Web MQTT插件时）
+- 15692：Prometheus指标（仅在启用Prometheus插件的情况下）
 
 ### 关联阅读
 
