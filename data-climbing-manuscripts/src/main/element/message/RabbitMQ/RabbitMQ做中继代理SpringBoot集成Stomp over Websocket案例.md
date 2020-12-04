@@ -106,7 +106,7 @@ public class RabbitMQConfig {
         cf.setUsername(rabbitMQProperties.getUsername());
         cf.setPassword(rabbitMQProperties.getPassword());
         rabbitTemplate = new RabbitTemplate(cf);
-        rabbitTemplate.setMessageConverter(new 						           					Jackson2JsonMessageConverter(objectMapper));
+        rabbitTemplate.setMessageConverter(new 		           			Jackson2JsonMessageConverter(objectMapper));
         /* 此写法是RabbitMQ的单节点写法，不适用于本案例 */
 //        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
 //        rabbitTemplate.setMessageConverter(jsonMessageConverter());
