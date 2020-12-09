@@ -366,6 +366,27 @@ tcp        0      0 0.0.0.0:42214           0.0.0.0:*               LISTEN      
 tcp        0      0 0.0.0.0:46727           0.0.0.0:*               LISTEN      11310/java      
 ```
 
+- 查看某进程占用的端口号
+
+```java
+ netstat -anp
+ [root@www ~]# netstat -anp | grep syslog
+ udp    0   0 0.0.0.0:514         0.0.0.0:*                31483/syslogd 
+```
+
+- 查看某端口被占用的进程
+
+```java
+ [root@nbatest ~]# netstat -altp |grep 9999
+ tcp    0   0 0.0.0.0:9999        0.0.0.0:*          LISTEN   16315/gate_applicat
+```
+
+- 得到PID后，使用netstat命令查询端口占用
+
+```
+netstat -nap | grep [pid]
+```
+
 
 
 
