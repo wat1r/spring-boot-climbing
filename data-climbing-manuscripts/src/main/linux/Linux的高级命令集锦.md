@@ -422,9 +422,7 @@ find / -name art  2>&1 | grep -v "Permission denied"
 
 
 
-
-
-
+https://blog.csdn.net/feit2417/article/details/82935801
 
 ## 20.Maven命令
 
