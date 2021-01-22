@@ -187,6 +187,14 @@ ALTER TABLE db.table DROP COLUMN currency_unit_type;
 
 
 
+#### 清空数据库中表的所有数据
+
+```sql
+SELECT CONCAT('truncate table ',TABLE_NAME,';') AS a FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'data_studio_dev' ;
+```
+
+
+
 
 
 
