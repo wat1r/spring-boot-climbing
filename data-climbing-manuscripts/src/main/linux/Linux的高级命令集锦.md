@@ -347,7 +347,7 @@ find -type f -size +100M  -print0 | xargs -0 du -h | sort -nr
 ```
 
 - 查看默认端口：`ss -lntp`
-- 通过端口好找到服务名
+- 通过端口号找到服务名
 
 ```shell
 [root@centos7 flink]# netstat -antup | grep 8080
