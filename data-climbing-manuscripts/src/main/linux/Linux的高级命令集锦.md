@@ -470,6 +470,7 @@ https://blog.csdn.net/feit2417/article/details/82935801
 ```
 
 ```shell
+// vim ~/.bash_profile
 $ export GREP_OPTIONS='--color=auto' GREP_COLOR='31'
 $ ps axu | grep java
 ```

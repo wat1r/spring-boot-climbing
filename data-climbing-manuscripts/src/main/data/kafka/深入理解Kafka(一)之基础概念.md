@@ -34,7 +34,7 @@
 事实上，在每一个消费者中唯一保存的元数据是`offset`（偏移量）即消费在`log`中的位置.偏移量由消费者所控制:通常在读取记录后，消费者会以线性的方式增加偏移量，但是实际上，由于这个位置由消费者控制，所以消费者可以采用任何顺序来消费记录。例如，一个消费者可以重置到一个旧的偏移量，从而重新处理过去的数据；也可以跳过最近的记录，从"现在"开始消费。
 这些细节说明`Kafka` 消费者是非常廉价的—消费者的增加和减少，对集群或者其他消费者没有多大的影响。比如，你可以使用命令行工具，对一些`topic`内容执行 `tail`操作，并不会影响已存在的消费者消费数据。
 
-### [offset]()
+### offset
 `Kafka` 消费者端有位移（ `offset`）的概念。
 
 - 每条消息在某个 `partition` 的位移是固定的，但消费该 `partition` 的消费者的位移会随着消费进度不断前移
@@ -83,3 +83,31 @@ defaultPartition Utils.abs(key.hashCode) % numPartitions
 - follower HW值 =min(follower自身LEO 和 leader HW)
 ![image-20210331203438051](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\kafka\深入理解Kafka(一)之基础概念.assets\image-20210331203438051.png)
 HW能保证数据的一致性
+
+### LSO
+
+![image-20210401211329843](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\kafka\深入理解Kafka(一)之基础概念.assets\image-20210401211329843.png)
+
+如上图所示，它代表一个日志文件，这个日志文件中有 9 条消息，第一条消息的 `offset`( `logStartOffset`)为 0，最后一条消息的 `offset` 为 8，`offset` 为 9 的消息用虚线框表示，代表下一条待写入的消息。日志文件的 `HW` 为 6，表示消费者只能拉取到 `offset` 在 0 至 5 之间的消息， 而 `offset` 为 6 的消息对消费者而言是不可见的。
+
+而`LW` 是 `Low` `Watermark` 的缩写，俗称“低水位”，代表 `AR` 集合中最小的 `logStartOffset` 值。副本的拉取请求(`FetchRequest`，它有可能触发新建日志分段而旧的被清理，进而导致 `logStartOffset` 的增加)和删除消息请求(`DeleteRecordRequest`)都有可能促使 `LW` 的增长。
+
+在 `Kafka` 的日志管理器中会有一个专门的日志删除任务来周期性地检测和删除不符合保留条件的日志分段文件，这个周期可以通过 `broker` 端参数 `log`.`retention`.`check`.`interval`.`ms`来配置，默认值为 300000，即 5 分钟。当前日志分段的保留策略有 3 种：基于时间的保留策略、基于日志大小的保留策略和基于日志起始偏移量的保留策略。而“基于日志起始偏移量的保留策略”正是基于 `logStartOffset`来实现的。
+
+一般情况下，日志文件的起始偏移量 `logStartOffset` 等于第一个日志分段的 `baseOffset`，但这并不是绝对的，`logStartOffset` 的值可以通过 `DeleteRecordsRequest` 请求(比如使用 `KafkaAdminClient` 的 `deleteRecords`()方法、使用 `kafka`-`delete`-`records`.`sh` 脚本、日志的清理和截断等操作进行修改。
+
+基于日志起始偏移量的保留策略的判断依据是某日志分段的下一个日志分段的起始偏移量 `baseOffset` 是否小于等于 `logStartOffset`，若是，则可以删除此日志分段。如下图所示。
+
+![image-20210401212236777](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\kafka\深入理解Kafka(一)之基础概念.assets\image-20210401212236777.png)
+
+假设 `logStartOffset` 等于 25，日志分段 1 的起始偏移量为 0，日志分段 2 的起始偏移量为 11， 日志分段 3 的起始偏移量为 23，那么通过如下动作收集可删除的日志分段的文件集合 `deletableSegments`:
+
+1. 从头开始遍历每个日志分段，日志分段 1 的下一个日志分段的起始偏移量为11，小于`logStartOffset` 的大小，将日志分段1加入 `deletableSegments`。
+2. 日志分段 2 的下一个日志偏移量的起始偏移量为 23，也小于 `logStartOffset` 的大小， 将日志分段 2 页加入 `deletableSegments`。
+3. 日志分段 3 的下一个日志偏移量在 `logStartOffset` 的右侧，故从日志分段 3 开始的所有日志分段都不会加入 `deletableSegments`。
+
+
+
+## Reference
+
+https://honeypps.com/mq/kafka-basic-knowledge-of-lw-and-logstartoffset/

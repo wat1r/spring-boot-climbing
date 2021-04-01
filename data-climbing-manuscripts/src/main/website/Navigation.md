@@ -48,3 +48,10 @@
 `Typora` 快捷键
 
 ![image-20210331192258372](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\website\Navigation.assets\image-20210331192258372.png)
+
+
+
+替换掉当前的字符
+
+![image-20210401202039774](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\website\Navigation.assets\image-20210401202039774.png)
+
