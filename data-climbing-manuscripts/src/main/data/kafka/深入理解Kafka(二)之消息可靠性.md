@@ -45,13 +45,19 @@
 `Partition` 的数量直接决定了该 `Topic` 的并发处理能力。但也并不是越多越好。`Partition` 的数量对消息延迟性会产生影响。
 一般建议选择 `broker` `num` * `consumer` `num` ，这样平均每个 `consumer` 会同时读取`broker`数目个 `partition` , 这些 `partiton` 压力可以平摊到每台 ``broker`` 上。
 
-## 日志压缩
+## 日志删除/压缩
 
 
 
 
 
+![image-20210402224831120](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210402224831120.png)
 
+
+
+
+
+![image-20210402225936854](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210402225936854.png)
 
 
 
