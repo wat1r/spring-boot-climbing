@@ -48,6 +48,7 @@ git checkout test
 git push origin test
 #一句命令:
 git checkout -b issue-13 && git push origin issue-13
+git checkout -b dev && git push origin dev
 #切到master分支上，去单独的拿feature分支点的62ecb3 代码
 git checkout master  
 git cherry-pick 62ecb3
