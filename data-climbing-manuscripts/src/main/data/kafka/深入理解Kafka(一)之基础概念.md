@@ -2,6 +2,7 @@
 `Kafka`是用`scala`语言编写，最初由`Linkedin`公司开发，后贡献给了`Apache`基金会并成为顶级开源项目。是一个分布式、支持分区的（`partition`）、多副本的（`replication`），基于zookeeper协调的分布式消息系统，它的最大的特性就是可以实时的处理大量数据以满足各种需求场景：比如基于`hadoop`的批处理系统、低延迟的实时系统、`storm/Spark`流式处理引擎，`web/nginx`日志、访问日志，消息服务等等。
 `Kafka`是一个类`JMS`消息队列，结合了`JMS`中的两种模式，可以有多个消费者主动拉取数据。虽然它提供了类似于`JMS`的特性，但是在设计实现上完全不同，此外它并不是`JMS`规范的实现，在`JMS`中只有点对点模式才有消费者主动拉取数据。
 特性
+
 ## 特性
 - 高吞吐量、低延迟：`kafka`每秒可以处理几十万条消息，它的延迟最低只有几毫秒，每个`topic`可以分多个`partition`，`consumer group` 对 `partition` 进行`consume`操作。
 - 可扩展性：`kafka`集群支持热扩展
@@ -27,7 +28,7 @@
 #### Topics/Log
 `Topic` 就是数据主题，是数据记录发布的地方,可以用来区分业务系统。`Kafka`中的`Topics`总是多订阅者模式，一个`topic`可以拥有一个或者多个消费者来订阅它的数据。
 对于每一个`topic`， `Kafka`集群都会维持一个分区日志，如下所示：
-![image-20210320135717817](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210320135717817.png)
+![image-20210414091255110](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\kafka\深入理解Kafka(一)之基础概念.assets\image-20210414091255110.png)
 每个分区都是有序且顺序不可变的记录集，并且不断地追加到结构化的`commit log`文件。分区中的每一个记录都会分配一个`id`号来表示顺序，我们称之为*offset*，*offset*用来唯一的标识分区中每一条记录。
 `Kafka` 集群保留所有发布的记录—无论他们是否已被消费—并通过一个可配置的参数——保留期限来控制. 举个例子， 如果保留策略设置为2天，一条记录发布后两天内，可以随时被消费，两天过后这条记录会被抛弃并释放磁盘空间。`Kafka`的性能和数据大小无关，所以长时间存储数据没有什么问题.
 ![image-20210320140833189](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210320140833189.png)
@@ -40,7 +41,7 @@
 - 每条消息在某个 `partition` 的位移是固定的，但消费该 `partition` 的消费者的位移会随着消费进度不断前移
 - 消费者位移不可能超过该分区最新一条消息的位移 。
   `Kafka` 中的一条消息其实就是一个`<topic,partition,offset>`三元组（`tuple`），通过该元组值我们可以在 `Kafka` 集群中找到唯一对应的那条消息。
-![image-20210331204753947](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\kafka\深入理解Kafka(一)之基础概念.assets\image-20210331204753947.png)
+![image-20210414091255110](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\kafka\深入理解Kafka(一)之基础概念.assets\image-20210414091255110.png)
 ### Partition
 `topic` 物理上的分组，一个 `topic` 可以分为多个 `partition`，每个 `partition` 是一个有序的队列（分区可以间接理解成数据库的分表操作）
 一般来说：
@@ -81,7 +82,7 @@ defaultPartition Utils.abs(key.hashCode) % numPartitions
 > **HW**（`high watermark`）:俗称高水位，**小于 HW 值**的`offset`所对应的消息被认为是「已提交」或「已备份」的消息，才对`consumer`可见，offset只能拉取这个offset之前的消息。任何一个副本对象的HW的值一定不大于其LEO的值（这里强调的是同一个副本的HW和LEO大小的比较）
 - leader HW值 = 所有副本LEO最小值
 - follower HW值 =min(follower自身LEO 和 leader HW)
-![image-20210331203438051](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\kafka\深入理解Kafka(一)之基础概念.assets\image-20210331203438051.png)
+![image-20210414094159588](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\kafka\深入理解Kafka(一)之基础概念.assets\image-20210414094159588.png)
 HW能保证数据的一致性
 
 ### LSO

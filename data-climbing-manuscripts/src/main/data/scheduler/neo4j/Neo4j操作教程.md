@@ -20,10 +20,6 @@ neo4j console
 http://localhost:7474/browser/
 ```
 
-
-
-
-
 #### 批量导入数据
 
 数据文件 import/目录下
