@@ -31,7 +31,7 @@
 ![image-20210414091255110](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\kafka\深入理解Kafka(一)之基础概念.assets\image-20210414091255110.png)
 每个分区都是有序且顺序不可变的记录集，并且不断地追加到结构化的`commit log`文件。分区中的每一个记录都会分配一个`id`号来表示顺序，我们称之为*offset*，*offset*用来唯一的标识分区中每一条记录。
 `Kafka` 集群保留所有发布的记录—无论他们是否已被消费—并通过一个可配置的参数——保留期限来控制. 举个例子， 如果保留策略设置为2天，一条记录发布后两天内，可以随时被消费，两天过后这条记录会被抛弃并释放磁盘空间。`Kafka`的性能和数据大小无关，所以长时间存储数据没有什么问题.
-![image-20210320140833189](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210320140833189.png)
+![image-20210415090257615](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\kafka\深入理解Kafka(一)之基础概念.assets\image-20210415090257615.png)
 事实上，在每一个消费者中唯一保存的元数据是`offset`（偏移量）即消费在`log`中的位置.偏移量由消费者所控制:通常在读取记录后，消费者会以线性的方式增加偏移量，但是实际上，由于这个位置由消费者控制，所以消费者可以采用任何顺序来消费记录。例如，一个消费者可以重置到一个旧的偏移量，从而重新处理过去的数据；也可以跳过最近的记录，从"现在"开始消费。
 这些细节说明`Kafka` 消费者是非常廉价的—消费者的增加和减少，对集群或者其他消费者没有多大的影响。比如，你可以使用命令行工具，对一些`topic`内容执行 `tail`操作，并不会影响已存在的消费者消费数据。
 
@@ -63,7 +63,7 @@ defaultPartition Utils.abs(key.hashCode) % numPartitions
 
 ### Consumer
 每个 `Consumer` 进程都会划归到一个逻辑的`Consumer Group`中，逻辑的订阅者是`Consumer Group`，同一个 `Consumer Group` 中的 `Consumer` 可以在不同的程序中，也可以在不同的机器上。所以一条`message`可以被多个订阅该 `message` 所在的`topic`的每一个`Consumer Group` 所消费，也就好像是这条`message`被广播到每个`Consumer Group`一样。而每个`Consumer Group`中，类似于一个`Queue`（`JMS`中的`Queue`）的概念差不多，即`topic`中的一条`message`只会被`Consumer Group`中的一个`Consumer`消费
-![image-20210330225625665](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210330225625665.png)
+![image-20210415091000864](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\kafka\深入理解Kafka(一)之基础概念.assets\image-20210415091000864.png)
 
 ### replia
 `partition` 是有序消息日志，为了实现高可靠性，`Kafka`保存了多个备份日志，在 `Kafka` 中被称为**副本（ replica ）**，它们存在的唯一目的就是**防止数据丢失**。副本分为两类 ： 领导者副本（ `leader replica` ）和追随者副本（ `follower replica` ）
