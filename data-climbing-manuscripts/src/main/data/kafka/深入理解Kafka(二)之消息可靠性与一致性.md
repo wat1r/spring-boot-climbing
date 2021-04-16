@@ -39,18 +39,14 @@
 
 假设一个场景，我们需要将每个用户的 `Page` `View` 信息给存入 `Kafka` ，此时我们会很自然地想到以 `userId` 来作为 `key` 。理想情况下这种选择可能是不会错的，但如果假设有一个用户是一个爬虫用户，他个人的访问量可能是正常用户的百倍甚至千倍，这个时候你会发现，虽然 `userId` 作为 `key` 而言，它是均匀分布的，但其背后的数据量却并不一定是均匀分布的，久而久之，就可能产生`数据倾斜`的情况，导致各个`partition`数据量分布不均匀。当然对于 `Kafka` 自身而言，一个`Partition`里有再多的数据，也不会去影响到它的正常性能。但没有特殊需求时，在选择 `key` 的时候，还是要考虑到这种情况的发生。
 
-
-
-
-
 ### 数据一致性
 
-一致性定义:若某条消息对Consumer可见,那么即使Leader宕机了,在新Leader上数据依然可以被读到
+一致性定义:若某条消息对`Consumer`可见,那么即使Leader宕机了,在新`Leader`上数据依然可以被读到
 
-- HighWaterMark简称HW: Partition的高水位，取一个partition对应的ISR中最小的LEO作为HW，消费者最多只能消费到HW所在的位置，另外每个replica都有highWatermark，leader和follower各自负责更新自己的highWatermark状态，highWatermark <= leader. LogEndOffset
-- 对于Leader新写入的msg，Consumer不能立刻消费，Leader会等待该消息被所有ISR中的replica同步后,更新HW,此时该消息才能被Consumer消费，即Consumer最多只能消费到HW位置
+- `HighWaterMark`简称`HW`: `Partition`的高水位，取一个`partition`对应的`ISR`中最小的`LEO`作为`HW`，消费者最多只能消费到HW所在的位置，另外每个replica都有`highWatermark`，`leader`和follower各自负责更新自己的`highWatermark`状态，`highWatermark <= leader. LogEndOffset`
+- 对于`Leader`新写入的`msg`，`Consumer`不能立刻消费，`Leader`会等待该消息被所有`ISR`中的`replica`同步后,更新`HW`,此时该消息才能被`Consumer`消费，即Consumer最多只能消费到`HW`位置
 
-这样就保证了如果Leader Broker失效,该消息仍然可以从新选举的Leader中获取。对于来自内部Broker的读取请求,没有HW的限制。同时,Follower也会维护一份自己的HW,Folloer.HW = min(Leader.HW, Follower.offset)
+这样就保证了如果`Leader Broker`失效,该消息仍然可以从新选举的`Leader`中获取。对于来自内部`Broker`的读取请求,没有`HW`的限制。同时,`Follower`也会维护一份自己的`HW`,`Folloer.HW` = `min(Leader.HW, Follower.offset)`
 
 
 
