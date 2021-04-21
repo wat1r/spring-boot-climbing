@@ -389,6 +389,16 @@ netstat -nap | grep [pid]
 
 
 
+## 11.ls命令
+
+```shell
+$ ls -lhS
+//ls -lhS  按照由大到小排序
+//ls -Slhr   按照从小到大排序
+```
+
+
+
 
 
 ## 19.防火墙
