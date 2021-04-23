@@ -389,6 +389,12 @@ netstat -nap | grep [pid]
 
 
 
+
+
+
+
+
+
 ## 11.ls命令
 
 ```shell
@@ -396,6 +402,19 @@ $ ls -lhS
 //ls -lhS  按照由大到小排序
 //ls -Slhr   按照从小到大排序
 ```
+
+
+
+
+
+## 18.ssh
+
+```shell
+//指定端口号登录
+ssh   hadoop@116.XXX.20.XXX:58422
+```
+
+
 
 
 
