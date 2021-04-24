@@ -526,6 +526,219 @@ $ ps axu | grep java
 
 
 
+## 60.Macos
+
+- 编辑文件用sudo权限打开，qa!退出编辑
+
+```shell
+➜  bin cat /etc/paths
+/usr/local/bin
+/usr/bin
+/bin
+/usr/sbin
+/sbin
+/Applications/Docker.app/Contents/Resources/bin
+```
+
+- 找不到命令`zsh: command not found: docker`
+
+```shell
+vim .zshrc
+```
+
+
+
+### 60.1.Redis
+
+```shell
+➜  ~ redis-server /usr/local/etc/redis.conf 
+4800:C 24 Apr 18:21:05.53  ....
+➜  ~ redis-cli
+```
+
+
+
+
+
+### 60.2.Docker 
+
+> 参考文档https://www.runoob.com/docker/macos-docker-install.html
+
+需要先启动Docker的Server 即图形化界面
+
+
+
+```shell
+➜  ~ docker --version
+Docker version 20.10.5, build 55c4c88
+
+
+➜  ~ docker info
+Client:
+ Context:    default
+ Debug Mode: false
+ Plugins:
+  app: Docker App (Docker Inc., v0.9.1-beta3)
+  buildx: Build with BuildKit (Docker Inc., v0.5.1-docker)
+  scan: Docker Scan (Docker Inc., v0.6.0)
+
+Server:
+ Containers: 0
+  Running: 0
+  Paused: 0
+  Stopped: 0
+ Images: 0
+ Server Version: 20.10.5
+ Storage Driver: overlay2
+  Backing Filesystem: extfs
+  Supports d_type: true
+  Native Overlay Diff: true
+ Logging Driver: json-file
+ Cgroup Driver: cgroupfs
+ Cgroup Version: 1
+
+```
+
+
+
+
+
+设置镜像加速
+
+可以配置多个镜像
+
+```shell
+"registry-mirrors":["http://hub-mirror.c.163.com"]
+```
+
+
+
+![image-20210424184507859](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210424184507859.png)
+
+```shell
+~ docker info
+Registry Mirrors:
+  http://hub-mirror.c.163.com/
+ Live Restore Enabled: false
+```
+
+
+
+
+
+### 60.3.ClickHouse
+
+> 基础知识参考链接：https://www.jianshu.com/p/250e9d9788f2
+
+安装ClickHouse镜像
+
+```shell
+docker pull yandex/clickhouse-client
+docker pull yandex/clickhouse-server
+```
+
+启动容器服务，加载镜像
+
+```shell
+docker run -d --name ck-server --ulimit nofile=262144:262144  -p 8123:8123 -p 9000:9000 -p 9009:9009 --volume=$HOME/Documents/ck2_database:/var/lib/clickhouse yandex/clickhouse-server
+#上面的这条语句没成功，用下面的这个
+docker run -d --name ch-server --ulimit nofile=262144:262144 -p 8123:8123 -p 9000:9000 -p 9009:9009 yandex/clickhouse-server
+```
+
+volume：冒号两侧的路径建立映射，当容器服务读取冒号后面的虚拟机内路径时，会去读冒号前面的本机路径。加这个参数的作用是自定义配置，这个参数可以比较简单的修改部分配置。
+
+-p:暴露容器中的端口到本机端口中。本机端口：容器端口。不配置的话可以后面除来虚拟机中，别的地方连不上8123端口。
+查看启动情况
+
+```shell
+➜  Resources docker ps
+CONTAINER ID   IMAGE                      COMMAND            CREATED          STATUS          PORTS                                                                    NAMES
+2864fdf80b8f   yandex/clickhouse-server   "/entrypoint.sh"   56 seconds ago   Up 52 seconds   0.0.0.0:8123->8123/tcp, 0.0.0.0:9000->9000/tcp, 0.0.0.0:9009->9009/tcp   ch-server
+➜  Resources
+```
+
+进入容器校验一下
+
+```shell
+➜  Resources docker exec -it ch-server /bin/bash
+root@2864fdf80b8f:/# clickhouse-client
+ClickHouse client version 21.4.4.30 (official build).
+Connecting to localhost:9000 as user default.
+Connected to ClickHouse server version 21.4.4 revision 54447.
+
+2864fdf80b8f :) show databases;
+
+SHOW DATABASES
+
+Query id: dc6cd7d7-c423-4ffd-90fc-46ff0219fa36
+
+┌─name────┐
+│ default │
+│ system  │
+└─────────┘
+
+2 rows in set. Elapsed: 0.003 sec.
+
+2864fdf80b8f :)
+```
+
+
+
+
+
+### 60.4.Mysql
+
+> 查看mysql的版本信息
+
+```shell
+➜  ~ brew  info mysql 
+mysql: stable 8.0.23 (bottled)
+Open source relational database management system
+https://dev.mysql.com/doc/refman/8.0/en/
+Conflicts with:
+  mariadb (because mysql, mariadb, and percona install the same binaries)
+  percona-server (because mysql, ma
+  
+安装5.7版本mysql
+➜  ~ brew install mysql@5.7
+
+```
+
+上面的安装失败了采用dmg的方式安装
+
+```shell
+2021-04-24T11:48:20.760596Z 1 [Note] A temporary password is generated for root@localhost: !103t(S-u6%=
+
+If you lose this password, please consult the section How to Reset the Root Password in the MySQL reference manual.
+```
+
+查看安装版本
+
+```shell
+➜  bin mysql -V
+mysql  Ver 14.14 Distrib 5.7.29, for macos10.14 (x86_64) using  EditLine wrapper
+➜  bin
+```
+
+启动mysql
+
+![image-20210424201258050](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210424201258050.png)
+
+
+
+修改密码
+
+```java
+mysql> alter user 'root'@'localhost' identified by 'root';
+mysql> update mysql.user set authentication_string=PASSWORD('123456') where user='root';
+
+
+```
+
+
+
+
+
 ## Reference
 
 - [Linux中查询当前用户的命令总结](https://blog.csdn.net/csdn1198402320/article/details/84335639)
