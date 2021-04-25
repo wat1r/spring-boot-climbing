@@ -686,6 +686,28 @@ Query id: dc6cd7d7-c423-4ffd-90fc-46ff0219fa36
 
 
 
+一些测试命令
+
+```shell
+CREATE TABLE arrays_test (s String, arr Array(UInt8)) ENGINE = Memory
+
+INSERT INTO arrays_test VALUES ('Hello', [1,2]), ('World', [3,4,5]), ('Goodbye', [])
+
+SELECT * FROM arrays_test
+
+select s , arr from arrays_test ARRAY join arr
+
+#制定别名
+SELECT s, arr, a FROM arrays_test ARRAY JOIN arr AS a
+
+SELECT s, arr, a, num, mapped FROM arrays_test ARRAY JOIN arr AS a, arrayEnumerate(arr) AS num, arrayMap(x -> x + 1, arr) AS mapped
+ 
+
+
+```
+
+
+
 ### 60.4.Mysql
 
 > 查看mysql的版本信息
