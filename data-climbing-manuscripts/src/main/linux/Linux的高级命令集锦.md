@@ -556,6 +556,15 @@ vim .zshrc
 ➜  ~ redis-cli
 ```
 
+- 常用命令
+
+```shell
+# 返回存在的keys
+keys * 
+```
+
+
+
 
 
 
