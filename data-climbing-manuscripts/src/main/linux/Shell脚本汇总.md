@@ -1,5 +1,18 @@
 # Shell脚本汇总
 
+## 0.windows开机启动程序`start.bat`
+
+```bash
+@echo off
+start "" "D:\Dev\JetBrains\IntelliJ IDEA 2019.3.4\bin\idea64.exe"
+start "" "D:\Dev\Microsoft VSCode\Code.exe"
+start "" "D:\Program Files (x86)\Notepad++\notepad++.exe"
+start "" "D:\Program Files (x86)\Typora\Typora.exe"
+start "" "D:\Program Files (x86)\NetSarang\Xshell.exe"
+start "" "D:\Program Files (x86)\FastStone Capture\FSCapture.exe"
+start "" "D:\Program Files (x86)\Navicat Premium 12\navicat.exe"
+```
+
 
 
 ## 1.重启当前dev环境的jar包

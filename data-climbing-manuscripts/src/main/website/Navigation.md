@@ -11,12 +11,6 @@
 
 
 
-
-
-
-
-
-
 | 项目                           | 分类          | 用途                 | 备注 |
 | ------------------------------ | ------------- | -------------------- | ---- |
 | 谷歌访问助手破解版.2.3.0       | Chrome插件    |                      |      |
@@ -60,4 +54,10 @@
 https://shimo.im/docs/WY3hd8Jt8KHgvVty/read
 
 
+
+
+
+Chrome浏览器插件
+
+![image-20210429101301923](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\website\Navigation.assets\image-20210429101301923.png)
 

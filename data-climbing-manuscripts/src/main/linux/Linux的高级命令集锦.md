@@ -478,6 +478,7 @@ https://blog.csdn.net/feit2417/article/details/82935801
 
 - 输出Maven项目的目录结构:`tree >> D:/tree.txt`
 - 输出maven依赖结构：`mvn dependency:tree >D:/aa.txt `
+- 跳过测试构建:`mvn clean install -DskipTests`
 
 
 
