@@ -771,6 +771,98 @@ mysql> update mysql.user set authentication_string=PASSWORD('123456') where user
 
 
 
+### 60.5.brew
+
+
+
+改成中科大的源：
+
+```shell
+# 进入 brew 的仓库根目录
+cd "$(brew --repo)"
+
+# 修改为中科大的源
+git remote set-url origin https://mirrors.ustc.edu.cn/brew.git
+```
+
+同理，修改 homebrew-cask、homebrew-core、homebrew-services 的远程仓库地址
+
+```shell
+cd "$(brew --repo)/Library/Taps/homebrew/homebrew-cask"
+git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-cask.git
+
+cd "$(brew --repo)/Library/Taps/homebrew/homebrew-core"
+git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-core.git
+```
+
+修改完仓库地址后，更新一下，加上 `-v` 参数可以看到当前跑的进度：
+
+```shell
+brew update -v
+```
+
+http://www.manongjc.com/detail/15-jxncezljoldhtop.html
+
+
+
+
+
+
+
+### 60.6.Kafka
+
+启动
+启动zookeeper
+kafka是基于zookeeper的，启动kafka之前，需要先启动zookeeper
+
+ ```shell
+/usr/local/Cellar/kafka/3.7.0/bin/zookeeper-server-start /usr/local/etc/kafka/zookeeper.properties &
+
+
+/usr/local/etc/zookeeper
+这个目录下
+/usr/local/Cellar/zookeeper/3.7.0/bin
+启动/停止
+./zkServer start
+./zkServer stop
+ps aux | grep zookeeper 查看进程
+或
+➜  bin jps
+17381 Jps
+357
+17305 QuorumPeerMain
+
+
+
+
+ ```
+
+https://blog.csdn.net/weixin_33207551/article/details/86521905
+
+
+
+安装kafka
+
+```shell
+brew install kafka
+/usr/local/Cellar/kafka/2.8.0/bin
+
+./kafka-server-start /usr/local/etc/kafka/server.properties &
+
+检测是否启动成功
+ps aux | grep kakfka
+```
+
+
+
+https://www.cnblogs.com/mysticbinary/p/13848497.html
+
+
+
+
+
+
+
 ## Reference
 
 - [Linux中查询当前用户的命令总结](https://blog.csdn.net/csdn1198402320/article/details/84335639)
