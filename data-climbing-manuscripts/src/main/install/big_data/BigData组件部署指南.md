@@ -351,7 +351,72 @@ https://www.cnblogs.com/mysticbinary/p/13848497.html
 
 
 
+### 60.7.Flume
 
+vi ~/.bash_profile
+
+```properties
+export FLUME_HOME=/usr/local/Cellar/flume/1.9.0_1/libexec
+export FLUME_CONF_DIR=$FLUME_HOME/conf
+export PATH=$FLUME_HOME/bin:$PATH
+```
+
+source ~/.bash_profile
+
+
+
+配置env
+
+```properties
+cp flume-env.sh.template flume-env.sh
+//
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_201.jdk/Contents/Home
+export JAVA_OPTS="-Xms100m -Xmx2000m -Dcom.sun.management.jmxremote"
+```
+
+
+
+查看版本
+
+```shell
+cd $FLUME_HOME/conf
+flume-ng version
+
+➜  libexec flume-ng  version
+Flume 1.9.0
+Source code repository: https://git-wip-us.apache.org/repos/asf/flume.git
+Revision: d4fcab4f501d41597bc616921329a4339f73585e
+Compiled by fszabo on Mon Dec 17 20:45:25 CET 2018
+From source with checksum 35db629a3bda49d23e9b3690c80737f9
+
+```
+
+- 创建 netcat.conf文件
+
+两个窗口测试
+
+```shell
+sudo flume-ng agent -c . -f netcat.conf -n a1 -Dflume.root.logger=INFO,console
+
+# telnet后输入一些英文(不要输入中文)回车
+telnet  localhost 44444
+```
+
+
+
+https://blog.csdn.net/vbirdbest/article/details/104479258
+
+
+
+
+
+
+
+整合flume + kafka
+
+
+
+https://blog.csdn.net/jackhell2/article/details/79152394
 
 
 
