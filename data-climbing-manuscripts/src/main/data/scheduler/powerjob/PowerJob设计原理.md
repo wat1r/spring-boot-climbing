@@ -48,6 +48,34 @@ select * from job_info where app_name ="XXX" and  next_trigger_time < now()+15s
 
 
 
+### Fragment
+
+```java
+powerjob-worker : ProcessorRunnable
+    - run() --> innerRun() : 
+		构造上下文,上报执行信息,广播执行,最终任务特殊处理(BROADCAST/MAP_REDUCE)，提交执行
+TaskTracker: initProcessor
+	分配Processor(EMBEDDED_JAVA/PYTHON/SHELL) ：
+selectTaskTracker：
+     - 两种策略：HEALTH_FIRST / RANDOM
+ProcessorTracker: destory():
+	- 移除container，关闭执行的线程池，gc, 关闭定时线程池
+	- WorkerActor: 监听  onReceiveServerDeployContainerRequest 
+	- 
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
