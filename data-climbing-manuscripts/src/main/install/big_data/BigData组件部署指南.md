@@ -414,6 +414,32 @@ https://blog.csdn.net/vbirdbest/article/details/104479258
 
 整合flume + kafka
 
+```shell
+#启动Zookeeper
+/usr/local/Cellar/zookeeper/3.7.0/bin
+#启动/停止
+./zkServer start
+显示 QuorumPeerMain启动
+
+
+#启动kafka
+./kafka-server-start /usr/local/etc/kafka/server.properties &
+# 显示2571 Kafka 启动
+
+# 创建test的topic并且查看list
+kafka-topics  --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
+
+kafka-topics --list --zookeeper localhost:2181
+
+# 启动flume
+flume-ng agent --conf conf --conf-file conf/flume-kafka.conf --name agent1 -Dflume.root.logger=INFO,console
+
+
+kafka-console-consumer --zookeeper localhost:2181 --topic test
+
+kafka-console-consumer --bootstrap-server localhost:9092 --topic test --from-beginning
+```
+
 
 
 https://blog.csdn.net/jackhell2/article/details/79152394
