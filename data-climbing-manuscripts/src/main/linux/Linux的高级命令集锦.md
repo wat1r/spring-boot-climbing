@@ -301,7 +301,19 @@ find -type f -size +100M  -print0 | xargs -0 du -h | sort -nr
  find / -type f -size +1024M  -print0 | xargs -0 du -h | sort -nr
 ```
 
+- 查找当前文件夹下文件大小：
 
+  ```shell
+  $ du -sh *
+  332K    $Recycle.Bin
+  4.0K    AMTAG.BIN
+  4.0K    Config.Msi
+  0       Documents and Settings
+  1.7G    Drivers
+  
+  ```
+
+  
 
 
 
