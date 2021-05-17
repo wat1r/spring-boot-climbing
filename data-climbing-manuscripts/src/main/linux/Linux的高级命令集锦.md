@@ -482,6 +482,24 @@ find / -name art  2>&1 | grep -v "Permission denied"
 
 
 
+- 查找linux下的java进程：
+
+```shell
+ps -ef | grep java
+cd /proc/173957
+ll cwd
+[ 173957]$ ll cwd
+lrwxrwxrwx 1 hadoop hadoop 0 May 14 14:06 cwd -> /app/hadoop/jerry/powerjob/server
+```
+
+
+
+https://blog.csdn.net/glw0223/article/details/88823513
+
+
+
+
+
 
 
 https://blog.csdn.net/feit2417/article/details/82935801
