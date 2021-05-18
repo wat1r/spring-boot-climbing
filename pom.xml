@@ -20,6 +20,8 @@
         <module>spring-boot-apollo</module>
         <module>spring-boot-redis</module>
         <module>spring-boot-websocket</module>
+        <module>spring-boot-netty-server</module>
+        <module>spring-boot-netty-client</module>
     </modules>
 
     <packaging>pom</packaging>
