@@ -2,6 +2,12 @@
 
 ## 0.windows开机启动程序`start.bat`
 
+```java
+win10开机启动文件夹路径是什么：
+1、路径：【C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp】；
+2、快捷命令：按下【win+R】打开运行输入：【shell:Common Startup】；
+```
+
 ```bash
 @echo off
 start "" "D:\Dev\JetBrains\IntelliJ IDEA 2019.3.4\bin\idea64.exe"
@@ -13,7 +19,11 @@ start "" "D:\Program Files (x86)\FastStone Capture\FSCapture.exe"
 start "" "D:\Program Files (x86)\Navicat Premium 12\navicat.exe"
 ```
 
+![image-20210602082432467](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\linux\Shell脚本汇总.assets\image-20210602082432467.png)
 
+![image-20210602082849031](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\linux\Shell脚本汇总.assets\image-20210602082849031.png)
+
+![image-20210602083630802](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\linux\Shell脚本汇总.assets\image-20210602083630802.png)
 
 ## 1.重启当前dev环境的jar包
 
