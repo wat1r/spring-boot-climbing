@@ -106,6 +106,9 @@ git stash pop
 # git提交到本地仓库，想要执行撤回操作
 git reset --soft HEAD~1
 
+# git提交代码 添加评论
+git add . && git commit -m "add comments" && git push
+
 ```
 
 
