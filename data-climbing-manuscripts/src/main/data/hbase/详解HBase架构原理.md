@@ -2,9 +2,37 @@
 
 ## 基础
 
+### 数据模型
+
+![image-20210708202859199](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210708202859199.png)
 
 
 
+![image-20210708205922121](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210708205922121.png)
+
+
+
+- `Name Space`
+  命名空间，类似于关系型数据库的 `DatabBase` 概念，每个命名空间下有多个表。 `HBase`
+  有两个自带的命名空间，分别是 `hbase` 和 `default`， `hbase` 中存放的是 `HBase` 内置的表，
+  `default` 表是用户默认使用的命名空间。
+- `Region`
+  类似于关系型数据库的表概念。不同的是， `HBase` 定义表时只需要声明列族即可，不需
+  要声明具体的列。这意味着， 往 `HBase` 写入数据时，字段可以动态、 按需指定。因此，和关
+  系型数据库相比， `HBase` 能够轻松应对字段变更的场景。
+- `Row`
+  `HBase` 表中的每行数据都由一个 `RowKey` 和多个 `Column`（列）组成，数据是按照 `RowKey`
+  的字典顺序存储的，并且查询数据时只能根据 `RowKey` 进行检索，所以 `RowKey` 的设计十分重
+  要。
+- `Column`
+  `HBase` 中的每个列都由 `Column Family`(列族)和 `Column Qualifier`（列限定符） 进行限
+  定，例如 `info： name`， `info： age`。建表时，只需指明列族，而列限定符无需预先定义。
+- `Time` `Stamp`
+  用于标识数据的不同版本（`version`）， 每条数据写入时， 如果不指定时间戳， 系统会
+  自动为其加上该字段，其值为写入 `HBase` 的时间。  
+- `Cell`
+  由{`rowkey`, `column Family`： `column Qualifier`, `time Stamp`} 唯一确定的单元。 `cell` 中的数
+  据是没有类型的，全部是字节码形式存贮。  
 
 
 
@@ -16,15 +44,66 @@
 
 
 
+- `Client` 
+   - `HBase` 有两张特殊表：
 
+     .`META`.：记录了用户所有表拆分出来的的 `Region` 映射信息，.`META`.可以有多个 `Regoin`
 
+     -`ROOT`-：记录了.`META`.表的 `Region` 信息，-`ROOT`-只有一个 `Region`，无论如何不会分裂
 
+  - `Client` 访问用户数据前需要首先访问 `ZooKeeper`，找到-`ROOT`-表的 `Region` 所在的位置，然 后访问-`ROOT`-表，接着访问.`META`.表，最后才能找到用户数据的位置去访问，中间需要多次网络操作，不过 `client` 端会做 `cache` 缓存。
 
+- `ZooKeeper` 
+   - `ZooKeeper` 为 `HBase` 提供 `Failover` 机制，选举 `Master`，避免单点 `Master` 单点故障问题
 
+   - 存储所有 `Region` 的寻址入口：-`ROOT`-表在哪台服务器上。-`ROOT`-这张表的位置信息
 
+   - 实时监控 `RegionServer` 的状态，将 `RegionServer` 的上线和下线信息实时通知给 `Master`
 
+   - 存储 `HBase` 的 `Schema`，包括有哪些 `Table`，每个 `Table` 有哪些 `Column` `Family`
 
+- `Master` 
 
+  - 为 `RegionServer` 分配 `Region`
+
+  - 负责 `RegionServer` 的负载均衡
+
+  - 发现失效的 `RegionServer` 并重新分配其上的 `Region`
+
+  - `HDFS` 上的垃圾文件（`HBase`）回收
+
+  - 处理 `Schema` 更新请求（表的创建，删除，修改，列簇的增加等等）
+
+- `RegionServer` 
+  - `RegionServer` 维护 `Master` 分配给它的 `Region`，处理对这些 `Region` 的 `IO` 请求
+
+  - `RegionServer` 负责 `Split` 在运行过程中变得过大的 `Region`，负责 `Compact` 操作
+
+  可以看到，`client` 访问 `HBase` 上数据的过程并不需要 `master` 参与（寻址访问 `zookeeper` 和 `RegioneServer`，数据读写访问 `RegioneServer`），`Master` 仅仅维护者 `Table` 和 `Region` 的元数据信息，负载很低。
+
+  .`META`. 存的是所有的 `Region` 的位置信息，那么 `RegioneServer` 当中 `Region` 在进行分裂之后 的新产生的 `Region`，是由 `Master` 来决定发到哪个 `RegioneServer`，这就意味着，只有 `Master` 知道 `new` `Region` 的位置信息，所以，由 `Master` 来管理.`META`.这个表当中的数据的 `CRUD`
+
+  所以结合以上两点表明，在没有 `Region` 分裂的情况，`Master` 宕机一段时间是可以忍受的。
+
+- `HRegion`
+  `table`在行的方向上分隔为多个`Region`。`Region`是`HBase`中分布式存储和负载均衡的最小单元，即不同的`region`可以分别在不同的`Region` `Server`上，但同一个`Region`是不会拆分到多个`server`上。
+  `Region`按大小分隔，每个表一般是只有一个`region`。随着数据不断插入表，`region`不断增大，当`region`的某个列族达到一个阈值时就会分成两个新的`region`。
+  每个`region`由以下信息标识：< 表名,`startRowkey`,创建时间>
+  由目录表(-`ROOT`-和.`META`.)记录该`region`的`endRowkey`
+- `Store`
+  每一个`region`由一个或多个`store`组成，至少是一个`store`，`hbase`会把一起访问的数据放在一个`store`里面，即为每个 `ColumnFamily`建一个`store`，如果有几个`ColumnFamily`，也就有几个`Store`。一个`Store`由一个`memStore`和0或者 多个`StoreFile`组成。 `HBase`以`store`的大小来判断是否需要切分`region`
+- `MemStore`
+  `memStore` 是放在内存里的。保存修改的数据即`keyValues`。当`memStore`的大小达到一个阀值（默认`128MB`）时，`memStore`会被`flush`到文 件，即生成一个快照。目前`hbase` 会有一个线程来负责`memStore`的`flush`操作。
+
+- `StoreFile`
+  `memStore`内存中的数据写到文件后就是`StoreFile`，`StoreFile`底层是以`HFile`的格式保存。当`storefile`文件的数量增长到一定阈值后，系统会进行合并（`minor`、`major` `compaction`），在合并过程中会进行版本合并和删除工作（`majar`），形成更大的`storefile`。
+
+- `HFile`
+   `HBase`中`KeyValue`数据的存储格式，`HFile`是`Hadoop`的 二进制格式文件，实际上`StoreFile`就是对`Hfile`做了轻量级包装，即`StoreFile`底层就是`HFile`。
+
+- `HLog`
+  `HLog`(`WAL` `log`)：`WAL`意为`write` `ahead` `log`，用来做灾难恢复使用，`HLog`记录数据的所有变更，一旦`region` `server` 宕机，就可以从`log`中进行恢复。
+  `HLog`文件就是一个普通的`Hadoop` `Sequence` `File`， `Sequence` `File`的`value`是`key`时`HLogKey`对象，其中记录了写入数据的归属信息，除了`table`和`region`名字外，还同时包括`sequence` `number`和`timestamp`，`timestamp`是写入时间，`sequence` `number`的起始值为0，或者是最近一次存入文件系统中的`sequence` `number`。 `Sequence` `File`的`value`是`HBase`的`KeyValue`对象，即对应`HFile`中的`KeyValue`。
 
 ## 读写原理
 
@@ -33,4 +112,12 @@
 
 
 ## 命令行操作
+
+
+
+
+
+## Reference
+
+- [HBase（三）HBase架构与工作原理](https://www.cnblogs.com/frankdeng/p/9310278.html)
 
