@@ -12,6 +12,8 @@
 
 
 
+
+
 - `Name Space`
   命名空间，类似于关系型数据库的 `DatabBase` 概念，每个命名空间下有多个表。 `HBase`
   有两个自带的命名空间，分别是 `hbase` 和 `default`， `hbase` 中存放的是 `HBase` 内置的表，
@@ -33,6 +35,40 @@
 - `Cell`
   由{`rowkey`, `column Family`： `column Qualifier`, `time Stamp`} 唯一确定的单元。 `cell` 中的数
   据是没有类型的，全部是字节码形式存贮。  
+
+
+
+
+
+![image-20210712204405790](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210712204405790.png)
+
+
+
+
+
+**Data Block** 段–保存表中的数据，这部分可以被压缩
+
+　　**Meta Block** 段 (可选的)–保存用户自定义的 kv 对，可以被压缩。
+
+　　**File Info** 段–Hfile 的元信息，不被压缩，用户也可以在这一部分添加自己的元信息。
+
+　　**Data Block Index** 段–Data Block 的索引。每条索引的 key 是被索引的 block 的第一条记录的 key。
+
+　　**Meta Block Index** 段 (可选的)–Meta Block 的索引。
+
+　　**Trailer** 段–这一段是定长的。保存了每一段的偏移量，读取一个 HFile 时，会首先读取 Trailer， Trailer保存了每个段的起始位置(段的Magic Number用来做安全check)，然后，DataBlock Index 会被读取到内存中，这样，当检索某个 key 时，不需要扫描整个 HFile，而只需从内存中找 到key所在的block，通过一次磁盘io将整个block读取到内存中，再找到需要的key。DataBlock Index 采用 LRU 机制淘汰。
+
+　　HFile 的 Data Block，Meta Block 通常采用压缩方式存储，压缩之后可以大大减少网络 IO 和磁 盘 IO，随之而来的开销当然是需要花费 cpu 进行压缩和解压缩。
+
+目标 Hfile 的压缩支持两种方式：Gzip，LZO。
+
+　　Data Index 和 Meta Index 块记录了每个 Data 块和 Meta 块的起始点。
+
+　　Data Block 是 HBase I/O 的基本单元，为了提高效率，HRegionServer 中有基于 LRU 的 Block Cache 机制。每个 Data 块的大小可以在创建一个 Table 的时候通过参数指定，大号的 Block 有利于顺序 Scan，小号 Block 利于随机查询。 每个 Data 块除了开头的 Magic 以外就是一个 个 KeyValue 对拼接而成, Magic 内容就是一些随机数字，目的是防止数据损坏。
+
+
+
+
 
 
 
