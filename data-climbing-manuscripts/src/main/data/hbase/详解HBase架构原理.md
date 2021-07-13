@@ -68,9 +68,11 @@
 
 
 
+HFile 里面的每个 **KeyValue** 对就是一个简单的 byte 数组。但是这个 byte 数组里面包含了很多项，并且有固定的结构。下面是具体结构：
 
+![image-20210713093452866](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210713093452866.png)
 
-
+其中`Time Stamp` 和 `Key Type（Put/Delete）`
 
 
 
