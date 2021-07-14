@@ -71,6 +71,24 @@ HFile 里面的每个 **KeyValue** 对就是一个简单的 byte 数组。但是
 
 
 
+
+
+
+
+由于memstore每次刷写都会生成一个新的HFile，且同一个字段的不同版本（timestamp）和不同类型（Put/Delete）有可能会分布在不同的HFile中，因此查询时需要遍历所有的HFile。为了减少HFile的个数，以及清理掉过期和删除的数据，会进行StoreFileCompaction。
+
+- Compaction分为两种:
+  - MinorCompaction会将临近的若干个较小的HFile合并成一个较大的HFile，但不会清理过期和删除的数据。
+  - MajorCompaction会将一个Store下的所有的HFile合并成一个大HFile，并且会清理掉过期和删除的数据
+
+
+
+
+
+
+
+
+
 ## 架构
 
 ![image-20210707201939888](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210707201939888.png)
