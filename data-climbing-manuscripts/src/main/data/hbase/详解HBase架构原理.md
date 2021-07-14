@@ -15,56 +15,51 @@
 
 
 - `Name Space`
-  命名空间，类似于关系型数据库的 `DatabBase` 概念，每个命名空间下有多个表。 `HBase`
-  有两个自带的命名空间，分别是 `hbase` 和 `default`， `hbase` 中存放的是 `HBase` 内置的表，
-  `default` 表是用户默认使用的命名空间。
+  命名空间，类似于关系型数据库的 `DatabBase` 概念，每个命名空间下有多个表。 `HBase`有两个自带的命名空间，分别是 `hbase` 和 `default`， `hbase` 中存放的是 `HBase` 内置的表，`default` 表是用户默认使用的命名空间。
 - `Region`
-  类似于关系型数据库的表概念。不同的是， `HBase` 定义表时只需要声明列族即可，不需
-  要声明具体的列。这意味着， 往 `HBase` 写入数据时，字段可以动态、 按需指定。因此，和关
-  系型数据库相比， `HBase` 能够轻松应对字段变更的场景。
+  类似于关系型数据库的表概念。不同的是， `HBase` 定义表时只需要声明列族即可，不需要声明具体的列。这意味着， 往 `HBase` 写入数据时，字段可以动态、 按需指定。因此，和关系型数据库相比， `HBase` 能够轻松应对字段变更的场景。
 - `Row`
-  `HBase` 表中的每行数据都由一个 `RowKey` 和多个 `Column`（列）组成，数据是按照 `RowKey`
-  的字典顺序存储的，并且查询数据时只能根据 `RowKey` 进行检索，所以 `RowKey` 的设计十分重
-  要。
+  `HBase` 表中的每行数据都由一个 `RowKey` 和多个 `Column`（列）组成，数据是按照 `RowKey`的字典顺序存储的，并且查询数据时只能根据 `RowKey` 进行检索，所以 `RowKey` 的设计十分重要。
 - `Column`
-  `HBase` 中的每个列都由 `Column Family`(列族)和 `Column Qualifier`（列限定符） 进行限
-  定，例如 `info： name`， `info： age`。建表时，只需指明列族，而列限定符无需预先定义。
+  `HBase` 中的每个列都由 `Column Family`(列族)和 `Column Qualifier`（列限定符） 进行限定，例如 `info： name`， `info： age`。建表时，只需指明列族，而列限定符无需预先定义。
 - `Time` `Stamp`
-  用于标识数据的不同版本（`version`）， 每条数据写入时， 如果不指定时间戳， 系统会
-  自动为其加上该字段，其值为写入 `HBase` 的时间。  
+  用于标识数据的不同版本（`version`）， 每条数据写入时， 如果不指定时间戳， 系统会自动为其加上该字段，其值为写入 `HBase` 的时间。  
 - `Cell`
-  由{`rowkey`, `column Family`： `column Qualifier`, `time Stamp`} 唯一确定的单元。 `cell` 中的数
-  据是没有类型的，全部是字节码形式存贮。  
+  由{`rowkey`, `column Family`： `column Qualifier`, `time Stamp`} 唯一确定的单元。 `cell` 中的数据是没有类型的，全部是字节码形式存贮。  
 
 
 
 
+
+#### StoreFile 和 HFile 
+
+StoreFile 以 HFile的格式保存在HDFS上， HFile的格式：
 
 ![image-20210712204405790](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210712204405790.png)
 
+ `HFile` 文件是不定长的，长度固定的只有其中的两块：`Trailer` 和 `FileInfo`
 
+- `Trailer` 中有指针指向其他数据块的起始点。
 
+- `FileInfo` 中记录了文件的一些 `Meta` 信息，例如：`AVG_KEY_LEN`, `AVG_VALUE_LEN`, `LAST_KEY`, `COMPARATOR`, `MAX_SEQ_ID_KEY` 等。
 
+`HFile`分为6个部分：
 
-**Data Block** 段–保存表中的数据，这部分可以被压缩
+- **`Data Block`** 段–保存表中的数据，这部分可以被压缩
+  - **`Meta Block`** 段 (可选的)–保存用户自定义的 `kv` 对，可以被压缩。
 
-　　**Meta Block** 段 (可选的)–保存用户自定义的 kv 对，可以被压缩。
+  - **`File Info`** 段–`Hfile` 的元信息，不被压缩，用户也可以在这一部分添加自己的元信息。
+  - **`Data Block Index`** 段–`Data Block` 的索引。每条索引的 `key` 是被索引的 `block` 的第一条记录的 `key`。
+  - **`Meta Block Index`** 段 (可选的)–`Meta Block` 的索引。
+  - **`Trailer`** 段–这一段是定长的。保存了每一段的偏移量，读取一个 `HFile` 时，会首先读取 `Trailer`， `Trailer`保存了每个段的起始位置(段的`Magic` `Number`用来做安全`check`)，然后，`DataBlock` `Index` 会被读取到内存中，这样，当检索某个 `key` 时，不需要扫描整个 `HFile`，而只需从内存中找 到`key`所在的`block`，通过一次磁盘`io`将整个`block`读取到内存中，再找到需要的`key`。`DataBlock` `Index` 采用 `LRU` 机制淘汰。
 
-　　**File Info** 段–Hfile 的元信息，不被压缩，用户也可以在这一部分添加自己的元信息。
+　　`HFile` 的 `Data` `Block`，`Meta` `Block` 通常采用压缩方式存储，压缩之后可以大大减少网络 `IO` 和磁 盘 `IO`，随之而来的开销当然是需要花费 `cpu` 进行压缩和解压缩。
 
-　　**Data Block Index** 段–Data Block 的索引。每条索引的 key 是被索引的 block 的第一条记录的 key。
+目标 `Hfile` 的压缩支持两种方式：`Gzip`，`LZO`。
 
-　　**Meta Block Index** 段 (可选的)–Meta Block 的索引。
+　　`Data` `Index` 和 `Meta` `Index` 块记录了每个 `Data` 块和 `Meta` 块的起始点。
 
-　　**Trailer** 段–这一段是定长的。保存了每一段的偏移量，读取一个 HFile 时，会首先读取 Trailer， Trailer保存了每个段的起始位置(段的Magic Number用来做安全check)，然后，DataBlock Index 会被读取到内存中，这样，当检索某个 key 时，不需要扫描整个 HFile，而只需从内存中找 到key所在的block，通过一次磁盘io将整个block读取到内存中，再找到需要的key。DataBlock Index 采用 LRU 机制淘汰。
-
-　　HFile 的 Data Block，Meta Block 通常采用压缩方式存储，压缩之后可以大大减少网络 IO 和磁 盘 IO，随之而来的开销当然是需要花费 cpu 进行压缩和解压缩。
-
-目标 Hfile 的压缩支持两种方式：Gzip，LZO。
-
-　　Data Index 和 Meta Index 块记录了每个 Data 块和 Meta 块的起始点。
-
-　　Data Block 是 HBase I/O 的基本单元，为了提高效率，HRegionServer 中有基于 LRU 的 Block Cache 机制。每个 Data 块的大小可以在创建一个 Table 的时候通过参数指定，大号的 Block 有利于顺序 Scan，小号 Block 利于随机查询。 每个 Data 块除了开头的 Magic 以外就是一个 个 KeyValue 对拼接而成, Magic 内容就是一些随机数字，目的是防止数据损坏。
+　　`Data` `Block` 是 `HBase` `I`/`O` 的基本单元，为了提高效率，`HRegionServer` 中有基于 `LRU` 的 `Block` `Cache` 机制。每个 `Data` 块的大小可以在创建一个 `Table` 的时候通过参数指定，大号的 `Block` 有利于顺序 `Scan`，小号 `Block` 利于随机查询。 每个 `Data` 块除了开头的 `Magic` 以外就是一个 个 `KeyValue` 对拼接而成, `Magic` 内容就是一些随机数字，目的是防止数据损坏。
 
 
 
