@@ -27,10 +27,6 @@
 - `Cell`
   由{`rowkey`, `column Family`： `column Qualifier`, `time Stamp`} 唯一确定的单元。 `cell` 中的数据是没有类型的，全部是字节码形式存贮。  
 
-
-
-
-
 #### StoreFile 和 HFile 
 
 StoreFile 以 HFile的格式保存在HDFS上， HFile的格式：
@@ -61,49 +57,40 @@ StoreFile 以 HFile的格式保存在HDFS上， HFile的格式：
 
 　　`Data` `Block` 是 `HBase` `I`/`O` 的基本单元，为了提高效率，`HRegionServer` 中有基于 `LRU` 的 `Block` `Cache` 机制。每个 `Data` 块的大小可以在创建一个 `Table` 的时候通过参数指定，大号的 `Block` 有利于顺序 `Scan`，小号 `Block` 利于随机查询。 每个 `Data` 块除了开头的 `Magic` 以外就是一个 个 `KeyValue` 对拼接而成, `Magic` 内容就是一些随机数字，目的是防止数据损坏。
 
-
-
 HFile 里面的每个 **KeyValue** 对就是一个简单的 byte 数组。但是这个 byte 数组里面包含了很多项，并且有固定的结构。下面是具体结构：
 
 ![image-20210713093452866](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210713093452866.png)
 
 其中`Time Stamp` 和 `Key Type（Put/Delete）`
 
+#### Campaction
+
+- 由于`memstore`每次刷写都会生成一个新的`HFile`，且同一个字段的不同版本（`timestamp`）和不同类型（`Put`/`Delete`）有可能会分布在不同的`HFile`中，因此查询时需要遍历所有的`HFile`。为了减少`HFile`的个数，以及清理掉过期和删除的数据，会进行`StoreFileCompaction`。
+
+  - `Compaction`分为两种:
+
+    - `Minor Compaction`会将临近的若干个较小的`HFile`合并成一个较大的`HFile`，**但不会清理过期和删除的数据**。
+    - `Major Compaction`会将一个`Store`下的所有的`HFile`合并成一个大`HFile`，**并且会清理掉过期和删除的数据**。
 
 
-
-
-
-
-由于memstore每次刷写都会生成一个新的HFile，且同一个字段的不同版本（timestamp）和不同类型（Put/Delete）有可能会分布在不同的HFile中，因此查询时需要遍历所有的HFile。为了减少HFile的个数，以及清理掉过期和删除的数据，会进行StoreFileCompaction。
-
-- Compaction分为两种:
-  - MinorCompaction会将临近的若干个较小的HFile合并成一个较大的HFile，但不会清理过期和删除的数据。
-  - MajorCompaction会将一个Store下的所有的HFile合并成一个大HFile，并且会清理掉过期和删除的数据
-
-
-
-
-
-
-
-
+![image-20210715085959366](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210715085959366.png)
 
 ## 架构
 
 ![image-20210707201939888](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210707201939888.png)
 
-
+### 概念
 
 - `Client` 
-   - `HBase` 有两张特殊表：
-
-     .`META`.：记录了用户所有表拆分出来的的 `Region` 映射信息，.`META`.可以有多个 `Regoin`
-
-     -`ROOT`-：记录了.`META`.表的 `Region` 信息，-`ROOT`-只有一个 `Region`，无论如何不会分裂
-
-  - `Client` 访问用户数据前需要首先访问 `ZooKeeper`，找到-`ROOT`-表的 `Region` 所在的位置，然 后访问-`ROOT`-表，接着访问.`META`.表，最后才能找到用户数据的位置去访问，中间需要多次网络操作，不过 `client` 端会做 `cache` 缓存。
-
+   
+- `HBase` 有两张特殊表：
+   
+  .`META`.：记录了用户所有表拆分出来的的 `Region` 映射信息，.`META`.可以有多个 `Regoin`
+   
+  -`ROOT`-：记录了.`META`.表的 `Region` 信息，-`ROOT`-只有一个 `Region`，无论如何不会分裂
+  
+- `Client` 访问用户数据前需要首先访问 `ZooKeeper`，找到-`ROOT`-表的 `Region` 所在的位置，然 后访问-`ROOT`-表，接着访问.`META`.表，最后才能找到用户数据的位置去访问，中间需要多次网络操作，不过 `client` 端会做 `cache` 缓存。
+   
 - `ZooKeeper` 
    - `ZooKeeper` 为 `HBase` 提供 `Failover` 机制，选举 `Master`，避免单点 `Master` 单点故障问题
 
@@ -158,7 +145,17 @@ HFile 里面的每个 **KeyValue** 对就是一个简单的 byte 数组。但是
 
 ## 读写原理
 
+### 写流程
 
+![image-20210715095117946](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210715095117946.png)
+
+1. `Client` 先访问 `zookeeper`，获取 `hbase`:`meta` 表位于哪个 `Region` `Server`。
+2. 访问对应的 `Region` `Server`，获取 `hbase`:`meta` 表，根据读请求的 `namespace`:`table`/`rowkey`，查询出目标数据位于哪个 `Region` `Server` 中的哪个 `Region` 中。并将该 `table` 的 `region` 信息以及 `meta` 表的位置信息缓存在客户端的 `meta` `cache`，方便下次访问。
+3. 与目标 `Region` `Server` 进行通讯；
+4. 将数据顺序写入（追加）到 `WAL`；
+5. 将数据写入对应的 `MemStore`，数据会在 `MemStore` 进行排序；
+6. 向客户端发送 `ack`；
+7. 等达到 `MemStore` 的刷写时机后，将数据刷写到 `HFile`。
 
 
 
