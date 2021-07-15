@@ -72,8 +72,30 @@ HFile 里面的每个 **KeyValue** 对就是一个简单的 byte 数组。但是
     - `Minor Compaction`会将临近的若干个较小的`HFile`合并成一个较大的`HFile`，**但不会清理过期和删除的数据**。
     - `Major Compaction`会将一个`Store`下的所有的`HFile`合并成一个大`HFile`，**并且会清理掉过期和删除的数据**。
 
-
 ![image-20210715085959366](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210715085959366.png)
+
+#### WAL日志
+
+- **`wal(write ahead log) `**
+
+![image-20210715191622365](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210715191622365.png)
+
+1. `Table` 中的所有行都按照 `RowKsey` 的字典序排列。
+2. `Table` 在行的方向上分割为多个 `HRegion`。
+3. `HRegion` 按大小分割的(默认 10`G`)，每个表一开始只有一个 `HRegion`，随着数据不断插入 表，`HRegion` 不断增大，当增大到一个阀值的时候，`HRegion` 就会等分会两个新的 `HRegion`。 当表中的行不断增多，就会有越来越多的 `HRegion`。
+4. `HRegion` 是 `Hbase` 中分布式存储和负载均衡的最小单元。最小单元就表示不同的 `HRegion` 可以分布在不同的 `HRegionserver` 上。但一个 `HRegion` 是不会拆分到多个 `server` 上的。
+5. `HRegion` 虽然是负载均衡的最小单元，但并不是物理存储的最小单元。事实上，`HRegion` 由一个或者多个 `Store` 组成，每个 `Store` 保存一个 `Column` `Family`。每个 `Strore` 又由一个 `memStore` 和 0 至多个 `StoreFile` 组成
+
+- 为什么要一个`RegionServer` 对应于一个`HLog`。为什么不是一个`region`对应于一个`log` `file`?
+  引用`BigTable`中的一段话：
+  如果我们每一个“`tablet`”（对应于`HBase`的`region`）都提交一个日志文件，会需要并发写入大量的文件到`GFS`，这样，根据每个`GFS`
+  `server`所依赖的文件系统，写入不同的日志文件会造成大量的磁盘操作。
+  `HBase`依照这样的原则。在日志被回滚和安全删除之前，将会有大量的文件。如果改成一个`region`对应于一个文件，将会不好扩展，迟早会引发问题。
+
+- 延迟（异步）同步写入`WAL`
+  `WAL`在默认情况下时开启的，当然，我们也可以手动关闭。调用{`Mutation`.`setDurability`（`Durability`.`SKIP``WAL`）}方法来关闭，这样做的确可以使得数据操作快一点，但并不建议这样做，一旦服务器宕机，数据就会丢失。
+  延迟（异步）同步写入`WAL`。调用`setDurability`（`Durability`.`ASYNC``WAL`），这样通过设置时间间隔来延迟将操作写入`WAL`。
+  时间间隔：`HBase`间隔多久会将操作从内存写入到`WAL`，默认值为`1s`。 这种方法也可以相对应地提高性能。
 
 ## 架构
 
@@ -82,15 +104,15 @@ HFile 里面的每个 **KeyValue** 对就是一个简单的 byte 数组。但是
 ### 概念
 
 - `Client` 
-   
+  
 - `HBase` 有两张特殊表：
-   
+  
   .`META`.：记录了用户所有表拆分出来的的 `Region` 映射信息，.`META`.可以有多个 `Regoin`
-   
+  
   -`ROOT`-：记录了.`META`.表的 `Region` 信息，-`ROOT`-只有一个 `Region`，无论如何不会分裂
   
 - `Client` 访问用户数据前需要首先访问 `ZooKeeper`，找到-`ROOT`-表的 `Region` 所在的位置，然 后访问-`ROOT`-表，接着访问.`META`.表，最后才能找到用户数据的位置去访问，中间需要多次网络操作，不过 `client` 端会做 `cache` 缓存。
-   
+  
 - `ZooKeeper` 
    - `ZooKeeper` 为 `HBase` 提供 `Failover` 机制，选举 `Master`，避免单点 `Master` 单点故障问题
 
@@ -147,7 +169,7 @@ HFile 里面的每个 **KeyValue** 对就是一个简单的 byte 数组。但是
 
 ### 写流程
 
-![image-20210715095117946](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210715095117946.png)
+![image-20210715181404800](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210715181404800.png)
 
 1. `Client` 先访问 `zookeeper`，获取 `hbase`:`meta` 表位于哪个 `Region` `Server`。
 2. 访问对应的 `Region` `Server`，获取 `hbase`:`meta` 表，根据读请求的 `namespace`:`table`/`rowkey`，查询出目标数据位于哪个 `Region` `Server` 中的哪个 `Region` 中。并将该 `table` 的 `region` 信息以及 `meta` 表的位置信息缓存在客户端的 `meta` `cache`，方便下次访问。
@@ -159,7 +181,16 @@ HFile 里面的每个 **KeyValue** 对就是一个简单的 byte 数组。但是
 
 
 
-## 命令行操作
+### 读流程
+
+![image-20210715181341469](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\hbase\详解HBase架构原理.assets\image-20210715181341469.png)
+
+1. `Client` 先访问 `zookeeper`，获取 `hbase`:`meta` 表位于哪个 `Region` `Server`。
+2. 访问对应的 `Region` `Server`，获取 `hbase`:`meta` 表，根据读请求的 `namespace`:`table`/`rowkey`，查询出目标数据位于哪个 `Region` `Server` 中的哪个 `Region` 中。并将该 `table` 的 `region` 信息以及 `meta` 表的位置信息缓存在客户端的 `meta` `cache`，方便下次访问。
+3. 与目标 `Region` `Server` 进行通讯；
+4. 分别在 `Block` `Cache`（读缓存）， `MemStore` 和 `Store` `File`（`HFile`）中查询目标数据，并将查到的所有数据进行合并。此处所有数据是指同一条数据的不同版本（`time` `stamp`）或者不同的类型（`Put`/`Delete`）。
+5. 将从文件中查询到的数据块（`Block`， `HFile` 数据存储单元，默认大小为 64`KB`）缓存到`Block` `Cache`。
+6. 将合并后的最终结果返回给客户端
 
 
 

@@ -482,7 +482,7 @@ find / -name art  2>&1 | grep -v "Permission denied"
 
 
 
-- 查找linux下的java进程：
+#### 查找linux下的java进程：
 
 ```shell
 ps -ef | grep java
@@ -492,17 +492,24 @@ ll cwd
 lrwxrwxrwx 1 hadoop hadoop 0 May 14 14:06 cwd -> /app/hadoop/jerry/powerjob/server
 ```
 
+```powershell
+/proc/pid/cmdline 包含了用于开始进程的命令 ； -> cat cmdline 可以找到程序启动入口
+/proc/pid/cwd包含了当前进程工作目录的一个链接 ；
+/proc/pid/environ 包含了可用进程环境变量的列表 ；
+/proc/pid/exe 包含了正在进程中运行的程序链接；
+/proc/pid/fd/ 这个目录包含了进程打开的每一个文件的链接；
+/proc/pid/mem 包含了进程在内存中的内容；
+/proc/pid/stat包含了进程的状态信息；
+/proc/pid/statm 包含了进程的内存使用信息。
+```
 
 
-https://blog.csdn.net/glw0223/article/details/88823513
 
 
 
 
 
 
-
-https://blog.csdn.net/feit2417/article/details/82935801
 
 ## 20.Maven命令
 
@@ -573,3 +580,7 @@ $ ps axu | grep java
 - https://www.cnblogs.com/tianyajuanke/archive/2012/04/25/2470002.html
 
 - [linux下查找java进程所在的目录](https://blog.csdn.net/glw0223/article/details/88823513)
+
+- https://blog.csdn.net/glw0223/article/details/88823513
+
+- https://blog.csdn.net/feit2417/article/details/82935801
