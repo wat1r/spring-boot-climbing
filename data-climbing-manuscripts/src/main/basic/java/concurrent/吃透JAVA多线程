@@ -1,0 +1,122 @@
+# 吃透JAVA多线程
+
+
+
+## 吃透JAVA多线程(一)：
+
+
+
+
+
+
+
+
+
+## 吃透JAVA多线程(二)：LockSupport
+
+### 简介
+
+LockSupport类的核心方法其实就两个：`park()`和`unpark()`，其中`park()`方法用来阻塞当前调用线程，`unpark()`方法用于唤醒指定线程。
+这其实和Object类的wait()和signal()方法有些类似，但是LockSupport的这两种方法从语意上讲比Object类的方法更清晰，而且可以针对指定线程进行阻塞和唤醒。
+
+> LockSupport类使用了一种名为Permit（许可）的概念来做到阻塞和唤醒线程的功能，可以把许可看成是一种(0,1)信号量（Semaphore），但与 Semaphore 不同的是，许可的累加上限是1。
+> 初始时，permit为0，当调用`unpark()`方法时，线程的permit加1，当调用`park()`方法时，如果permit为0，则调用线程进入阻塞状态。
+
+### API
+
+```java
+public static void park(Object blocker); // 暂停当前线程
+public static void parkNanos(Object blocker, long nanos); // 暂停当前线程，不过有超时时间的限制
+public static void parkUntil(Object blocker, long deadline); // 暂停当前线程，直到某个时间
+public static void park(); // 无期限暂停当前线程
+public static void parkNanos(long nanos); // 暂停当前线程，不过有超时时间的限制
+public static void parkUntil(long deadline); // 暂停当前线程，直到某个时间
+public static void unpark(Thread thread); // 恢复当前线程
+public static Object getBlocker(Thread t);
+```
+
+### 对比wait()和notify/notifyAll()
+
+1. `LockSupport`不需要在同步代码块里 ，线程间不需要维护一个共享的同步对象，实现了线程间的解耦,主要针对`Thread`，`Object.wait()`是以对象为纬度,阻塞当前的线程和唤醒单个(随机)或者所有线程。
+2. `unpark`函数可以先于`park`调用，不需要担心线程间的执行的先后顺序。
+3. 多次调用`unpark`方法和调用一次`unpark`方法效果一样，比如线程`A`连续调用两次`LockSupport.unpark(B)`方法唤醒线程`B`，然后线程B调用两次`LockSupport.park()`方法， 线程`B`依旧会被阻塞。因为两次`unpark`调用效果跟一次调用一样，只能让线程B的第一次调用`park`方法不被阻塞，第二次调用依旧会阻塞
+
+### 总结：
+
+`park`: 阻塞线程,线程在一下三种情况下会被阻塞:
+
+1. 调用`unpark`方法,释放该线程的许可
+2. 该线程被中断
+3. 到期时间
+
+### Demo
+
+- #### test1
+
+```java
+private static void lockSupportOne() {
+    Thread t1 = new Thread(() -> {
+        LockSupport.park();
+        System.out.println("lock support running");
+    });
+    t1.start();
+    LockSupport.unpark(t1);
+    System.out.println("lock support end");
+}
+```
+
+- #### test2
+
+```java
+   private static Thread mainThread;
+
+    public static void main(String[] args) throws InterruptedException {
+        ThreadA ta = new ThreadA("ta");
+        // 获取主线程
+        mainThread = Thread.currentThread();
+        System.out.println(Thread.currentThread().getName() + " start ta");
+        ta.start();
+        System.out.println(Thread.currentThread().getName() + " block");
+        // 主线程阻塞
+        LockSupport.park(mainThread);
+        System.out.println(Thread.currentThread().getName() + " continue");
+    }
+
+    static class ThreadA extends Thread {
+        public ThreadA(String name) {
+            super(name);
+        }
+
+        public void run() {
+            System.out.println(Thread.currentThread().getName() + " wake up others");
+            // 唤醒“主线程”
+            LockSupport.unpark(mainThread);
+        }
+    }
+
+---
+//打印结果
+/**
+main start ta
+main block
+ta wake up others
+main continue
+**/
+```
+
+### 源码
+
+
+
+
+
+
+
+## Reference
+
+- [jstack 打印 Java 进程堆栈信息](http://einverne.github.io/post/2017/09/jstack-usage.html)
+
+- [LockSupport解析与使用](https://blog.csdn.net/secsf/article/details/78560013)
+
+
+
