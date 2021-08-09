@@ -165,6 +165,9 @@ Client   Proposer      Acceptor     Learner
 > **P1：一个 acceptor 必须接受（accept）第一次收到的提案。**
 
 注意 P1 是不完备的。如果恰好一半 acceptor 接受的提案具有 value A，另一半接受的提案具有 value B，那么就无法形成多数派（majority），无法批准任何一个 value。
+
+![image-20210809194313589](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210809194313589.png)
+
 约束2并不要求只批准一个提案，暗示可能存在多个提案。只要提案的 value 是一样的，批准多个提案不违背约束2。于是可以产生约束 P2：
 
 > **P2：一旦一个具有 value v 的提案被批准（chosen），那么之后批准（chosen）的提案必须具有 value v。**
@@ -175,6 +178,19 @@ Client   Proposer      Acceptor     Learner
 
 
 > **P2a：一旦一个具有 value v 的提案被批准（chosen），那么之后任何 acceptor 再次接受（accept）的提案必须具有 value v。**
+
+![image-20210809194825548](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210809194825548.png)
+
+如上图所示：
+
+假设总的有5个Acceptor。Proposer2提出[M1,V1]的提案，Acceptor2-5（半数以上）均接受了该提案，于是对于Acceptor2-5和Proposer2来讲，它们都认为V1被选定。
+
+Acceptor1刚刚从宕机状态恢复过来（之前Acceptor1没有收到过任何提案），此时Proposer1向Acceptor1发送了[M2,V2]的提案（V2≠V1且M2>M1），对于Acceptor1来讲，这是它收到的第一个提案。根据P1（**P1：一个 acceptor 必须接受（accept）第一次收到的提案。**）,Acceptor1必须接受该提案！同时Acceptor1认为V2被选定。这就出现了两个问题：
+
+1. Acceptor1认为V2被选定，Acceptor2~5和Proposer2认为V1被选定。出现了不一致。
+2. V1被选定了，但是编号更高的被Acceptor1接受的提案[M2,V2]的value为V2，且V2≠V1。这就跟P2a（**P2a：一旦一个具有 value v 的提案被批准（chosen），那么之后任何 acceptor 再次接受（accept）的提案必须具有 value v**）矛盾了。
+
+
 
 
 由于通信是异步的，P2a 和 P1 会发生冲突。如果一个 value 被批准后，一个 proposer 和一个 acceptor 从休眠中苏醒，前者提出一个具有新的 value 的提案。根据 P1，后者应当接受，根据 P2a，则不应当接受，这种场景下 P2a 和 P1 有矛盾。于是需要换个思路，转而对 proposer 的行为进行约束：
@@ -188,38 +204,72 @@ Client   Proposer      Acceptor     Learner
 
 > **P2c：如果一个编号为 n 的提案具有 value v，该提案被提出（issued），那么存在一个多数派，要么他们中所有人都没有接受（accept）编号小于 n 的任何提案，要么他们已经接受（accept）的所有编号小于 n 的提案中编号最大的那个提案具有 value v。**
 
+可以用**数学归纳法**证明 **P2c** 蕴涵 **P2b**：
 
+假设具有value v的提案m获得批准，当n=m+1时，采用反证法，假如提案n不具有value v，而是具有value w，根据**P2c**，则存在一个多数派S1，要么他们中没有人接受过编号小于n的任何提案，要么他们已经接受的所有编号小于n的提案中编号最大的那个提案是value w。由于S1和通过提案m时的多数派C之间至少有一个公共的acceptor，所以以上两个条件都不成立，导出矛盾从而推翻假设，证明了提案n必须具有value v；
 
+若（m+1）..（N-1）所有提案都具有value v，采用反证法，假如新提案N不具有value v，而是具有value w',根据P2c，则存在一个多数派S2，要么他们没有接受过m..（N-1）中的任何提案，要么他们已经接受的所有编号小于N的提案中编号最大的那个提案是value w'。由于S2和通过m的多数派C之间至少有一个公共的acceptor，所以至少有一个acceptor曾经接受了m，从而也可以推出S2中已接受的所有编号小于n的提案中编号最大的那个提案的编号范围在m..（N-1）之间，而根据初始假设，m..（N-1）之间的所有提案都具有value v，所以S2中已接受的所有编号小于n的提案中编号最大的那个提案肯定具有value v，导出矛盾从而推翻新提案N不具有value v的假设。根据数学归纳法，我们证明了若满足**P2c**，则**P2b**一定满足。
 
+**P2c**是可以通过消息传递模型实现的。另外，引入了**P2c**后，也解决了前文提到的**P1**不完备的问题。
 
+#### 实现
 
+Paxos算法分为**两个阶段**。具体如下：
 
+- **阶段一：**
 
+  (a) Proposer选择一个**提案编号N**，然后向**半数以上**的Acceptor发送编号为N的**Prepare请求**。
 
+  (b) 如果一个Acceptor收到一个编号为N的Prepare请求，且N**大于**该Acceptor已经**响应过的**所有**Prepare请求**的编号，那么它就会将它已经**接受过的编号最大的提案（如果有的话）**作为响应反馈给Proposer，同时该Acceptor承诺**不再接受**任何**编号小于N的提案**。
 
-### 流程
+- **阶段二：**
+
+  (a) 如果Proposer收到**半数以上**Acceptor对其发出的编号为N的Prepare请求的**响应**，那么它就会发送一个针对**[N,V]提案**的**Accept请求**给**半数以上**的Acceptor。注意：V就是收到的**响应**中**编号最大的提案的value**，如果响应中**不包含任何提案**，那么V就由Proposer**自己决定**。
+
+  (b) 如果Acceptor收到一个针对编号为N的提案的Accept请求，只要该Acceptor**没有**对编号**大于N**的**Prepare请求**做出过**响应**，它就**接受该提案**
+
+#### 不足
+
+- 难实现，2轮RPC导致效率低，活锁问题
+
+### Multi Paxos
 
 ```java
 Client   Proposer      Acceptor     Learner
-   |         |          |  |  |       |  |
+   |         |          |  |  |       |  |  ---First Request---
    X-------->|          |  |  |       |  |  Request
-   |         X--------->|->|->|       |  |  Prepare(1)
-   |         |<---------X--X--X       |  |  Promise(1,{Va,Vb,Vc})
-   |         X--------->|->|->|       |  |  Accept!(1,V)
-   |         |<---------X--X--X------>|->|  Accepted(1,V)
+   |         X--------->|->|->|       |  |  Prepare(N)
+   |         |<---------X--X--X       |  |  Promise(N,I,{Va,Vb,Vc})
+   |         X--------->|->|->|       |  |  Accept!(N,I,Vm)
+   |         |<---------X--X--X------>|->|  Accepted(N,I,Vm)
    |<---------------------------------X--X  Response
    |         |          |  |  |       |  |
+ 
+  
+Client   Proposer      Acceptor     Learner
+   |         |          |  |  |       |  |  ---Following Requests---
+   X-------->|          |  |  |       |  |  Request
+   |         X--------->|->|->|       |  |  Accept!(N,I+1,W)
+   |         |<---------X--X--X------>|->|  Accepted(N,I+1,W)
+   |<---------------------------------X--X  Response
+   |         |          |  |  |       |  |
+  
 ```
 
+**Basic Paxos**只能对一个值形成决议，决议的形成至少需要2次RPC，在高并发情况下可能需要更多的RPC，极端情况下甚至可能形成活锁。如果想连续确定多个值，**Basic Paxos**很难完成。因此**Basic Paxos**几乎只是用来做理论研究，并不直接应用在实际工程中。
+
+实际应用中几乎都需要连续确定多个值，而且希望能有更高的效率。Multi-Paxos正是为解决此问题而提出。Multi-Paxos基于Basic Paxos做了两点改进：
+
+1. 针对每一个要确定的值，运行一次Paxos算法实例（Instance），形成决议。每一个Paxos实例使用唯一的Instance ID标识。
+2. 在所有Proposers中选举一个Leader，由Leader唯一地提交Proposal给Acceptors进行表决。这样没有Proposer竞争，解决了活锁问题。在系统中仅有一个Leader进行Value提交的情况下，Prepare阶段就可以跳过，从而将两阶段变为一阶段，提高效率。
+
+下图对比了**Basic Paxos和Multi Paxos**
+
+![image-20210809195856150](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210809195856150.png)
 
 
 
-
-
-
-
-
-
+![image-20210809200420214](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210809200420214.png)
 
 ### Reference
 
@@ -231,3 +281,4 @@ Client   Proposer      Acceptor     Learner
 - [一致性算法（Paxos、Raft、ZAB）](https://www.bilibili.com/video/BV1TW411M7Fx?from=search&seid=12869954421071795743)
 - [分布式系列文章——Paxos算法原理与推导](https://www.cnblogs.com/linbingdong/p/6253479.html)
 - [Wiki Pedia](https://chi.jinzhao.wiki/wiki/Paxos%E7%AE%97%E6%B3%95)
+
