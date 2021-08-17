@@ -127,3 +127,4 @@ git add . && git commit -m "add comments" && git push
 - [如何将本地未提交更改合并到另一个Git分支中](https://blog.csdn.net/u013986317/article/details/106967998/)
 - https://talktocomputer.site/blogs/84/
 - [git仓库服务器名称变更Could not read from remote repository](https://blog.csdn.net/qc530167365/article/details/89878547)
+- [Support for password authentication was removed](https://blog.csdn.net/weixin_41010198/article/details/119698015)
