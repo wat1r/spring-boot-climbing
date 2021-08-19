@@ -187,6 +187,16 @@ translog有如下的作用：
 
 ![image-20210819223226574](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210819223226574.png)
 
+### 3.性能优化方案
+
+- **filesystem cache**：ES的搜索引擎依赖底层的filesystem cache，如果给filesystem cache更多的内存，尽量让内存可以容纳所有的index segment file索引数据文件
+- **数据预热**：对于那些你觉得比较热的数据，即经常会有人访问的数据，最好做一个专门的缓存预热子系统，对于热数据，每隔一段时间，系统本身就提前访问一下，让数据进入filesystem cache里面去，这样下次访问的时候，性能会更好一些。
+- **冷热分离**：
+  - **冷数据索引**：查询频率低，基本无写入，一般为当天或最近2天以前的数据索引，这种数据可以存储在机械硬盘HDD中
+  - **热数据索引**：查询频率高，写入压力大，一般为当天的数据索引，这种数据可以存储在SSD中
+- **document的模型设计**：不要在搜索的时候去执行各种复杂的操作，尽量在document模型设计和数据写入的时候就将复杂操作处理掉
+- **分页性能优化**：翻页翻得越深，每个shard返回的数据越多，而且协调节点处理的时间越长，此时，要用scroll，scroll会一次性的生成所有数据的快照，然后每次翻页都是通过移动游标来完成
+
 ### Reference
 
 - [分布式搜索引擎Elasticsearch（一）](https://blog.csdn.net/u012373815/article/details/50460248/)
@@ -194,3 +204,4 @@ translog有如下的作用：
 - [深入详解Elasticsearch](https://blog.csdn.net/laoyang360/category_9266239.html)
 - [「干货」图解 Elasticsearch 写入流程](https://blog.51cto.com/u_7117633/2866130)
 - [倒排索引与ElasticSearch](https://www.cnblogs.com/kukri/p/9996104.html)
+
