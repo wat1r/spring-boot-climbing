@@ -56,7 +56,7 @@ ElasticSearch是一个接近实时的搜索平台。这意味着，从索引一�
 
 ![image-20210819100158711](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210819100158711.png)
 
-一个索引可以存储超出单个结点硬件限制的大量数据。比如，一个具有10亿文档的索引占据1TB的磁盘空间，而任一节点都没有这样大的磁盘空间；或者单个节点处理搜索请求，[响应太慢]()。为了解决这个问题，ElasticSearch提供了将索引划分成多份的能力，这些份就叫做分片。当你创建一个索引的时候，你可以指定你想要的分片的数量。每个分片本身也是一个功能完善并且独立的“索引”，这个“索引”可以被放置到集群中的任何节点上。
+一个索引可以存储超出单个结点硬件限制的大量数据。比如，一个具有10亿文档的索引占据1TB的磁盘空间，而任一节点都没有这样大的磁盘空间；或者单个节点处理搜索请求，响应太慢。为了解决这个问题，ElasticSearch提供了将索引划分成多份的能力，这些份就叫做分片。当创建一个索引的时候，可以指定想要的分片的数量。每个分片本身也是一个功能完善并且独立的“索引”，这个“索引”可以被放置到集群中的任何节点上。
 
 分片很重要，主要有两方面的原因：
 
@@ -74,6 +74,64 @@ ElasticSearch是一个接近实时的搜索平台。这意味着，从索引一�
 
 ### 2.读写数据
 
+#### 写入数据
+
+![image-20210819192950043](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210819192950043.png)
+
+1. 客户端选择一个 node 发送请求过去，这个 node 就是 coordinating node（协调节点）
+2. coordinating node 对 document 进行路由，将请求转发给对应的 node（有 primary shard）
+3. node 上的 主分片（primary shard）处理请求，然后将数据同步到 复制分片（replica node)
+4. node报告成功到协调节点，协调节点再报告给客户端
+
+#### 读取数据
+
+![image-20210819194037122](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210819194037122.png)
+
+可以通过 doc id 来查询，会根据 doc id 进行 hash，判断出来当时把 doc id 分配到了哪个 shard 上面去，从那个 shard 去查询。
+
+1. 客户端发送请求到任意一个 node，成为 coordinate node
+2. coordinate node 对 doc id 进行哈希路由，将请求转发到对应的 node，此时会使用 round-robin随机轮询算法，在 primary shard 以及其所有 replica 中随机选择一个，让读请求负载均衡
+3. 接收请求的 node 返回 document 给 coordinate node
+4. coordinate node 返回 document 给客户端
+
+#### 搜索数据
+
+##### MySQL中索引实现
+
+##### MyISAM的索引实现
+
+MyISAM表的索引和数据是分离的，索引保存在”表名.MYI”文件内，而数据保存在“表名.MYD”文件内。
+MyISAM的索引方式也叫做“非聚集”的，之所以这么称呼是为了与InnoDB的聚集索引区分。
+
+![image-20210819200857530](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210819200857530.png)
+
+##### InnoDB的索引实现
+
+Primary key 这种索引叫做聚集索引。因为InnoDB的数据文件本身要按主键聚集，所以InnoDB要求表必须有主键（MyISAM可以没有），如果没有显式指定，则MySQL系统会自动选择一个可以唯一标识数据记录的列作为主键，如果不存在这种列，则MySQL自动为InnoDB表生成一个隐含字段作为主键，这个字段长度为6个字节，类型为长整形。
+
+![image-20210819204023813](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210819204023813.png)
+
+这里以英文字符的ASCII码作为比较准则。聚集索引这种实现方式使得按主键的搜索十分高效，**但是辅助索引搜索需要检索两遍索引**：首先检索辅助索引获得主键，然后用主键到主索引中检索获得记录
+
+
+
+##### 倒排索引
+
+以「冰与火之歌」中的文本作为例子：
+
+![image-20210819203134329](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210819203134329.png)
+
+##### 流程
+
+1. 客户端发送请求到一个 coordinate node
+2. 协调节点将搜索请求转发到所有的 shard 对应的 primary shard 或 replica shard，都可以
+3. query phase：每个 shard 将自己的搜索结果（其实就是一些 doc id）返回给协调节点，由协调节点进行数据的合并、排序、分页等操作，产出最终结果
+4. fetch phase：接着由协调节点根据 doc id 去各个节点上拉取实际的 document 数据，最终返回给客户端
+
+#### 写入数据的底层逻辑
+
+
+
 
 
 
@@ -83,4 +141,7 @@ ElasticSearch是一个接近实时的搜索平台。这意味着，从索引一�
 ### Reference
 
 - [分布式搜索引擎Elasticsearch（一）](https://blog.csdn.net/u012373815/article/details/50460248/)
-- 
+- [分布式搜索引擎Elasticsearch的架构分析](https://zhuanlan.zhihu.com/p/334348919)
+- [深入详解Elasticsearch](https://blog.csdn.net/laoyang360/category_9266239.html)
+- [「干货」图解 Elasticsearch 写入流程](https://blog.51cto.com/u_7117633/2866130)
+- [倒排索引与ElasticSearch](https://www.cnblogs.com/kukri/p/9996104.html)
