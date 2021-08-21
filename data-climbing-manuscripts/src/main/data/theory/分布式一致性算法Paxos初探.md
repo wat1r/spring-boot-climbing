@@ -288,4 +288,5 @@ Client   Proposer      Acceptor     Learner
 - [一致性算法（Paxos、Raft、ZAB）](https://www.bilibili.com/video/BV1TW411M7Fx?from=search&seid=12869954421071795743)
 - [分布式系列文章——Paxos算法原理与推导](https://www.cnblogs.com/linbingdong/p/6253479.html)
 - [Wiki Pedia](https://chi.jinzhao.wiki/wiki/Paxos%E7%AE%97%E6%B3%95)
+- [李永乐谈拜占庭将军问题](https://www.bilibili.com/video/BV1yJ411v7xV)
 
