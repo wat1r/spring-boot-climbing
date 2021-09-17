@@ -61,3 +61,20 @@ Chrome浏览器插件
 
 ![image-20210429101301923](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\website\Navigation.assets\image-20210429101301923.png)
 
+
+
+
+
+#### 原型设计软件
+
+1.Balsamiq Mockups(适用于快速草图原型设计)
+
+Balsamiq Mockups是一种软件工程中快速原型的建立软件，可以做为与用户交互的一个界面草图，它的优势就在于"草图"原型，这是除了纸笔之外最方便的工具了。
+
+2.AxureRP(适用于复杂交互的原型设计)
+
+如果是轻量级的设计，Mockups就够了。但如果要做一个产品高保真的交互原型，AxureRP应该是产品经理或交互设计师的首选。网络上有汉化，有Crack。
+
+3.UIDesigner(腾讯推出的原型设计工具)
+
+目前的版本还在不断的更新完善中，可以做为尝新的人来使用，相信后续功能会越来越完善，毕竟这是国人推出的产品，相信会更适合于国内的互联网工作状况。
