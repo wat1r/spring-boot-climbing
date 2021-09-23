@@ -16,7 +16,7 @@ java中的8种基本类型的字节数：
 
 
 
-### 2.一些常用场景
+### 2.BitMap一些常见应用场景
 
 #### 2.1.**在2.5亿个整数中找出不重复的整数，注，内存不足以容纳这2.5亿个整数。**
 
@@ -26,7 +26,9 @@ java中的8种基本类型的字节数：
 
 #### 2.2.给40亿个不重复的 unsigned int 的整数，没排过序的，再给一个数，如何快速判断这个数是否在那 40 亿个数当中？
 
-判断集合中存在重复是常见编程任务之一，当集合中数据量比较大时我们通常希望少进行几次扫描，这时双重循环法就不可取了。 位图法比较适合于这种情况，它的做法是按照集合中最大元素 max 创建一个长度为 max+1的新数组，然后再次扫描原数组，遇到几就给新数组的第几位置上 1，如遇到 5 就给新数组的第六个元素置 1，这样下次再遇到 5 想置位时发现新数组的第六个元素已经是 1 了，这说明这次的数据肯定和以前的数据存在着重复。这 种给新数组初始化时置零其后置一的做法类似于位图的处理方法故称位图法。它的运算次数最坏的情况为 2N。如果已知数组的最大值即能事先给新数组定长的话效 率还能提高一倍
+判断集合中存在重复是常见编程任务之一，当集合中数据量比较大时我们通常希望少进行几次扫描，这时双重循环法就不可取了。 位图法比较适合于这种情况，它的做法是按照集合中最大元素 max 创建一个长度为 max+1的新数组，然后再次扫描原数组，遇到几就给新数组的第几位置上 1，如遇到 5 就给新数组的第六个元素置 1，这样下次再遇到 5 想置位时发现新数组的第六个元素已经是 1 了，这说明这次的数据肯定和以前的数据存在着重复。这 种给新数组初始化时置零其后置一的做法类似于位图的处理方法故称位图法。它的运算次数最坏的情况为 2N。如果已知数组的最大值即能事先给新数组定长的话效 率还能提高一倍。
+
+
 
 ### 3.RoaringBitMap
 
@@ -80,11 +82,80 @@ int size;//当前包含的key-value pair的数量，即keys和values中有效数
 
 也就是说：ArrayContainer存储稀疏数据，BitmapContainer存储稠密数据，可以最大限度地避免内存浪费。如下图
 
+![image-20210923192210557](/Users/frankcooper/Library/Application Support/typora-user-images/image-20210923192210557.png)
+
+##### ArrayContainer
+
+```java
+static final int DEFAULT_MAX_SIZE = 4096//阈值，超过这个值后Container会转成BitmapContainer
+short[] content;//存低16位的value，不存重复的数据，后续二分
+```
+
+- ArrayContainer没有压缩，只存储少量数据，占用的空间大小与存储的数据量为线性关系，每个`short`为2字节，因此存储了N个数据的ArrayContainer占用空间大致为`2N`字节。存储一个数据占用2字节，存储4096个数据占用8kb
+
+##### BitmapContainer
+
+```java
+final long[] bitmap;
+```
+
+- BitmapContainer使用long[]存储位图数据。每个Container处理16位整型的数据，也就是0~65535，因此根据位图的原理，需要65536个比特来存储数据，每个比特位用1来表示有，0来表示无。每个long有64位，因此需要1024（2^12）个long来提供65536个比特。
+
+- 因此，每个BitmapContainer在构建时就会初始化长度为1024的long[]。这就意味着，不管一个BitmapContainer中只存储了1个数据还是存储了65536个数据，占用的空间都是同样的8kb。
+
+##### RunContainer
+
+```java
+private short[] valueslength;
+int nbrruns = 0;
+```
+
+- RunContainer中的Run指的是行程长度压缩算法(Run Length Encoding)，对连续数据有比较好的压缩效果。它的原理是，对于连续出现的数字，只记录初始数字和后续数量。即：
+
+```java
+//11，它会压缩为11,0；
+//11,12,13,14,15，它会压缩为11,4；
+//11,12,13,14,15,21,22，它会压缩为11,4,21,1；
+//源码中的short[] values length中存储的就是压缩后的数据。
+```
+
+- 这种压缩算法的性能和数据的连续性（紧凑性）关系极为密切，对于连续的100个short，它能从200字节压缩为4字节，但对于完全不连续的100个short，编码完之后反而会从200字节变为400字节。
+
+- 如果要分析RunContainer的容量，我们可以做下面两种极端的假设：
+  - 最好情况，即只存在一个数据或只存在一串连续数字，那么只会存储2个short，占用4字节
+  - 最坏情况，0~65535的范围内填充所有的奇数位（或所有偶数位），需要存储65536个short，128kb
+
+##### SharedContainer
+
+这种容器它本身是不存储数据的，只是用它来指向ArrayContainer,BitMapContainer或RunContainer,和指针的作用类似，这个指针可以被多个对象拥有，但是指针所指的实质东西是被这多个对象所共享的。
+
+在进行RoaringBitMap之间的拷贝的时候，有时并不需要将一个Container拷贝多份，可以使用SharedContainer来指向实际的Container，然后把SharedContainer赋给多个RoaringBitMap对象持有，这个RoaringBitMap对象就可以根据SharedContainer找到真正存储数据的Container,这可以省去不必要的空间浪费。
 
 
 
+RoaringBitMap针对Container的优化策略
+创建时：
+
+创建包含单个值的Container时，选用ArrayContainer
+创建包含一串连续值的Container时，比较ArrayContainer和RunContainer，选取空间占用较少的
+转换：
+
+针对ArrayContainer：
+
+如果插入值后容量超过4096，则自动转换为BitmapContainer。因此正常使用的情况下不会出现容量超过4096的ArrayContainer。
+调用runOptimize()方法时，会比较和RunContainer的空间占用大小，选择是否转换为RunContainer。
+针对BitmapContainer：
+
+如果删除某值后容量低至4096，则会自动转换为ArrayContainer。因此正常使用的情况下不会出现容量小于4096的BitmapContainer。
+调用runOptimize()方法时，会比较和RunContainer的空间占用大小，选择是否转换为RunContainer。
+针对RunContainer：
+
+只有在调用runOptimize()方法才会发生转换，会分别和ArrayContainer、BitmapContainer比较空间占用大小，然后选择是否转换。
 
 
+### 4.DorisDB中使用案例
+
+> 
 
 
 
