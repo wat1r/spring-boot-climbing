@@ -112,6 +112,10 @@ git add . && git commit -m "add comments" && git push
 #丢弃本地的所有改动和提交
 git reset --hard origin/master
 
+
+
+
+
 ```
 
 

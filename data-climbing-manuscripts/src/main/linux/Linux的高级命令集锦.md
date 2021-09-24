@@ -544,6 +544,27 @@ $ ps axu | grep java
 
 
 
+
+
+## 22.screen
+
+```shell
+screen -S yourname -> 新建一个叫yourname的session
+screen -ls         -> 列出当前所有的session
+screen -r yourname -> 回到yourname这个session
+screen -d yourname -> 远程detach某个session
+screen -d -r yourname -> 结束当前session并回到yourname这个session
+
+session下使用如下命令
+ctrl+a(C-a) 
+C-a d -> detach，暂时离开当前session，将目前的 screen session (可能含有多个 windows) 丢到后台执行，并会回到还没进 screen 时的状态，此时在 screen session 里，每个 window 内运行的 process (无论是前台/后台)都在继续执行，即使 logout 也不影响。 
+
+```
+
+
+
+
+
 ---
 
 ## 50.番外
@@ -578,9 +599,7 @@ $ ps axu | grep java
 - [Xshell-grep高亮显示匹配项](https://www.jianshu.com/p/9944f96ea378)
 - https://www.cnblogs.com/weifeng1463/p/9858048.html
 - https://www.cnblogs.com/tianyajuanke/archive/2012/04/25/2470002.html
-
 - [linux下查找java进程所在的目录](https://blog.csdn.net/glw0223/article/details/88823513)
-
 - https://blog.csdn.net/glw0223/article/details/88823513
-
 - https://blog.csdn.net/feit2417/article/details/82935801
+- [Linux中的screen命令使用](https://blog.csdn.net/han0373/article/details/81352663)
