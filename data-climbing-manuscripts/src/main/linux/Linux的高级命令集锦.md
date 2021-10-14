@@ -136,7 +136,24 @@ adm:x:3:4:adm:/var/adm:/sbin/nologin
 
 ```
 
+判断一个文件中两个字段相同并筛选出：
+
+```powershell
+$ cat action_relation.txt | awk  -F'\t' '{if($2==$3) print}' | head
+"658"   "669"   "669"   "-1"    "D"     "0"     "1"
+```
+
+
+
+
+
+
+
+
+
 ---
+
+
 
 ## 2.sed
 
@@ -602,4 +619,4 @@ C-a d -> detach，暂时离开当前session，将目前的 screen session (可�
 - [linux下查找java进程所在的目录](https://blog.csdn.net/glw0223/article/details/88823513)
 - https://blog.csdn.net/glw0223/article/details/88823513
 - https://blog.csdn.net/feit2417/article/details/82935801
-- [Linux中的screen命令使用](https://blog.csdn.net/han0373/article/details/81352663)
+- [Linux中的screen命令使用](https://blog.csdn.net/han0373/article/details/81352663)d
