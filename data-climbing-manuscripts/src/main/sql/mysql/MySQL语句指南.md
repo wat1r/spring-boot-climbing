@@ -140,6 +140,16 @@ ALTER TABLE hiveassistant2_private.history_log ADD INDEX job_id_index (job_id);
 
 
 
+#### 修改字段的Comment
+
+```sql
+ALTER TABLE `smallbang-ljy`.job_info MODIFY script varchar(10240) COMMENT "test";
+```
+
+
+
+
+
 
 
 
