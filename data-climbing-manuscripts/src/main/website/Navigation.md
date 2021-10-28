@@ -55,6 +55,8 @@ https://shimo.im/docs/WY3hd8Jt8KHgvVty/read
 
 
 
+[Navicat已经成功连接，密码忘记的解决方法](https://www.cnblogs.com/houdj/p/13917544.html)
+
 
 
 Chrome浏览器插件

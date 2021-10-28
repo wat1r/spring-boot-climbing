@@ -17,6 +17,8 @@ start "" "D:\Program Files (x86)\Typora\Typora.exe"
 start "" "D:\Program Files (x86)\NetSarang\Xshell.exe"
 start "" "D:\Program Files (x86)\FastStone Capture\FSCapture.exe"
 start "" "D:\Program Files (x86)\Navicat Premium 12\navicat.exe"
+start "" "D:\Dev\DBeaver\dbeaver.exe"
+start "" "D:\Dev\Git\git-bash.exe"
 ```
 
 ![image-20210602082432467](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\linux\Shell脚本汇总.assets\image-20210602082432467.png)
