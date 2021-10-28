@@ -245,5 +245,5 @@ WHERE
 
 - [mysql服务启动、停止、重启](https://www.cnblogs.com/lhj588/p/3268614.html)
 
-
+- [mysql show variables sql_mode_详解mysql的sql_mode模式](https://blog.csdn.net/weixin_33582311/article/details/113299848)
 
