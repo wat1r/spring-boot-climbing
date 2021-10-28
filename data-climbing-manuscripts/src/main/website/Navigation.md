@@ -92,3 +92,13 @@ B站视频下载：https://github.com/leiurayer/downkyi
 
 
 Typora可以画图吗？https://zhuanlan.zhihu.com/p/172635547
+
+
+
+VisualCode 远程工具：remote插件 + jdk11
+
+
+
+BT下载器：Free Downloader Manager
+
+Macos视频剪辑工具：Final Cut Pro
