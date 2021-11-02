@@ -16,6 +16,16 @@ $ gitbook serve
 
 $ SUMMRY下写好目录，gitbook init 生成文件，图片注意相对路径
 
+# 单命令安装插件
+cnpm install gitbook-plugin-search-pro
+
+
+# 部署流程
+gitbook build
+_book文件夹 打包zip文件 
+target文件夹 push上去
+jenkins发布
+
 ```
 
 
@@ -31,3 +41,4 @@ $ SUMMRY下写好目录，gitbook init 生成文件，图片注意相对路径
 ### Reference
 
 - [gitbook安装与使用之windows下搭建gitbook平台](https://www.cnblogs.com/Lam7/p/6109872.html)
+- [gitbook安装与使用（含常用插件和book.json配置详解）](https://blog.csdn.net/fghsfeyhdf/article/details/88403548)

@@ -107,7 +107,7 @@ git stash pop
 git reset --soft HEAD~1
 
 # git提交代码 添加评论
-git add . && git commit -m "add comments" && git push
+git add . && git commit -m "add plugins" && git push
 
 #丢弃本地的所有改动和提交
 git reset --hard origin/master
@@ -135,3 +135,4 @@ git reset --hard origin/master
 - https://talktocomputer.site/blogs/84/
 - [git仓库服务器名称变更Could not read from remote repository](https://blog.csdn.net/qc530167365/article/details/89878547)
 - [Support for password authentication was removed](https://blog.csdn.net/weixin_41010198/article/details/119698015)
+- [git add时出现Filename too long、Function not implemente的解决办法](https://blog.csdn.net/weixin_45623615/article/details/108747989)
