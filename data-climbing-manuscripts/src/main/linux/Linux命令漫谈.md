@@ -64,6 +64,28 @@ ps -ef | egrep "StandaloneSessionClusterEntrypoint|TaskManagerRunner" | grep -v 
 
 
 
+- 只输出符合模式的文本，不加-o 会输输出整行
+
+```powershell
+$ grep -Eo  '\${(\w+)(-)?(\d+)?}' action.txt |  head
+${date}
+${date}
+${date}
+${date}
+${date}
+${date}
+${date}
+${date}
+```
+
+
+
+
+
+
+
+
+
 #### `join` 命令
 
 - -a<1或2> 除了显示原来的输出内容之外，还显示指令文件中没有相同栏位的行。

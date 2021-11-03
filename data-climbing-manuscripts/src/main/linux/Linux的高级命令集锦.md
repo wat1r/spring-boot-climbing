@@ -12,7 +12,7 @@
 
 ### 基础知识
 
-```
+```powershell
 AWK是一种处理文本文件的语言，是一个强大的文本分析工具。
 
 之所以叫AWK是因为其取了三位创始人 Alfred Aho，Peter Weinberger, 和 Brian Kernighan 的 Family Name 的首字符。
@@ -74,18 +74,39 @@ dm, 642
 dw, 14338
 ```
 
++ 对文件去重，统计
+
+```powershell
+awk   '{a[$1]++;} END {for (i in a ) print i ", " a[i];}'  result.txt
+${date-89}, 34
+${date-91}, 13
+${date-45}, 7
+${date-365}, 52
+${date-180}, 148
+${data_time}, 2
+```
+
+- 同上
+
+```powershell
+$ grep -Eo  '\${[^}]+}' temp.txt |  sort | uniq
+${date-1d}
+${date-2}
+${datetime}
+${datetime+2m}
+${datetime-2m}
+${updatetime+2d}
+```
+
+
+
 + 根据`"` 分割，取字段 ：`awk -F'"' '{print $6}'   cartridge_msg  | head -7`
 + 看看统计每个用户的进程的占了多少内存（注：sum的RSS那一列)
   `ps aux | awk 'NR!=1{a[$1]+=$6;} END { for(i in a) print i ", " a[i]"KB";}'`
-
 + awk去重：`awk '!x[$0]++' file1awk > file2`
-
 + sh脚本中杀死进程：`ps -ef | grep java | grep -v consumer |awk '{print $2}' | xargs -p kill -9 `
-
 + 查询行数相关：` awk 'FNR==16000' file `
-
 + 查询需要的信息并且加上第一行:`awk  'NR==1;/205613/{print}' Submissions.txt`
-
 + 查看所有行的记录:` awk '//{print}' passwd.txt`
 + 过滤到`localhost`:` awk '/localhost/{print}' /etc/hosts `
 + 按`~` 分隔后，取field后，去重：`awk -F'~' '!($12 in a){a[$12];print $12}' products_1.txt`
@@ -286,6 +307,28 @@ sed -E 's/.*\/req\/v2\/fetch\/hive\/page\/(.*)\?operatorId=.*/\1/' access_august
 ```
 zcat java.gz > java.java
 ```
+
+
+
+
+
+## 8.grep
+
+- -o命令精髓
+
+```powershell
+grep -Eo  '\${(\w+)?(-)?(\d+)?(\w+)?}' action.txt  > result.txt
+# ${date}
+# ${date-30}
+# ${date-30}
+# ${date-1}
+```
+
+
+
+
+
+
 
 
 
