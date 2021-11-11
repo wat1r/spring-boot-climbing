@@ -166,6 +166,14 @@ $ cat action_relation.txt | awk  -F'\t' '{if($2==$3) print}' | head
 
 
 
+去重统计
+
+```shell
+ less  bigbang-server.log | grep "ready to dispatch" | awk -F'\]:' '{print $2}' | awk -F'##' '{print $1}' | sort | uniq  -c   | less
+```
+
+
+
 
 
 
@@ -267,6 +275,42 @@ sed -E 's/.*\/tasks\/req\/v2\/fetch\/(.*)\?token=.*/\1/' access_august_prod_more
 sed -E 's/.*\/req\/v2\/fetch\/(.*)\?operatorId=.*/\1/' access_august_prod_more_than_2_seconds.log | awk 'length($0)<20'  > seg_2.txt
 sed -E 's/.*\/req\/v2\/fetch\/hive\/(.*)\?operatorId=.*/\1/' access_august_prod_more_than_2_seconds.log | awk 'length($0)=36'  > seg_3.txt
 sed -E 's/.*\/req\/v2\/fetch\/hive\/page\/(.*)\?operatorId=.*/\1/' access_august_prod_more_than_2_seconds.log | awk 'length($0)<=36'  > seg_4.txt
+```
+
+
+
+查看某个时间点往后的日志：
+
+```shell
+ sed -n '/2021-11-11 05:01:59./,//p' bigbang-server.log  | less
+```
+
+
+
+```shell
+sed -n '/2021-11-11 17:53:04./,//p' bigbang-server.log |  grep "start dispatch instance to worker" | awk -F'worker:' '{print $2}' | sort | uniq -c | less
+```
+
+
+
+```java
+sed -n '/2021-11-11 17:53:04./,//p' bigbang-server.log |  grep "start dispatch instance to worker" | awk -F'worker:' '{print $2}' | sort | uniq -c | less
+```
+
+
+
+切分
+
+```shell
+less bigbang-server.log | grep -oE 'receive tasktracker report info: ##instanceId:(.*) ->  status:5##'| cut -d ":" -f 3| cut -d " " -f 1 |  uniq -c |sort   -r | less
+```
+
+
+
+- 按统计的次数升序排列 -r 
+
+```shell
+less bigbang-server-application-338908527265318528.log | grep -oE 'receive tasktracker report info: ##instanceId:(.*) ->  status:5##'| cut -d ":" -f 3| cut -d " " -f 1 |  uniq -c | sort -r   | head
 ```
 
 
