@@ -99,20 +99,35 @@ VisualCode 远程工具：remote插件 + jdk11
 
 
 
-| 主题  | 网站                                 | 介绍              |
-| ----- | ------------------------------------ | ----------------- |
-| LaTeX | https://www.latexlive.com/           | LaTeX公式在线     |
-|       | https://excalidraw.com/              | 在线画图          |
-|       | https://github.com/leiurayer/downkyi | B站视频下载       |
-|       | Free Downloader Manager              | BT下载器          |
-|       | Final Cut Pro                        | Macos视频剪辑工具 |
-|       |                                      |                   |
-|       |                                      |                   |
-|       |                                      |                   |
-|       |                                      |                   |
-|       |                                      |                   |
+| 主题                 | 网站                                      | 介绍              |
+| -------------------- | ----------------------------------------- | ----------------- |
+| LaTeX                | https://www.latexlive.com/                | LaTeX公式在线     |
+|                      | https://excalidraw.com/                   | 在线画图          |
+|                      | https://github.com/leiurayer/downkyi      | B站视频下载       |
+|                      | Free Downloader Manager                   | BT下载器          |
+|                      | Final Cut Pro                             | Macos视频剪辑工具 |
+| Draw Function Graphs | https://rechneronline.de/function-graphs/ | 方程式画图        |
+|                      |                                           |                   |
+|                      |                                           |                   |
+|                      |                                           |                   |
+|                      |                                           |                   |
 
 
+
+
+
+| 主题           | 网站                       | 介绍 |
+| -------------- | -------------------------- | ---- |
+| 分布式测试项目 | Jepsen/Namazu              |      |
+| 分布式计算系统 | Spark/Dremel/Presto/Impala |      |
+| Google Papers  | GFS/BigTable/Spanner/F1    |      |
+| 共识算法       | Raft/Paxos                 |      |
+|                |                            |      |
+|                |                            |      |
+|                |                            |      |
+|                |                            |      |
+|                |                            |      |
+|                |                            |      |
 
 
 
