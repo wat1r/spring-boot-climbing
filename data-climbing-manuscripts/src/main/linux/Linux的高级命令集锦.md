@@ -307,11 +307,31 @@ less bigbang-server.log | grep -oE 'receive tasktracker report info: ##instanceI
 
 
 
-- 按统计的次数升序排列 -r 
+- 按统计的次数降序排列 -r 
 
 ```shell
 less bigbang-server-application-338908527265318528.log | grep -oE 'receive tasktracker report info: ##instanceId:(.*) ->  status:5##'| cut -d ":" -f 3| cut -d " " -f 1 |  uniq -c | sort -r   | head
 ```
+
+
+
+```java
+less bigbang-server-application.2021-11-19.log  | grep -oE 'receive tasktracker report info: ##instanceId:(.*) ->  status:5##'| cut -d ":" -f 3| cut -d " " -f 1 | uniq -c | sort | uniq -c | sort -rn |   less 
+```
+
+
+
+
+
+```java
+//筛选出1: jobId:{} , instanceId:{} -> {}
+//     2: jobId:{} , instanceId:{} -> {} 
+less bigbang-server.log | grep -E  "jobId:(.*) , instanceId:"  | less 
+```
+
+
+
+
 
 
 
@@ -517,6 +537,9 @@ netstat -nap | grep [pid]
 $ ls -lhS
 //ls -lhS  按照由大到小排序
 //ls -Slhr   按照从小到大排序
+
+> ls -alc # 按创建时间排序
+> ls -alu # 按访问时间排序
 ```
 
 
