@@ -113,7 +113,7 @@ git add . && git commit -m "add plugins" && git push
 git reset --hard origin/master
 
 
-
+# 如果想放弃本地的文件修改，可以使用git reset --hard FETCH_HEAD，FETCH_HEAD表示上一次成功git pull之后形成的commit点。然后git pull.
 
 
 ```

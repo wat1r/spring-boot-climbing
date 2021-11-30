@@ -122,3 +122,33 @@ echo "============START WORKER-AGENT============"
 
 ```
 
+
+
+
+
+## 3.监控进程存活发送邮件
+
+- 使用crontab :
+  - `crontab -e `: `*/1 * * * *  sh /app/hadoop/scripts/detect_bigbang_server.sh`
+
+```shell
+#!/bin/sh
+while true
+do
+ps -ef | egrep "bigbang-server" | grep -v "grep" 
+if [ "$?" -eq 0 ] 
+then
+echo "[bigbang-server] ALIVE"
+echo "[bigbang-server] ALIVE" >> /app/hadoop/scripts/test.txt
+#crontab -r
+else
+echo "[bigbang-server] DEAD" >> /app/hadoop/scripts/test.txt
+echo "mail -s 'test' xxx@163.com  <  /app/hadoop/scripts/test.txt"
+crontab -r 
+fi
+sleep 10
+done
+```
+
+
+

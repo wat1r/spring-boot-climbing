@@ -731,3 +731,4 @@ C-a d -> detach，暂时离开当前session，将目前的 screen session (可�
 - https://blog.csdn.net/feit2417/article/details/82935801
 - [Linux中的screen命令使用](https://blog.csdn.net/han0373/article/details/81352663)
 - [用 echo 管道命令给sudo自动输入密码](https://blog.csdn.net/xushx_bigbear/article/details/12966625?%3E)
+- [Linux中常用的查看系统信息的命令](https://www.linuxprobe.com/linux-cat-system.html
