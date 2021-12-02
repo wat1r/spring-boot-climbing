@@ -227,7 +227,52 @@ WHERE
 
 
 
-# 
+### 分组topN
+
+- 按 每一天的，`job_id` 下按`elapsed_time` 取top3
+
+```sql
+SELECT id
+	,`job_id`
+	,elapsed_time
+FROM (
+	SELECT id
+		,`job_id`
+		,elapsed_time
+		,(
+			@num: = IF (
+				@group = `job_id`
+				,@num + 1
+				,IF (
+					@group : = `job_id`
+					,1
+					,1
+					) ) ) row_number FROM (
+				SELECT *
+				FROM instance_info
+				WHERE actual_trigger_time >= '2021-11-21 00:00:01'
+					AND actual_trigger_time <= '2021-11-21 23:59:59'
+				) t CROSS JOIN (
+				SELECT @num: = 0
+					,@group: = NULL
+				) c ORDER BY `job_id`
+				,elapsed_time DESC
+				,id ) AS x WHERE x.row_number <= 3;
+				)
+			)
+	)
+	
+	等价于
+	
+	SELECT id,
+          ROW_NUMBER() over(partition by  job_id   order by     elapsed_time DESC) RowNum
+   FROM instance_info_1201
+	
+```
+
+
+
+
 
 
 
@@ -242,8 +287,11 @@ WHERE
 ### Reference
 
 - [安全快速修改Mysql数据库名的5种方法](https://m.jb51.net/article/49293.htm)
-
 - [mysql服务启动、停止、重启](https://www.cnblogs.com/lhj588/p/3268614.html)
-
 - [mysql show variables sql_mode_详解mysql的sql_mode模式](https://blog.csdn.net/weixin_33582311/article/details/113299848)
+- [低版本mysql 利用@变量实现row_number() over(partition by order by )排序功能](https://blog.csdn.net/shammy_feng/article/details/112308170)
+
+
+
+
 
