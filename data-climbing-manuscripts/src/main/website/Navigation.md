@@ -8,6 +8,9 @@
 | CS-Notes/LintCode/Anti-Anti-Spider/awesome-spider/OpenSource_Study |                   |      |
 | https://www.elastic.co/cn/downloads/past-releases#elasticsearch |                   |      |
 | [DataMan-美团旅行数据质量监管平台实践](https://tech.meituan.com/2018/03/21/mtdp-dataman.html) | 数据质量/数据治理 |      |
+| [Java用什么来代替If else 和switch](https://blog.csdn.net/qq_36865969/article/details/80155776) |                   |      |
+| [Java中多个ifelse语句的替代设计](https://cloud.tencent.com/developer/article/1453467) |                   |      |
+| https://zhuanlan.zhihu.com/p/149425451                       | if else替换       |      |
 
 
 
