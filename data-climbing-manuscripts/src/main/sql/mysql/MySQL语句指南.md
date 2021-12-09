@@ -148,6 +148,14 @@ ALTER TABLE `smallbang-ljy`.job_info MODIFY script varchar(10240) COMMENT "test"
 
 
 
+#### 修改字段名称
+
+```mysql
+alter table em_day_data change f_day_house11 f_day_hour11 int(11) not null
+alter table `smallbang-dev`.workflow_params change relation_status constraint_status  tinyint(6) NOT NULL
+
+```
+
 
 
 
