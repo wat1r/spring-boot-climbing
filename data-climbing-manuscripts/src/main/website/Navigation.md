@@ -34,12 +34,12 @@
 | Balsamiq_Wireframes_4.1.4 | 软件 | 产品画图工具 |      |
 | FastStone Capture | 软件 | 截图工具 |      |
 | Beyond Compare 4 | 软件 | 文件对比 |      |
-| Notepad++ | 软件 | 文本编辑工具 |      |
+| Notepad++（港独分支，弃坑） | 软件 | 文本编辑工具 |      |
 | Typora | 软件 | markdown编辑器 |      |
 | ProcessOn | 网页 | 画图 |      |
 | Charles | 软件 | 接口转发工具 |      |
 | Fiddler | 软件 | 抓包工具 |      |
-| | | | |
+| [UltraEdit](https://www.ultraedit.com/products/ultraedit/) | 软件 | 文本编辑工具 | |
 | | | | |
 
 
