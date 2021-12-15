@@ -333,17 +333,37 @@ less bigbang-server.log | grep -E  "jobId:(.*) , instanceId:"  | less
 
 
 
+## 3.vim/vi
+
+```powershell
+命令模式下：
+在光标的位置按“yy”，复制当前行,然后再光标的行按“p”,粘贴到下一行，原来的往下顺移。
+删除当前行-------dd
+复制多行----------nyy(比如3yy，复制3行)
+删除多行----------ndd
+复制多遍----------np
+删除光标当前所在的字符--x 
+
+:%s/原字符/替换字符/g 其中%全文的行，g 全文的列
+:1,3s/: /@/g  1-3行替换
+
+
+VISUAL模式
+v 进入该模式
+shift+v 进入VISUAL_LINE模式
+
+
+```
+
+
+
+
+
 
 
 
 
 ---
-
-## 3.nl
-
-- NONE
-
-----
 
 
 
@@ -371,6 +391,16 @@ less bigbang-server.log | grep -E  "jobId:(.*) , instanceId:"  | less
 ```
 zcat java.gz > java.java
 ```
+
+
+
+
+
+## 7.nl
+
+- NONE
+
+----
 
 
 
@@ -732,3 +762,4 @@ C-a d -> detach，暂时离开当前session，将目前的 screen session (可�
 - [Linux中的screen命令使用](https://blog.csdn.net/han0373/article/details/81352663)
 - [用 echo 管道命令给sudo自动输入密码](https://blog.csdn.net/xushx_bigbear/article/details/12966625?%3E)
 - [Linux中常用的查看系统信息的命令](https://www.linuxprobe.com/linux-cat-system.html
+- [VIM超详细用法以及思维导图](https://zhuanlan.zhihu.com/p/77283813)
