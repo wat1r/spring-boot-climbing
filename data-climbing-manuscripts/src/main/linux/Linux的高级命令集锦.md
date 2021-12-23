@@ -336,7 +336,7 @@ less bigbang-server.log | grep -E  "jobId:(.*) , instanceId:"  | less
 ## 3.vim/vi
 
 ```powershell
-命令模式下：
+NORMAL模式下：
 在光标的位置按“yy”，复制当前行,然后再光标的行按“p”,粘贴到下一行，原来的往下顺移。
 删除当前行-------dd
 复制多行----------nyy(比如3yy，复制3行)
@@ -348,14 +348,93 @@ less bigbang-server.log | grep -E  "jobId:(.*) , instanceId:"  | less
 :1,3s/: /@/g  1-3行替换
 
 
+hjkl表示上下左右，4h表示跳4行
+w可以跳到下一个单词的开头
+b可以跳到上一个单词的开头
+
+gg可以跳到文件的开头
+G可以跳到文件的末尾
+
+Ctrl+U向上翻页
+Ctrl+D向下翻页
+
+f+字符 会移动到这一行离光标最近的位置
+
+
+
+
+y(yank) 复制  
+  - yaw（all words）可以复制一个单词+p进行粘贴
+  - y4j 复制了当前行在内的向下的4行
+  - yfr 表示复制当前行到字符r的内容
+p(paste)粘贴
+c(change)
+	- caw删除当前的单词进入输入模式
+	- cc删除当前行进入输入模式
+	- c4j删除当前下4行进入输入模式
+u  撤销
+
+
+
+输入模式
+i(input)可以进入输入模式
+a(append)当前光标的后面
+I 本行的开头进行输入
+A 本行的末尾进行输入
+
+:wq保存
+
+
+
+
+
 VISUAL模式
 v 进入该模式
 shift+v 进入VISUAL_LINE模式
 
 
+
+安装插件
+
+
+https://github.com/junegunn/vim-plug
+
+
+NERTree
+~/.vimrc文件下
+
+set hlsearch
+set nu!
+syntax on
+call plug#begin('~/.vim/plugged')
+Plug 'scrooloose/nerdtree'
+call plug#end()
+
+" 绑定快捷键
+nnoremap <silent> <C-e> :NERDTree<CR>
+" map <F3> :NERDTreeMirror<CR>
+" map <F3> :NERDTreeToggle<CR>
+
+
+打开文件后执行 :PlugInstall 可以使用Tab键联想
+:NERtree就可以显示某个文件下的所有的文件夹了
+进去后使用 o 可以打开当前选中的文件或者文件夹
+切换工作台和目录 
+ctr+w+h  光标focus左侧树形目录
+ctrl+w+l 光标focus右侧文件显示窗口。 
+ctrl+w+w，光标自动在左右侧窗口切换 
+
+
+
 ```
 
 
+
+
+
+安装插件`YouCompleteMe`时遇到的报错
+
+> **YouCompleteMe unavailable: requires Vim compiled with Python (3.6.0+) support**
 
 
 
@@ -763,3 +842,5 @@ C-a d -> detach，暂时离开当前session，将目前的 screen session (可�
 - [用 echo 管道命令给sudo自动输入密码](https://blog.csdn.net/xushx_bigbear/article/details/12966625?%3E)
 - [Linux中常用的查看系统信息的命令](https://www.linuxprobe.com/linux-cat-system.html
 - [VIM超详细用法以及思维导图](https://zhuanlan.zhihu.com/p/77283813)
+
+- [use_vim_as_ide](https://gitcode.net/mirrors/yangyangwithgnu/use_vim_as_ide)
