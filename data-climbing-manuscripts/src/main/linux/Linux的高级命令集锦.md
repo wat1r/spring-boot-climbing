@@ -426,6 +426,13 @@ ctrl+w+w，光标自动在左右侧窗口切换
 
 
 
+全部删除：按esc键后，先按gg（到达顶部），然后dG
+全部复制：按esc键后，先按gg，然后ggyG
+全选高亮显示：按esc键后，先按gg，然后ggvG或者ggVG
+单行复制：按esc键后，然后yy
+单行删除：按esc键后，然后dd
+粘贴：按esc键后，然后p
+
 ```
 
 
@@ -812,6 +819,8 @@ C-a d -> detach，暂时离开当前session，将目前的 screen session (可�
 + 清空文件:`echo -n >  file`
 + 查询目录下文件的个数：`ls -lh| grep -c "^-"`
 + 比较 A，B文件的差集：`awk 'NR==FNR{ a[$1]=$1 } NR>FNR{ if(a[$1] == ""){ print $1}}'   delete_file_total_20200102_uniq   result_total.txt> file2.txt`
+
+- 命令行复制一个文件到剪切板，并粘贴到`Typora`上,`cat ~/.vimrc | pbcopy`
 
 
 
