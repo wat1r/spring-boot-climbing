@@ -282,6 +282,32 @@ FROM (
 
 
 
+#### 递归查询根节点
+
+```sql
+SELECT
+	* 
+FROM
+	(
+	SELECT
+		@r AS _id,
+		( SELECT @r := Pre_Action_ID FROM action_relation WHERE Action_ID = _id ) AS Pre_Action_ID,
+		@l := @l + 1 AS lvl 
+	FROM
+		( SELECT @r := 24001, @l := 0 ) vars,
+		action_relation m 
+	WHERE
+		@r <> 0 
+	) a 
+WHERE
+	a.Pre_Action_ID IS NOT NULL
+	
+```
+
+
+
+
+
 
 
 

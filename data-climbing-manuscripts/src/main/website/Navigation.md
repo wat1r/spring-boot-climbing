@@ -116,8 +116,8 @@ VisualCode 远程工具：remote插件 + jdk11
 |                      | Final Cut Pro                                                | Macos视频剪辑工具 |
 | Draw Function Graphs | https://rechneronline.de/function-graphs/                    | 方程式画图        |
 | Arthas 用户文档      | [Arthas（阿尔萨斯）](https://arthas.aliyun.com/doc/index.html) | Java诊断工具      |
-|                      |                                                              |                   |
-|                      |                                                              |                   |
+| gRPC APIs            | https://kreya.app/                                           |                   |
+| 快捷生成Entity       | https://java.bejson.com/generator/                           |                   |
 |                      |                                                              |                   |
 
 
