@@ -336,7 +336,7 @@ less bigbang-server.log | grep -E  "jobId:(.*) , instanceId:"  | less
 ## 3.vim/vi
 
 ```powershell
-命令模式下：
+NORMAL模式下：
 在光标的位置按“yy”，复制当前行,然后再光标的行按“p”,粘贴到下一行，原来的往下顺移。
 删除当前行-------dd
 复制多行----------nyy(比如3yy，复制3行)
@@ -348,14 +348,153 @@ less bigbang-server.log | grep -E  "jobId:(.*) , instanceId:"  | less
 :1,3s/: /@/g  1-3行替换
 
 
+hjkl表示上下左右，4h表示跳4行
+w可以跳到下一个单词的开头
+b可以跳到上一个单词的开头
+
+gg可以跳到文件的开头
+G可以跳到文件的末尾
+
+Ctrl+U向上翻页
+Ctrl+D向下翻页
+
+f+字符 会移动到这一行离光标最近的位置
+
+
+
+
+y(yank) 复制  
+  - yaw（all words）可以复制一个单词+p进行粘贴
+  - y4j 复制了当前行在内的向下的4行
+  - yfr 表示复制当前行到字符r的内容
+p(paste)粘贴
+c(change)
+	- caw删除当前的单词进入输入模式
+	- cc删除当前行进入输入模式
+	- c4j删除当前下4行进入输入模式
+u  撤销
+
+
+
+输入模式
+i(input)可以进入输入模式
+a(append)当前光标的后面
+I 本行的开头进行输入
+A 本行的末尾进行输入
+
+:wq保存
+
+
+
+
+
 VISUAL模式
 v 进入该模式
 shift+v 进入VISUAL_LINE模式
 
 
+
+
+
+安装插件
+
+
+https://github.com/junegunn/vim-plug
+
+
+NERTree
+~/.vimrc文件下
+
+set hlsearch
+set nu!
+syntax on
+call plug#begin('~/.vim/plugged')
+Plug 'scrooloose/nerdtree'
+call plug#end()
+
+" 绑定快捷键
+nnoremap <silent> <C-e> :NERDTree<CR>
+" map <F3> :NERDTreeMirror<CR>
+" map <F3> :NERDTreeToggle<CR>
+
+
+打开文件后执行 :PlugInstall 可以使用Tab键联想
+:NERtree就可以显示某个文件下的所有的文件夹了
+进去后使用 o 可以打开当前选中的文件或者文件夹
+切换工作台和目录 
+ctr+w+h  光标focus左侧树形目录
+ctrl+w+l 光标focus右侧文件显示窗口。 
+ctrl+w+w，光标自动在左右侧窗口切换 
+
+
+
+全部删除：按esc键后，先按gg（到达顶部），然后dG
+全部复制：按esc键后，先按gg，然后ggyG
+全选高亮显示：按esc键后，先按gg，然后ggvG或者ggVG
+单行复制：按esc键后，然后yy
+单行删除：按esc键后，然后dd
+粘贴：按esc键后，然后p
+
+
+
+
 ```
 
 
+
+#### Visual模式与Visual Block 与Visual Line
+
+- 选中双引号的内容：`vi"` 配合`c`即可删除双引号的内容
+- 选中多行后，按`<`或者`>`可以多行缩进，`.`可以重复上面的操作
+
+- Ctrl+V进入块选，选中多行，`s`执行删除
+- 多行注释代码：`Ctrl+V`后选中多行的开头，`I`后，输入`//`，`esc`后实现多行注释，删除这个注释的时候，多选选中后，按`x`进行删除
+- 同上面：在每行的末尾追加字符，`A`+`Esc` ，`$`可以跳到每行的行尾
+- `Shift+v`进入行模式
+
+- 按`Ctrl+v`进入块模式，选中部分字符，`:s/http:/https:/g`可以实现替换选中的`http:`为`https:`
+- 块模式下，光标回退到开始的位置：`o`  `O`的切换
+
+#### 搜索与查找
+
+- 打开文件后，跳到指定行:`:n`，其中n为要跳转的行号
+
+
+
+
+
+
+
+#### 删除
+
+删除指定位置到文末:`dG`
+
+删除全部文本
+
+```powershell
+gg
+dG
+```
+
+删除xx行至xx行:`: 1,10d`
+
+将从当前位置删除到行尾：`d$`
+将从当前向后删除到第一个非空格字符:`d^`
+将从当前向后删除到行首:`d0`
+将当前字符删除到当前字尾(包括)尾部空格):`dw`
+将当前字符删除到当前字符的开头:`db`
+
+#### Msic
+
+命令行复制一个文件到剪切板，并粘贴到`Typora`上,`cat ~/.vimrc | pbcopy`
+
+
+
+
+
+安装插件`YouCompleteMe`时遇到的报错
+
+> **YouCompleteMe unavailable: requires Vim compiled with Python (3.6.0+) support**
 
 
 
@@ -734,6 +873,8 @@ C-a d -> detach，暂时离开当前session，将目前的 screen session (可�
 + 查询目录下文件的个数：`ls -lh| grep -c "^-"`
 + 比较 A，B文件的差集：`awk 'NR==FNR{ a[$1]=$1 } NR>FNR{ if(a[$1] == ""){ print $1}}'   delete_file_total_20200102_uniq   result_total.txt> file2.txt`
 
+- 命令行复制一个文件到剪切板，并粘贴到`Typora`上,`cat ~/.vimrc | pbcopy`
+
 
 
 
@@ -763,3 +904,5 @@ C-a d -> detach，暂时离开当前session，将目前的 screen session (可�
 - [用 echo 管道命令给sudo自动输入密码](https://blog.csdn.net/xushx_bigbear/article/details/12966625?%3E)
 - [Linux中常用的查看系统信息的命令](https://www.linuxprobe.com/linux-cat-system.html
 - [VIM超详细用法以及思维导图](https://zhuanlan.zhihu.com/p/77283813)
+- [use_vim_as_ide](https://gitcode.net/mirrors/yangyangwithgnu/use_vim_as_ide)
+- [Fuzzy finder(fzf+vim) 使用全指南](https://zhuanlan.zhihu.com/p/41859976)
