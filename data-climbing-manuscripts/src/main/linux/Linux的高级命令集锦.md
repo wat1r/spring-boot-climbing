@@ -868,6 +868,10 @@ session下使用如下命令
 ctrl+a(C-a) 
 C-a d -> detach，暂时离开当前session，将目前的 screen session (可能含有多个 windows) 丢到后台执行，并会回到还没进 screen 时的状态，此时在 screen session 里，每个 window 内运行的 process (无论是前台/后台)都在继续执行，即使 logout 也不影响。 
 
+
+screen -X -S [session # you want to kill] quit
+如  screen -X -S 4588 quit
+
 ```
 
 

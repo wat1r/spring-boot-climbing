@@ -36,3 +36,7 @@ start "" "D:\Program Files (x86)\Navicat Premium 12\navicat.exe"
 - 关机脚本：`C:\Windows\System32\shutdown.exe  -s`
 
 ![image-20210412094435573](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\sys\windows\Windows操作教程.assets\image-20210412094435573.png)
+
+### 3.查询windows系统驱动安装列表：
+
+- `cmd-powershell ： get-wmiobject win32_pnpsigneddriver|select devicename,driverversion`

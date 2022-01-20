@@ -42,6 +42,7 @@
 | [UltraEdit](https://www.ultraedit.com/products/ultraedit/) | 软件 | 文本编辑工具 | |
 | Tampermonkey |  | Chrome插件安装管理器 | |
 | AC-baidu | 搜索引擎优化 | 配合上面的一起安装 | |
+| logseq | 软件 | 类似Typora笔记软件 | |
 
 
 
