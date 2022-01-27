@@ -11,6 +11,7 @@
 | [Java用什么来代替If else 和switch](https://blog.csdn.net/qq_36865969/article/details/80155776) |                   |      |
 | [Java中多个ifelse语句的替代设计](https://cloud.tencent.com/developer/article/1453467) |                   |      |
 | https://zhuanlan.zhihu.com/p/149425451                       | if else替换       |      |
+| https://blog.cloudera.com/how-to-use-hbase-bulk-loading-and-why/ | HBase             |      |
 
 
 
