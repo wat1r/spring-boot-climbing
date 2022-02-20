@@ -1,17 +1,23 @@
-| 地址                                                         | 分类              | 备注 |
-| ------------------------------------------------------------ | ----------------- | ---- |
-| [基于 Flink+Hive 构建流批一体准实时数仓](https://www.infoq.cn/article/tvQVYt54kdBsD1YoQo6D) | Data              |      |
-| [拜托，面试请不要再问我Redis分布式锁的实现原理【石杉的架构笔记】](https://mp.weixin.qq.com/s?__biz=MzU0OTk3ODQ3Ng==&mid=2247483893&idx=1&sn=32e7051116ab60e41f72e6c6e29876d9&chksm=fba6e9f6ccd160e0c9fa2ce4ea1051891482a95b1483a63d89d71b15b33afcdc1f2bec17c03c&mpshare=1&scene=23&srcid=1121Vlt0Mey0OD5eYWt8HPyB#rd) |                   |      |
-| [秒杀系统](https://github.com/zaiyunduan123/springboot-seckill) |                   |      |
-| [3种Redis分布式锁的对比](https://www.cnblogs.com/wlwl/p/11651409.html) |                   |      |
-| https://www.toyaml.com/index.html                            |                   |      |
-| CS-Notes/LintCode/Anti-Anti-Spider/awesome-spider/OpenSource_Study |                   |      |
-| https://www.elastic.co/cn/downloads/past-releases#elasticsearch |                   |      |
-| [DataMan-美团旅行数据质量监管平台实践](https://tech.meituan.com/2018/03/21/mtdp-dataman.html) | 数据质量/数据治理 |      |
-| [Java用什么来代替If else 和switch](https://blog.csdn.net/qq_36865969/article/details/80155776) |                   |      |
-| [Java中多个ifelse语句的替代设计](https://cloud.tencent.com/developer/article/1453467) |                   |      |
-| https://zhuanlan.zhihu.com/p/149425451                       | if else替换       |      |
-| https://blog.cloudera.com/how-to-use-hbase-bulk-loading-and-why/ | HBase             |      |
+| 地址                                                         | 分类                                                         | 备注 |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ---- |
+| [基于 Flink+Hive 构建流批一体准实时数仓](https://www.infoq.cn/article/tvQVYt54kdBsD1YoQo6D) | Data                                                         |      |
+| [拜托，面试请不要再问我Redis分布式锁的实现原理【石杉的架构笔记】](https://mp.weixin.qq.com/s?__biz=MzU0OTk3ODQ3Ng==&mid=2247483893&idx=1&sn=32e7051116ab60e41f72e6c6e29876d9&chksm=fba6e9f6ccd160e0c9fa2ce4ea1051891482a95b1483a63d89d71b15b33afcdc1f2bec17c03c&mpshare=1&scene=23&srcid=1121Vlt0Mey0OD5eYWt8HPyB#rd) |                                                              |      |
+| [秒杀系统](https://github.com/zaiyunduan123/springboot-seckill) |                                                              |      |
+| [3种Redis分布式锁的对比](https://www.cnblogs.com/wlwl/p/11651409.html) |                                                              |      |
+| https://www.toyaml.com/index.html                            |                                                              |      |
+| CS-Notes/LintCode/Anti-Anti-Spider/awesome-spider/OpenSource_Study |                                                              |      |
+| https://www.elastic.co/cn/downloads/past-releases#elasticsearch |                                                              |      |
+| [DataMan-美团旅行数据质量监管平台实践](https://tech.meituan.com/2018/03/21/mtdp-dataman.html) | 数据质量/数据治理                                            |      |
+| [Java用什么来代替If else 和switch](https://blog.csdn.net/qq_36865969/article/details/80155776) |                                                              |      |
+| [Java中多个ifelse语句的替代设计](https://cloud.tencent.com/developer/article/1453467) |                                                              |      |
+| https://zhuanlan.zhihu.com/p/149425451                       | if else替换                                                  |      |
+| https://blog.cloudera.com/how-to-use-hbase-bulk-loading-and-why/ | HBase                                                        |      |
+| Openwrt                                                      | OpenWRT 是一款家用路由器的操作系统，路由器安装了它才能正常的工作 |      |
+|                                                              |                                                              |      |
+|                                                              |                                                              |      |
+|                                                              |                                                              |      |
+|                                                              |                                                              |      |
+|                                                              |                                                              |      |
 
 
 
