@@ -220,6 +220,21 @@ s ：取代，可以直接进行取代的工作哩！通常这个 s 的动作可
 
 
 
+- 如何替换^A（\001）,\002,\003等特殊字符
+
+```java
+方法1：符号替换
+其中 “^A” 这个符号 ，使用组合按键“ctrl+V+A”获得
+sed -i "s/^A/\t/g" test.txt
+
+方法2：编码替换
+sed -i "s/\x01/\t/g" test.txt
+```
+
+![image-20220210165501575](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\linux\Linux的高级命令集锦.assets\image-20220210165501575.png)
+
+
+
 > 找到access.log文件中/req/v2/fetch的 请求，拿到7 14 15列，然后按 "切分， 选取大于1s的输出
 
 ```shell
@@ -923,3 +938,4 @@ screen -X -S [session # you want to kill] quit
 - [VIM超详细用法以及思维导图](https://zhuanlan.zhihu.com/p/77283813)
 - [use_vim_as_ide](https://gitcode.net/mirrors/yangyangwithgnu/use_vim_as_ide)
 - [Fuzzy finder(fzf+vim) 使用全指南](https://zhuanlan.zhihu.com/p/41859976)
+- [sed替换^A（\001）,\002,\003等特殊字符](https://blog.csdn.net/qq_16018407/article/details/78901809)
