@@ -176,6 +176,14 @@ $ cat action_relation.txt | awk  -F'\t' '{if($2==$3) print}' | head
 
 
 
+\#grep --color=auto “[[:digit:]]\{3\}\.[[:digit:]]\{3\}\.[[:digit:]]\{3\}\.[[:digit:]]\{3\}”FILE
+
+会显示出如下结果：
+
+212.592.111.303
+
+111.222.333.444
+
 
 
 
