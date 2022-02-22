@@ -115,18 +115,27 @@ VisualCode 远程工具：remote插件 + jdk11
 
 
 
-| 主题                 | 网站                                                         | 介绍              |
-| -------------------- | ------------------------------------------------------------ | ----------------- |
-| LaTeX                | https://www.latexlive.com/                                   | LaTeX公式在线     |
-|                      | https://excalidraw.com/                                      | 在线画图          |
-|                      | https://github.com/leiurayer/downkyi                         | B站视频下载       |
-|                      | Free Downloader Manager                                      | BT下载器          |
-|                      | Final Cut Pro                                                | Macos视频剪辑工具 |
-| Draw Function Graphs | https://rechneronline.de/function-graphs/                    | 方程式画图        |
-| Arthas 用户文档      | [Arthas（阿尔萨斯）](https://arthas.aliyun.com/doc/index.html) | Java诊断工具      |
-| gRPC APIs            | https://kreya.app/                                           |                   |
-| 快捷生成Entity       | https://java.bejson.com/generator/                           |                   |
-|                      |                                                              |                   |
+| 主题                                   | 网站                                                         | 介绍              |
+| -------------------------------------- | ------------------------------------------------------------ | ----------------- |
+| LaTeX                                  | https://www.latexlive.com/                                   | LaTeX公式在线     |
+|                                        | https://excalidraw.com/                                      | 在线画图          |
+|                                        | https://github.com/leiurayer/downkyi                         | B站视频下载       |
+|                                        | Free Downloader Manager                                      | BT下载器          |
+|                                        | Final Cut Pro                                                | Macos视频剪辑工具 |
+| Draw Function Graphs                   | https://rechneronline.de/function-graphs/                    | 方程式画图        |
+| Arthas 用户文档                        | [Arthas（阿尔萨斯）](https://arthas.aliyun.com/doc/index.html) | Java诊断工具      |
+| gRPC APIs                              | https://kreya.app/                                           |                   |
+| 快捷生成Entity                         | https://java.bejson.com/generator/                           |                   |
+| 说说 Mac 分屏的事(2) - Moom 的10个技巧 | https://zhuanlan.zhihu.com/p/20258341?columnSlug=MacTips#!   |                   |
+| windows下的分屏软件                    | https://www.zhihu.com/question/321895945                     |                   |
+|                                        |                                                              |                   |
+|                                        |                                                              |                   |
+|                                        |                                                              |                   |
+|                                        |                                                              |                   |
+|                                        |                                                              |                   |
+|                                        |                                                              |                   |
+|                                        |                                                              |                   |
+|                                        |                                                              |                   |
 
 
 
