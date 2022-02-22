@@ -1,4 +1,4 @@
-# 尚硅谷Flink教程笔记
+
 
 
 
@@ -1316,21 +1316,1624 @@ result> SensorReading{id='sensor_1', timestamp=1547718212, temperature=37.1}
 
 
 
-
-
-
-
 ![image-20220220210853819](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\flink\尚硅谷Flink教程笔记.assets\image-20220220210853819.png)
 
 **SplitStream虽然看起来像是两个Stream，但是其实它是一个特殊的Stream**;
 
 ##### Select
 
+**我们可以结合split&select将一个DataStream拆分成多个DataStream。**
+
+------
+
+测试场景：根据传感器温度高低，划分成两组，high和low（>30归入high）：
+
+*这个我发现在Flink当前时间最新版1.12.1已经不是DataStream的方法了，被去除了*
+
+这里直接附上教程代码（Flink1.10.1）
+
+```java
+package com.atguigu.apitest.transform;
+
+import com.atguigu.apitest.beans.SensorReading;
+import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.api.java.tuple.Tuple3;
+import org.apache.flink.streaming.api.collector.selector.OutputSelector;
+import org.apache.flink.streaming.api.datastream.ConnectedStreams;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
+import org.apache.flink.streaming.api.datastream.SplitStream;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.co.CoMapFunction;
+
+import java.util.Collections;
+
+
+public class TransformTest4_MultipleStreams {
+  public static void main(String[] args) throws Exception {
+    StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+    env.setParallelism(1);
+
+    // 从文件读取数据
+    DataStream<String> inputStream = env.readTextFile("D:\\Projects\\BigData\\FlinkTutorial\\src\\main\\resources\\sensor.txt");
+
+    // 转换成SensorReading
+    DataStream<SensorReading> dataStream = inputStream.map(line -> {
+      String[] fields = line.split(",");
+      return new SensorReading(fields[0], new Long(fields[1]), new Double(fields[2]));
+    } );
+
+    // 1. 分流，按照温度值30度为界分为两条流
+    SplitStream<SensorReading> splitStream = dataStream.split(new OutputSelector<SensorReading>() {
+      @Override
+      public Iterable<String> select(SensorReading value) {
+        return (value.getTemperature() > 30) ? Collections.singletonList("high") : Collections.singletonList("low");
+      }
+    });
+
+    DataStream<SensorReading> highTempStream = splitStream.select("high");
+    DataStream<SensorReading> lowTempStream = splitStream.select("low");
+    DataStream<SensorReading> allTempStream = splitStream.select("high", "low");
+
+    highTempStream.print("high");
+    lowTempStream.print("low");
+    allTempStream.print("all");
+    
+    env.execute();
+  }
+}
+```
+
+输出结果如下：
+
+```shell
+high> SensorReading{id='sensor_1', timestamp=1547718199, temperature=35.8}
+all > SensorReading{id='sensor_1', timestamp=1547718199, temperature=35.8}
+low > SensorReading{id='sensor_6', timestamp=1547718201, temperature=15.4}
+all > SensorReading{id='sensor_6', timestamp=1547718201, temperature=15.4}
+...
+```
+
+#### Connect和CoMap
+
+##### Connect
+
+![image-20220221090902723](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\flink\尚硅谷Flink教程笔记.assets\image-20220221090902723.png)
+
+ **DataStream,DataStream -> ConnectedStreams**: 连接两个保持他们类型的数据流，两个数据流被Connect 之后，只是被放在了一个流中，内部依然保持各自的数据和形式不发生任何变化，两个流相互独立。
+
+##### CoMap
+
+![image-20220221092740765](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\flink\尚硅谷Flink教程笔记.assets\image-20220221092740765.png)
+
+**ConnectedStreams -> DataStream**: 作用于ConnectedStreams 上，功能与map和flatMap一样，对ConnectedStreams 中的**每一个Stream分别进行map和flatMap操作**；
+
+------
+
+虽然Flink1.12.1的DataStream有connect和map方法，但是教程基于前面的split和select编写，所以这里直接附上教程的代码：
+
+```java
+package com.atguigu.apitest.transform;
+
+import com.atguigu.apitest.beans.SensorReading;
+import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.api.java.tuple.Tuple3;
+import org.apache.flink.streaming.api.collector.selector.OutputSelector;
+import org.apache.flink.streaming.api.datastream.ConnectedStreams;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
+import org.apache.flink.streaming.api.datastream.SplitStream;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.co.CoMapFunction;
+
+import java.util.Collections;
+
+
+public class TransformTest4_MultipleStreams {
+    public static void main(String[] args) throws Exception {
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.setParallelism(1);
+
+        // 从文件读取数据
+        DataStream<String> inputStream = env.readTextFile("D:\\Projects\\BigData\\FlinkTutorial\\src\\main\\resources\\sensor.txt");
+
+        // 转换成SensorReading
+        DataStream<SensorReading> dataStream = inputStream.map(line -> {
+            String[] fields = line.split(",");
+            return new SensorReading(fields[0], new Long(fields[1]), new Double(fields[2]));
+        } );
+
+        // 1. 分流，按照温度值30度为界分为两条流
+        SplitStream<SensorReading> splitStream = dataStream.split(new OutputSelector<SensorReading>() {
+            @Override
+            public Iterable<String> select(SensorReading value) {
+                return (value.getTemperature() > 30) ? Collections.singletonList("high") : Collections.singletonList("low");
+            }
+        });
+
+        DataStream<SensorReading> highTempStream = splitStream.select("high");
+        DataStream<SensorReading> lowTempStream = splitStream.select("low");
+        DataStream<SensorReading> allTempStream = splitStream.select("high", "low");
+
+        // highTempStream.print("high");
+        // lowTempStream.print("low");
+        // allTempStream.print("all");
+
+        // 2. 合流 connect，将高温流转换成二元组类型，与低温流连接合并之后，输出状态信息
+        DataStream<Tuple2<String, Double>> warningStream = highTempStream.map(new MapFunction<SensorReading, Tuple2<String, Double>>() {
+            @Override
+            public Tuple2<String, Double> map(SensorReading value) throws Exception {
+                return new Tuple2<>(value.getId(), value.getTemperature());
+            }
+        });
+
+        ConnectedStreams<Tuple2<String, Double>, SensorReading> connectedStreams = warningStream.connect(lowTempStream);
+
+        DataStream<Object> resultStream = connectedStreams.map(new CoMapFunction<Tuple2<String, Double>, SensorReading, Object>() {
+            @Override
+            public Object map1(Tuple2<String, Double> value) throws Exception {
+                return new Tuple3<>(value.f0, value.f1, "high temp warning");
+            }
+
+            @Override
+            public Object map2(SensorReading value) throws Exception {
+                return new Tuple2<>(value.getId(), "normal");
+            }
+        });
+
+        resultStream.print();
+        
+        env.execute();
+    }
+}
+```
+
+输出如下：
+
+```shell
+(sensor_1,35.8,high temp warning)
+(sensor_6,normal)
+(sensor_10,38.1,high temp warning)
+(sensor_7,normal)
+(sensor_1,36.3,high temp warning)
+(sensor_1,32.8,high temp warning)
+(sensor_1,37.1,high temp warning)
+```
+
+#### Union
+
+![image-20220221092844372](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\flink\尚硅谷Flink教程笔记.assets\image-20220221092844372.png)
+
+
+
+**DataStream -> DataStream**：对**两个或者两个以上**的DataStream进行Union操作，产生一个包含多有DataStream元素的新DataStream。
+
+**问题：和Connect的区别？**
+
+1. Connect 的数据类型可以不同，**Connect 只能合并两个流**；
+2. **Union可以合并多条流，Union的数据结构必须是一样的**；
+
+```java
+// 3. union联合多条流
+//        warningStream.union(lowTempStream); 这个不行，因为warningStream类型是DataStream<Tuple2<String, Double>>，而highTempStream是DataStream<SensorReading>
+        highTempStream.union(lowTempStream, allTempStream);
+```
+
+### 5.3.4 算子转换
+
+ 在Storm中，我们常常用Bolt的层级关系来表示各个数据的流向关系，组成一个拓扑。
+
+ 在Flink中，**Transformation算子就是将一个或多个DataStream转换为新的DataStream**，可以将多个转换组合成复杂的数据流拓扑。 如下图所示，DataStream会由不同的Transformation操作，转换、过滤、聚合成其他不同的流，从而完成我们的业务要求。
+
+![image-20220221093941125](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\flink\尚硅谷Flink教程笔记.assets\image-20220221093941125.png)
+
+
+
+## 5.4 支持的数据类型
+
+Flink流应用程序处理的是以数据对象表示的事件流。所以在Flink内部，我们需要能够处理这些对象。它们**需要被序列化和反序列化**，以便通过网络传送它们；或者从状态后端、检查点和保存点读取它们。为了有效地做到这一点，Flink需要明确知道应用程序所处理的数据类型。Flink使用类型信息的概念来表示数据类型，并为每个数据类型生成特定的序列化器、反序列化器和比较器。
+
+ Flink还具有一个类型提取系统，该系统分析函数的输入和返回类型，以自动获取类型信息，从而获得序列化器和反序列化器。但是，在某些情况下，例如lambda函数或泛型类型，需要显式地提供类型信息，才能使应用程序正常工作或提高其性能。
+
+ Flink支持Java和Scala中所有常见数据类型。使用最广泛的类型有以下几种。
+
+### 5.4.1 基础数据类型
+
+ Flink支持所有的Java和Scala基础数据类型，Int, Double, Long, String, …
+
+```java
+DataStream<Integer> numberStream = env.fromElements(1, 2, 3, 4);
+numberStream.map(data -> data * 2);
+```
+
+### 5.4.2 Java和Scala元组(Tuples
+
+java不像Scala天生支持元组Tuple类型，java的元组类型由Flink的包提供，默认提供Tuple0~Tuple25
+
+```java
+DataStream<Tuple2<String, Integer>> personStream = env.fromElements( 
+  new Tuple2("Adam", 17), 
+  new Tuple2("Sarah", 23) 
+); 
+personStream.filter(p -> p.f1 > 18);
+```
+
+### 5.4.3 Scala样例类(case classes)
+
+```scala
+case class Person(name:String,age:Int)
+
+val numbers: DataStream[(String,Integer)] = env.fromElements(
+  Person("张三",12),
+  Person("李四"，23)
+)
+```
+
+### 5.4.4 Java简单对象(POJO)
+
+java的POJO这里要求必须提供无参构造函数
+
+- 成员变量要求都是public（或者private但是提供get、set方法）
+
+```java
+public class Person{
+  public String name;
+  public int age;
+  public Person() {}
+  public Person( String name , int age) {
+    this.name = name;
+    this.age = age;
+  }
+}
+DataStream Pe rson > persons = env.fromElements(
+  new Person (" Alex", 42),
+  new Person (" Wendy",23)
+);
+```
+
+### 5.4.5 其他(Arrays, Lists, Maps, Enums,等等)
+
+Flink对Java和Scala中的一些特殊目的的类型也都是支持的，比如Java的ArrayList，HashMap，Enum等等。
+
+## 5.5 实现UDF函数——更细粒度的控制流
+
+### 5.5.1 函数类(Function Classes)
+
+ Flink暴露了所有UDF函数的接口(实现方式为接口或者抽象类)。例如MapFunction, FilterFunction, ProcessFunction等等。
+
+ 下面例子实现了FilterFunction接口：
+
+```java
+DataStream<String> flinkTweets = tweets.filter(new FlinkFilter()); 
+public static class FlinkFilter implements FilterFunction<String> { 
+  @Override public boolean filter(String value) throws Exception { 
+    return value.contains("flink");
+  }
+}
+```
+
+ 还可以将函数实现成匿名类
+
+```java
+DataStream<String> flinkTweets = tweets.filter(
+  new FilterFunction<String>() { 
+    @Override public boolean filter(String value) throws Exception { 
+      return value.contains("flink"); 
+    }
+  }
+);
+```
+
+ 我们filter的字符串"flink"还可以当作参数传进去。
+
+```java
+DataStream<String> tweets = env.readTextFile("INPUT_FILE "); 
+DataStream<String> flinkTweets = tweets.filter(new KeyWordFilter("flink")); 
+public static class KeyWordFilter implements FilterFunction<String> { 
+  private String keyWord; 
+
+  KeyWordFilter(String keyWord) { 
+    this.keyWord = keyWord; 
+  } 
+
+  @Override public boolean filter(String value) throws Exception { 
+    return value.contains(this.keyWord); 
+  } 
+}
+```
+
+### 5.5.2 匿名函数(Lambda Functions)
+
+```java
+DataStream<String> tweets = env.readTextFile("INPUT_FILE"); 
+DataStream<String> flinkTweets = tweets.filter( tweet -> tweet.contains("flink") );
+```
+
+### 5.5.3 富函数(Rich Functions)
+
+ “富函数”是DataStream API提供的一个函数类的接口，所有Flink函数类都有其Rich版本。
+
+ **它与常规函数的不同在于，可以获取运行环境的上下文，并拥有一些生命周期方法，所以可以实现更复杂的功能**。
+
+- RichMapFunction
+- RichFlatMapFunction
+- RichFilterFunction
+- …
+
+ Rich Function有一个**生命周期**的概念。典型的生命周期方法有：
+
+- **`open()`方法是rich function的初始化方法，当一个算子例如map或者filter被调用之前`open()`会被调用。**
+- **`close()`方法是生命周期中的最后一个调用的方法，做一些清理工作。**
+- **`getRuntimeContext()`方法提供了函数的RuntimeContext的一些信息，例如函数执行的并行度，任务的名字，以及state状态**
+
+```java
+public static class MyMapFunction extends RichMapFunction<SensorReading, Tuple2<Integer, String>> { 
+
+  @Override public Tuple2<Integer, String> map(SensorReading value) throws Exception {
+    return new Tuple2<>(getRuntimeContext().getIndexOfThisSubtask(), value.getId()); 
+  } 
+
+  @Override public void open(Configuration parameters) throws Exception { 
+    System.out.println("my map open"); // 以下可以做一些初始化工作，例如建立一个和HDFS的连接 
+  } 
+
+  @Override public void close() throws Exception { 
+    System.out.println("my map close"); // 以下做一些清理工作，例如断开和HDFS的连接 
+  } 
+}
+```
+
+------
+
+测试代码：
+
+```java
+package apitest.transform;
+
+import apitest.beans.SensorReading;
+import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.functions.RichMapFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+
+
+public class TransformTest5_RichFunction {
+    public static void main(String[] args) throws Exception {
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.setParallelism(4);
+
+        DataStream<String> inputStream = env.readTextFile("/tmp/Flink_Tutorial/src/main/resources/sensor.txt");
+
+        // 转换成SensorReading类型
+        DataStream<SensorReading> dataStream = inputStream.map(line -> {
+            String[] fields = line.split(",");
+            return new SensorReading(fields[0], new Long(fields[1]), new Double(fields[2]));
+        });
+
+        DataStream<Tuple2<String, Integer>> resultStream = dataStream.map( new MyMapper() );
+
+        resultStream.print();
+
+        env.execute();
+    }
+
+    // 传统的Function不能获取上下文信息，只能处理当前数据，不能和其他数据交互
+    public static class MyMapper0 implements MapFunction<SensorReading, Tuple2<String, Integer>> {
+        @Override
+        public Tuple2<String, Integer> map(SensorReading value) throws Exception {
+            return new Tuple2<>(value.getId(), value.getId().length());
+        }
+    }
+
+    // 实现自定义富函数类（RichMapFunction是一个抽象类）
+    public static class MyMapper extends RichMapFunction<SensorReading, Tuple2<String, Integer>> {
+        @Override
+        public Tuple2<String, Integer> map(SensorReading value) throws Exception {
+//            RichFunction可以获取State状态
+//            getRuntimeContext().getState();
+            return new Tuple2<>(value.getId(), getRuntimeContext().getIndexOfThisSubtask());
+        }
+
+        @Override
+        public void open(Configuration parameters) throws Exception {
+            // 初始化工作，一般是定义状态，或者建立数据库连接
+            System.out.println("open");
+        }
+
+        @Override
+        public void close() throws Exception {
+            // 一般是关闭连接和清空状态的收尾操作
+            System.out.println("close");
+        }
+    }
+}
+```
+
+输出如下：
+
+由于设置了执行环境env的并行度为4，所以有4个slot执行自定义的RichFunction，输出4次open和close
+
+```shell
+open
+open
+open
+open
+4> (sensor_1,3)
+4> (sensor_6,3)
+close
+2> (sensor_1,1)
+2> (sensor_1,1)
+close
+3> (sensor_1,2)
+close
+1> (sensor_7,0)
+1> (sensor_10,0)
+close
+```
+
+## 5.6 数据重分区操作
+
+重分区操作，在DataStream类中可以看到很多`Partitioner`字眼的类。
+
+**其中`partitionCustom(...)`方法用于自定义重分区**。
+
+java代码：
+
+```java
+package apitest.transform;
+
+import apitest.beans.SensorReading;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+
+
+public class TransformTest6_Partition {
+  public static void main(String[] args) throws Exception{
+
+    // 创建执行环境
+    StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+    // 设置并行度 = 4
+    env.setParallelism(4);
+
+    // 从文件读取数据
+    DataStream<String> inputStream = env.readTextFile("/tmp/Flink_Tutorial/src/main/resources/sensor.txt");
+
+    // 转换成SensorReading类型
+    DataStream<SensorReading> dataStream = inputStream.map(line -> {
+      String[] fields = line.split(",");
+      return new SensorReading(fields[0], new Long(fields[1]), new Double(fields[2]));
+    });
+
+    // SingleOutputStreamOperator多并行度默认就rebalance,轮询方式分配
+    dataStream.print("input");
+
+    // 1. shuffle (并非批处理中的获取一批后才打乱，这里每次获取到直接打乱且分区)
+    DataStream<String> shuffleStream = inputStream.shuffle();
+    shuffleStream.print("shuffle");
+
+    // 2. keyBy (Hash，然后取模)
+    dataStream.keyBy(SensorReading::getId).print("keyBy");
+
+    // 3. global (直接发送给第一个分区，少数特殊情况才用)
+    dataStream.global().print("global");
+
+    env.execute();
+  }
+}
+```
+
+输出：
+
+```shell
+input:3> SensorReading{id='sensor_1', timestamp=1547718199, temperature=35.8}
+input:3> SensorReading{id='sensor_6', timestamp=1547718201, temperature=15.4}
+input:1> SensorReading{id='sensor_1', timestamp=1547718207, temperature=36.3}
+input:1> SensorReading{id='sensor_1', timestamp=1547718209, temperature=32.8}
+shuffle:2> sensor_6,1547718201,15.4
+shuffle:1> sensor_1,1547718199,35.8
+input:4> SensorReading{id='sensor_7', timestamp=1547718202, temperature=6.7}
+input:4> SensorReading{id='sensor_10', timestamp=1547718205, temperature=38.1}
+shuffle:1> sensor_1,1547718207,36.3
+shuffle:2> sensor_1,1547718209,32.8
+global:1> SensorReading{id='sensor_1', timestamp=1547718199, temperature=35.8}
+keyBy:3> SensorReading{id='sensor_1', timestamp=1547718199, temperature=35.8}
+global:1> SensorReading{id='sensor_6', timestamp=1547718201, temperature=15.4}
+keyBy:3> SensorReading{id='sensor_6', timestamp=1547718201, temperature=15.4}
+keyBy:3> SensorReading{id='sensor_1', timestamp=1547718207, temperature=36.3}
+keyBy:3> SensorReading{id='sensor_1', timestamp=1547718209, temperature=32.8}
+global:1> SensorReading{id='sensor_1', timestamp=1547718207, temperature=36.3}
+shuffle:1> sensor_7,1547718202,6.7
+global:1> SensorReading{id='sensor_1', timestamp=1547718209, temperature=32.8}
+shuffle:2> sensor_10,1547718205,38.1
+input:2> SensorReading{id='sensor_1', timestamp=1547718212, temperature=37.1}
+global:1> SensorReading{id='sensor_7', timestamp=1547718202, temperature=6.7}
+keyBy:4> SensorReading{id='sensor_7', timestamp=1547718202, temperature=6.7}
+keyBy:2> SensorReading{id='sensor_10', timestamp=1547718205, temperature=38.1}
+global:1> SensorReading{id='sensor_10', timestamp=1547718205, temperature=38.1}
+shuffle:1> sensor_1,1547718212,37.1
+keyBy:3> SensorReading{id='sensor_1', timestamp=1547718212, temperature=37.1}
+global:1> SensorReading{id='sensor_1', timestamp=1547718212, temperature=37.1}
+```
+
+## [5.7 Sink](https://ashiamd.github.io/docsify-notes/#/study/BigData/Flink/尚硅谷Flink入门到实战-学习笔记?id=_57-sink)
+
+> [Flink之流处理API之Sink](https://blog.csdn.net/lixinkuan328/article/details/104116894)
+
+ Flink没有类似于spark中foreach方法，让用户进行迭代的操作。虽有对外的输出操作都要利用Sink完成。最后通过类似如下方式完成整个任务最终输出操作。
+
+```java
+stream.addSink(new MySink(xxxx)) 
+```
+
+ 官方提供了一部分的框架的sink。除此以外，需要用户自定义实现sink。
+
+## [5.5 实现UDF函数——更细粒度的控制流](https://ashiamd.github.io/docsify-notes/#/study/BigData/Flink/尚硅谷Flink入门到实战-学习笔记?id=_55-实现udf函数更细粒度的控制流)
+
+### [5.5.1 函数类(Function Classes)](https://ashiamd.github.io/docsify-notes/#/study/BigData/Flink/尚硅谷Flink入门到实战-学习笔记?id=_551-函数类function-classes)
+
+ Flink暴露了所有UDF函数的接口(实现方式为接口或者抽象类)。例如MapFunction, FilterFunction, ProcessFunction等等。
+
+ 下面例子实现了FilterFunction接口：
+
+```java
+DataStream<String> flinkTweets = tweets.filter(new FlinkFilter()); 
+public static class FlinkFilter implements FilterFunction<String> { 
+  @Override public boolean filter(String value) throws Exception { 
+    return value.contains("flink");
+  }
+}
+```
+
+ 还可以将函数实现成匿名类
+
+```java
+DataStream<String> flinkTweets = tweets.filter(
+  new FilterFunction<String>() { 
+    @Override public boolean filter(String value) throws Exception { 
+      return value.contains("flink"); 
+    }
+  }
+);
+```
+
+ 我们filter的字符串"flink"还可以当作参数传进去。
+
+```java
+DataStream<String> tweets = env.readTextFile("INPUT_FILE "); 
+DataStream<String> flinkTweets = tweets.filter(new KeyWordFilter("flink")); 
+public static class KeyWordFilter implements FilterFunction<String> { 
+  private String keyWord; 
+
+  KeyWordFilter(String keyWord) { 
+    this.keyWord = keyWord; 
+  } 
+
+  @Override public boolean filter(String value) throws Exception { 
+    return value.contains(this.keyWord); 
+  } 
+}
+```
+
+### [5.5.2 匿名函数(Lambda Functions)](https://ashiamd.github.io/docsify-notes/#/study/BigData/Flink/尚硅谷Flink入门到实战-学习笔记?id=_552-匿名函数lambda-functions)
+
+```java
+DataStream<String> tweets = env.readTextFile("INPUT_FILE"); 
+DataStream<String> flinkTweets = tweets.filter( tweet -> tweet.contains("flink") );
+```
+
+### [5.5.3 富函数(Rich Functions)](https://ashiamd.github.io/docsify-notes/#/study/BigData/Flink/尚硅谷Flink入门到实战-学习笔记?id=_553-富函数rich-functions)
+
+ “富函数”是DataStream API提供的一个函数类的接口，所有Flink函数类都有其Rich版本。
+
+ **它与常规函数的不同在于，可以获取运行环境的上下文，并拥有一些生命周期方法，所以可以实现更复杂的功能**。
+
+- RichMapFunction
+- RichFlatMapFunction
+- RichFilterFunction
+- …
+
+ Rich Function有一个**生命周期**的概念。典型的生命周期方法有：
+
+- **`open()`方法是rich function的初始化方法，当一个算子例如map或者filter被调用之前`open()`会被调用。**
+- **`close()`方法是生命周期中的最后一个调用的方法，做一些清理工作。**
+- **`getRuntimeContext()`方法提供了函数的RuntimeContext的一些信息，例如函数执行的并行度，任务的名字，以及state状态**
+
+```java
+public static class MyMapFunction extends RichMapFunction<SensorReading, Tuple2<Integer, String>> { 
+
+  @Override public Tuple2<Integer, String> map(SensorReading value) throws Exception {
+    return new Tuple2<>(getRuntimeContext().getIndexOfThisSubtask(), value.getId()); 
+  } 
+
+  @Override public void open(Configuration parameters) throws Exception { 
+    System.out.println("my map open"); // 以下可以做一些初始化工作，例如建立一个和HDFS的连接 
+  } 
+
+  @Override public void close() throws Exception { 
+    System.out.println("my map close"); // 以下做一些清理工作，例如断开和HDFS的连接 
+  } 
+}
+```
+
+------
+
+测试代码：
+
+```java
+package apitest.transform;
+
+import apitest.beans.SensorReading;
+import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.functions.RichMapFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+
+
+public class TransformTest5_RichFunction {
+    public static void main(String[] args) throws Exception {
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.setParallelism(4);
+
+        DataStream<String> inputStream = env.readTextFile("/tmp/Flink_Tutorial/src/main/resources/sensor.txt");
+
+        // 转换成SensorReading类型
+        DataStream<SensorReading> dataStream = inputStream.map(line -> {
+            String[] fields = line.split(",");
+            return new SensorReading(fields[0], new Long(fields[1]), new Double(fields[2]));
+        });
+
+        DataStream<Tuple2<String, Integer>> resultStream = dataStream.map( new MyMapper() );
+
+        resultStream.print();
+
+        env.execute();
+    }
+
+    // 传统的Function不能获取上下文信息，只能处理当前数据，不能和其他数据交互
+    public static class MyMapper0 implements MapFunction<SensorReading, Tuple2<String, Integer>> {
+        @Override
+        public Tuple2<String, Integer> map(SensorReading value) throws Exception {
+            return new Tuple2<>(value.getId(), value.getId().length());
+        }
+    }
+
+    // 实现自定义富函数类（RichMapFunction是一个抽象类）
+    public static class MyMapper extends RichMapFunction<SensorReading, Tuple2<String, Integer>> {
+        @Override
+        public Tuple2<String, Integer> map(SensorReading value) throws Exception {
+//            RichFunction可以获取State状态
+//            getRuntimeContext().getState();
+            return new Tuple2<>(value.getId(), getRuntimeContext().getIndexOfThisSubtask());
+        }
+
+        @Override
+        public void open(Configuration parameters) throws Exception {
+            // 初始化工作，一般是定义状态，或者建立数据库连接
+            System.out.println("open");
+        }
+
+        @Override
+        public void close() throws Exception {
+            // 一般是关闭连接和清空状态的收尾操作
+            System.out.println("close");
+        }
+    }
+}
+```
+
+输出如下：
+
+由于设置了执行环境env的并行度为4，所以有4个slot执行自定义的RichFunction，输出4次open和close
+
+```shell
+open
+open
+open
+open
+4> (sensor_1,3)
+4> (sensor_6,3)
+close
+2> (sensor_1,1)
+2> (sensor_1,1)
+close
+3> (sensor_1,2)
+close
+1> (sensor_7,0)
+1> (sensor_10,0)
+close
+```
+
+## [5.6 数据重分区操作](https://ashiamd.github.io/docsify-notes/#/study/BigData/Flink/尚硅谷Flink入门到实战-学习笔记?id=_56-数据重分区操作)
+
+重分区操作，在DataStream类中可以看到很多`Partitioner`字眼的类。
+
+**其中`partitionCustom(...)`方法用于自定义重分区**。
+
+java代码：
+
+```java
+package apitest.transform;
+
+import apitest.beans.SensorReading;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+
+
+public class TransformTest6_Partition {
+  public static void main(String[] args) throws Exception{
+
+    // 创建执行环境
+    StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+    // 设置并行度 = 4
+    env.setParallelism(4);
+
+    // 从文件读取数据
+    DataStream<String> inputStream = env.readTextFile("/tmp/Flink_Tutorial/src/main/resources/sensor.txt");
+
+    // 转换成SensorReading类型
+    DataStream<SensorReading> dataStream = inputStream.map(line -> {
+      String[] fields = line.split(",");
+      return new SensorReading(fields[0], new Long(fields[1]), new Double(fields[2]));
+    });
+
+    // SingleOutputStreamOperator多并行度默认就rebalance,轮询方式分配
+    dataStream.print("input");
+
+    // 1. shuffle (并非批处理中的获取一批后才打乱，这里每次获取到直接打乱且分区)
+    DataStream<String> shuffleStream = inputStream.shuffle();
+    shuffleStream.print("shuffle");
+
+    // 2. keyBy (Hash，然后取模)
+    dataStream.keyBy(SensorReading::getId).print("keyBy");
+
+    // 3. global (直接发送给第一个分区，少数特殊情况才用)
+    dataStream.global().print("global");
+
+    env.execute();
+  }
+}
+```
+
+输出：
+
+```shell
+input:3> SensorReading{id='sensor_1', timestamp=1547718199, temperature=35.8}
+input:3> SensorReading{id='sensor_6', timestamp=1547718201, temperature=15.4}
+input:1> SensorReading{id='sensor_1', timestamp=1547718207, temperature=36.3}
+input:1> SensorReading{id='sensor_1', timestamp=1547718209, temperature=32.8}
+shuffle:2> sensor_6,1547718201,15.4
+shuffle:1> sensor_1,1547718199,35.8
+input:4> SensorReading{id='sensor_7', timestamp=1547718202, temperature=6.7}
+input:4> SensorReading{id='sensor_10', timestamp=1547718205, temperature=38.1}
+shuffle:1> sensor_1,1547718207,36.3
+shuffle:2> sensor_1,1547718209,32.8
+global:1> SensorReading{id='sensor_1', timestamp=1547718199, temperature=35.8}
+keyBy:3> SensorReading{id='sensor_1', timestamp=1547718199, temperature=35.8}
+global:1> SensorReading{id='sensor_6', timestamp=1547718201, temperature=15.4}
+keyBy:3> SensorReading{id='sensor_6', timestamp=1547718201, temperature=15.4}
+keyBy:3> SensorReading{id='sensor_1', timestamp=1547718207, temperature=36.3}
+keyBy:3> SensorReading{id='sensor_1', timestamp=1547718209, temperature=32.8}
+global:1> SensorReading{id='sensor_1', timestamp=1547718207, temperature=36.3}
+shuffle:1> sensor_7,1547718202,6.7
+global:1> SensorReading{id='sensor_1', timestamp=1547718209, temperature=32.8}
+shuffle:2> sensor_10,1547718205,38.1
+input:2> SensorReading{id='sensor_1', timestamp=1547718212, temperature=37.1}
+global:1> SensorReading{id='sensor_7', timestamp=1547718202, temperature=6.7}
+keyBy:4> SensorReading{id='sensor_7', timestamp=1547718202, temperature=6.7}
+keyBy:2> SensorReading{id='sensor_10', timestamp=1547718205, temperature=38.1}
+global:1> SensorReading{id='sensor_10', timestamp=1547718205, temperature=38.1}
+shuffle:1> sensor_1,1547718212,37.1
+keyBy:3> SensorReading{id='sensor_1', timestamp=1547718212, temperature=37.1}
+global:1> SensorReading{id='sensor_1', timestamp=1547718212, temperature=37.1}
+```
+
+## 5.7 Sink
+
+ Flink没有类似于spark中foreach方法，让用户进行迭代的操作。虽有对外的输出操作都要利用Sink完成。最后通过类似如下方式完成整个任务最终输出操作。
+
+```java
+stream.addSink(new MySink(xxxx)) 
+```
+
+ 官方提供了一部分的框架的sink。除此以外，需要用户自定义实现
+
+![image-20220221192540874](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\flink\尚硅谷Flink教程笔记.assets\image-20220221192540874.png)
+
+
+
+### 5.7.1 Kafka
+
+1. pom依赖
+
+   ```xml
+   <?xml version="1.0" encoding="UTF-8"?>
+   <project xmlns="http://maven.apache.org/POM/4.0.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+       <modelVersion>4.0.0</modelVersion>
+   
+       <groupId>org.example</groupId>
+       <artifactId>Flink_Tutorial</artifactId>
+       <version>1.0-SNAPSHOT</version>
+   
+       <properties>
+           <maven.compiler.source>8</maven.compiler.source>
+           <maven.compiler.target>8</maven.compiler.target>
+           <flink.version>1.12.1</flink.version>
+           <scala.binary.version>2.12</scala.binary.version>
+       </properties>
+   
+       <dependencies>
+           <dependency>
+               <groupId>org.apache.flink</groupId>
+               <artifactId>flink-java</artifactId>
+               <version>${flink.version}</version>
+           </dependency>
+           <dependency>
+               <groupId>org.apache.flink</groupId>
+               <artifactId>flink-streaming-scala_${scala.binary.version}</artifactId>
+               <version>${flink.version}</version>
+           </dependency>
+           <dependency>
+               <groupId>org.apache.flink</groupId>
+               <artifactId>flink-clients_${scala.binary.version}</artifactId>
+               <version>${flink.version}</version>
+           </dependency>
+   
+           <!-- kafka -->
+           <dependency>
+               <groupId>org.apache.flink</groupId>
+               <artifactId>flink-connector-kafka_${scala.binary.version}</artifactId>
+               <version>${flink.version}</version>
+           </dependency>
+       </dependencies>
+   
+   </project>
+   ```
+
+2. 编写java代码
+
+   ```java
+   package apitest.sink;
+   
+   import apitest.beans.SensorReading;
+   import org.apache.flink.api.common.serialization.SimpleStringSchema;
+   import org.apache.flink.streaming.api.datastream.DataStream;
+   import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+   import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+   import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
+   
+   import java.util.Properties;
+   
+   
+   public class SinkTest1_Kafka {
+       public static void main(String[] args) throws Exception{
+           // 创建执行环境
+           StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+   
+           // 并行度设置为1
+           env.setParallelism(1);
+   
+           Properties properties = new Properties();
+           properties.setProperty("bootstrap.servers", "localhost:9092");
+           properties.setProperty("group.id", "consumer-group");
+           properties.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+           properties.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+           properties.setProperty("auto.offset.reset", "latest");
+   
+           // 从Kafka中读取数据
+           DataStream<String> inputStream = env.addSource( new FlinkKafkaConsumer<String>("sensor", new SimpleStringSchema(), properties));
+   
+           // 序列化从Kafka中读取的数据
+           DataStream<String> dataStream = inputStream.map(line -> {
+               String[] fields = line.split(",");
+               return new SensorReading(fields[0], new Long(fields[1]), new Double(fields[2])).toString();
+           });
+   
+           // 将数据写入Kafka
+           dataStream.addSink( new FlinkKafkaProducer<String>("localhost:9092", "sinktest", new SimpleStringSchema()));
+           
+           env.execute();
+       }
+   }
+   ```
+
+3. 启动zookeeper
+
+   ```shell
+   $ bin/zookeeper-server-start.sh config/zookeeper.properties
+   ```
+
+4. 启动kafka服务
+
+   ```shell
+   $ bin/kafka-server-start.sh config/server.properties
+   ```
+
+5. 新建kafka生产者console
+
+   ```shell
+   $ bin/kafka-console-producer.sh --broker-list localhost:9092  --topic sensor
+   ```
+
+6. 新建kafka消费者console
+
+   ```shell
+   $ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sinktest
+   ```
+
+7. 运行Flink程序，在kafka生产者console输入数据，查看kafka消费者console的输出结果
+
+   输入(kafka生产者console)
+
+   ```shell
+   >sensor_1,1547718199,35.8
+   >sensor_6,1547718201,15.4
+   ```
+
+   输出(kafka消费者console)
+
+   ```shell
+   SensorReading{id='sensor_1', timestamp=1547718199, temperature=35.8}
+   SensorReading{id='sensor_6', timestamp=1547718201, temperature=15.4}
+   ```
+
+这里Flink的作用相当于pipeline了。
+
+### 5.7.2 Redis
+
+> [flink-connector-redis](https://mvnrepository.com/search?q=flink-connector-redis)
+>
+> 查询Flink连接器，最简单的就是查询关键字`flink-connector-`
+
+这里将Redis当作sink的输出对象。
+
+1. pom依赖
+
+   这个可谓相当老的依赖了，2017年的。
+
+   ```xml
+   <!-- https://mvnrepository.com/artifact/org.apache.bahir/flink-connector-redis -->
+   <dependency>
+       <groupId>org.apache.bahir</groupId>
+       <artifactId>flink-connector-redis_2.11</artifactId>
+       <version>1.0</version>
+   </dependency>
+   ```
+
+2. 编写java代码
+
+   ```java
+   package apitest.sink;
+   
+   import apitest.beans.SensorReading;
+   import org.apache.flink.streaming.api.datastream.DataStream;
+   import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+   import org.apache.flink.streaming.connectors.redis.RedisSink;
+   import org.apache.flink.streaming.connectors.redis.common.config.FlinkJedisPoolConfig;
+   import org.apache.flink.streaming.connectors.redis.common.mapper.RedisCommand;
+   import org.apache.flink.streaming.connectors.redis.common.mapper.RedisCommandDescription;
+   import org.apache.flink.streaming.connectors.redis.common.mapper.RedisMapper;
+   
+   
+   public class SinkTest2_Redis {
+       public static void main(String[] args) throws Exception {
+           StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+           env.setParallelism(1);
+   
+           // 从文件读取数据
+           DataStream<String> inputStream = env.readTextFile("/tmp/Flink_Tutorial/src/main/resources/sensor.txt");
+   
+           // 转换成SensorReading类型
+           DataStream<SensorReading> dataStream = inputStream.map(line -> {
+               String[] fields = line.split(",");
+               return new SensorReading(fields[0], new Long(fields[1]), new Double(fields[2]));
+           });
+   
+           // 定义jedis连接配置(我这里连接的是docker的redis)
+           FlinkJedisPoolConfig config = new FlinkJedisPoolConfig.Builder()
+                   .setHost("localhost")
+                   .setPort(6379)
+                   .setPassword("123456")
+                   .setDatabase(0)
+                   .build();
+   
+           dataStream.addSink(new RedisSink<>(config, new MyRedisMapper()));
+   
+           env.execute();
+       }
+   
+       // 自定义RedisMapper
+       public static class MyRedisMapper implements RedisMapper<SensorReading> {
+           // 定义保存数据到redis的命令，存成Hash表，hset sensor_temp id temperature
+           @Override
+           public RedisCommandDescription getCommandDescription() {
+               return new RedisCommandDescription(RedisCommand.HSET, "sensor_temp");
+           }
+   
+           @Override
+           public String getKeyFromData(SensorReading data) {
+               return data.getId();
+           }
+   
+           @Override
+           public String getValueFromData(SensorReading data) {
+               return data.getTemperature().toString();
+           }
+       }
+   }
+   ```
+
+3. 启动redis服务
+
+4. 启动Flink程序
+
+5. 查看Redis里的数据
+
+   *因为最新数据覆盖前面的，所以最后redis里呈现的是最新的数据。*
+
+   ```shell
+   localhost:0>hgetall sensor_temp
+   1) "sensor_1"
+   2) "37.1"
+   3) "sensor_6"
+   4) "15.4"
+   5) "sensor_7"
+   6) "6.7"
+   7) "sensor_10"
+   8) "38.1"
+   ```
+
+### 5.7.3 Elasticsearch
+
+1. pom依赖
+
+   ```xml
+   <!-- ElasticSearch7 -->
+   <dependency>
+       <groupId>org.apache.flink</groupId>
+       <artifactId>flink-connector-elasticsearch7_2.12</artifactId>
+       <version>1.12.1</version>
+   </dependency>
+   ```
+
+2. 编写java代码
+
+   ```java
+   package apitest.sink;
+   
+   import apitest.beans.SensorReading;
+   import org.apache.flink.api.common.functions.RuntimeContext;
+   import org.apache.flink.streaming.api.datastream.DataStream;
+   import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+   import org.apache.flink.streaming.connectors.elasticsearch.ElasticsearchSinkFunction;
+   import org.apache.flink.streaming.connectors.elasticsearch.RequestIndexer;
+   import org.apache.flink.streaming.connectors.elasticsearch7.ElasticsearchSink;
+   import org.apache.http.HttpHost;
+   import org.elasticsearch.action.index.IndexRequest;
+   import org.elasticsearch.client.Requests;
+   
+   import java.util.ArrayList;
+   import java.util.HashMap;
+   import java.util.List;
+   
+   
+   public class SinkTest3_Es {
+       public static void main(String[] args) throws Exception {
+           StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+           env.setParallelism(1);
+   
+           // 从文件读取数据
+           DataStream<String> inputStream = env.readTextFile("/tmp/Flink_Tutorial/src/main/resources/sensor.txt");
+   
+           // 转换成SensorReading类型
+           DataStream<SensorReading> dataStream = inputStream.map(line -> {
+               String[] fields = line.split(",");
+               return new SensorReading(fields[0], new Long(fields[1]), new Double(fields[2]));
+           });
+   
+           // 定义es的连接配置
+           List<HttpHost> httpHosts = new ArrayList<>();
+           httpHosts.add(new HttpHost("localhost", 9200));
+   
+           dataStream.addSink( new ElasticsearchSink.Builder<SensorReading>(httpHosts, new MyEsSinkFunction()).build());
+   
+           env.execute();
+       }
+   
+       // 实现自定义的ES写入操作
+       public static class MyEsSinkFunction implements ElasticsearchSinkFunction<SensorReading> {
+           @Override
+           public void process(SensorReading element, RuntimeContext ctx, RequestIndexer indexer) {
+               // 定义写入的数据source
+               HashMap<String, String> dataSource = new HashMap<>();
+               dataSource.put("id", element.getId());
+               dataSource.put("temp", element.getTemperature().toString());
+               dataSource.put("ts", element.getTimestamp().toString());
+   
+               // 创建请求，作为向es发起的写入命令(ES7统一type就是_doc，不再允许指定type)
+               IndexRequest indexRequest = Requests.indexRequest()
+                       .index("sensor")
+                       .source(dataSource);
+   
+               // 用index发送请求
+               indexer.add(indexRequest);
+           }
+       }
+   }
+   ```
+
+3. 启动ElasticSearch（我这里是docker启动的
+
+4. 运行Flink程序，查看ElasticSearch是否新增数据
+
+   ```shell
+   $ curl "localhost:9200/sensor/_search?pretty"
+   {
+     "took" : 1,
+     "timed_out" : false,
+     "_shards" : {
+       "total" : 1,
+       "successful" : 1,
+       "skipped" : 0,
+       "failed" : 0
+     },
+     "hits" : {
+       "total" : {
+         "value" : 7,
+         "relation" : "eq"
+       },
+       "max_score" : 1.0,
+       "hits" : [
+         {
+           "_index" : "sensor",
+           "_type" : "_doc",
+           "_id" : "jciyWXcBiXrGJa12kSQt",
+           "_score" : 1.0,
+           "_source" : {
+             "temp" : "35.8",
+             "id" : "sensor_1",
+             "ts" : "1547718199"
+           }
+         },
+         {
+           "_index" : "sensor",
+           "_type" : "_doc",
+           "_id" : "jsiyWXcBiXrGJa12kSQu",
+           "_score" : 1.0,
+           "_source" : {
+             "temp" : "15.4",
+             "id" : "sensor_6",
+             "ts" : "1547718201"
+           }
+         },
+         {
+           "_index" : "sensor",
+           "_type" : "_doc",
+           "_id" : "j8iyWXcBiXrGJa12kSQu",
+           "_score" : 1.0,
+           "_source" : {
+             "temp" : "6.7",
+             "id" : "sensor_7",
+             "ts" : "1547718202"
+           }
+         },
+         {
+           "_index" : "sensor",
+           "_type" : "_doc",
+           "_id" : "kMiyWXcBiXrGJa12kSQu",
+           "_score" : 1.0,
+           "_source" : {
+             "temp" : "38.1",
+             "id" : "sensor_10",
+             "ts" : "1547718205"
+           }
+         },
+         {
+           "_index" : "sensor",
+           "_type" : "_doc",
+           "_id" : "kciyWXcBiXrGJa12kSQu",
+           "_score" : 1.0,
+           "_source" : {
+             "temp" : "36.3",
+             "id" : "sensor_1",
+             "ts" : "1547718207"
+           }
+         },
+         {
+           "_index" : "sensor",
+           "_type" : "_doc",
+           "_id" : "ksiyWXcBiXrGJa12kSQu",
+           "_score" : 1.0,
+           "_source" : {
+             "temp" : "32.8",
+             "id" : "sensor_1",
+             "ts" : "1547718209"
+           }
+         },
+         {
+           "_index" : "sensor",
+           "_type" : "_doc",
+           "_id" : "k8iyWXcBiXrGJa12kSQu",
+           "_score" : 1.0,
+           "_source" : {
+             "temp" : "37.1",
+             "id" : "sensor_1",
+             "ts" : "1547718212"
+           }
+         }
+       ]
+     }
+   }
+   ```
+
+### 5.7.4 JDBC自定义sink
+
+> [JDBC Connector](https://ci.apache.org/projects/flink/flink-docs-release-1.12/zh/dev/connectors/jdbc.html) <= 官方目前没有专门针对MySQL的，我们自己实现就好了
+
+这里测试的是连接MySQL。
+
+1. pom依赖（我本地docker里的mysql是8.0.19版本的）
+
+   ```xml
+   <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+   <dependency>
+       <groupId>mysql</groupId>
+       <artifactId>mysql-connector-java</artifactId>
+       <version>8.0.19</version>
+   </dependency>
+   ```
+
+2. 启动mysql服务（我本地是docker启动的）
+
+3. 新建数据库
+
+   ```sql
+   CREATE DATABASE `flink_test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+   ```
+
+4. 新建schema
+
+   ```sql
+   CREATE TABLE `sensor_temp` (
+     `id` varchar(32) NOT NULL,
+     `temp` double NOT NULL
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+   ```
+
+5. 编写java代码
+
+   ```java
+   package apitest.sink;
+   
+   import apitest.beans.SensorReading;
+   import apitest.source.SourceTest4_UDF;
+   import org.apache.flink.configuration.Configuration;
+   import org.apache.flink.streaming.api.datastream.DataStream;
+   import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+   import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
+   
+   import java.sql.Connection;
+   import java.sql.DriverManager;
+   import java.sql.PreparedStatement;
+   
+   
+   public class SinkTest4_Jdbc {
+       public static void main(String[] args) throws Exception {
+   
+           // 创建执行环境
+           StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+   
+           // 设置并行度 = 1
+           env.setParallelism(1);
+   
+           // 从文件读取数据
+   //        DataStream<String> inputStream = env.readTextFile("/tmp/Flink_Tutorial/src/main/resources/sensor.txt");
+   //
+   //        // 转换成SensorReading类型
+   //        DataStream<SensorReading> dataStream = inputStream.map(line -> {
+   //            String[] fields = line.split(",");
+   //            return new SensorReading(fields[0], new Long(fields[1]), new Double(fields[2]));
+   //        });
+   
+           // 使用之前编写的随机变动温度的SourceFunction来生成数据
+           DataStream<SensorReading> dataStream = env.addSource(new SourceTest4_UDF.MySensorSource());
+   
+           dataStream.addSink(new MyJdbcSink());
+   
+           env.execute();
+       }
+   
+       // 实现自定义的SinkFunction
+       public static class MyJdbcSink extends RichSinkFunction<SensorReading> {
+           // 声明连接和预编译语句
+           Connection connection = null;
+           PreparedStatement insertStmt = null;
+           PreparedStatement updateStmt = null;
+   
+           @Override
+           public void open(Configuration parameters) throws Exception {
+               connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/flink_test?useUnicode=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8&useSSL=false", "root", "example");
+               insertStmt = connection.prepareStatement("insert into sensor_temp (id, temp) values (?, ?)");
+               updateStmt = connection.prepareStatement("update sensor_temp set temp = ? where id = ?");
+           }
+   
+           // 每来一条数据，调用连接，执行sql
+           @Override
+           public void invoke(SensorReading value, Context context) throws Exception {
+               // 直接执行更新语句，如果没有更新那么就插入
+               updateStmt.setDouble(1, value.getTemperature());
+               updateStmt.setString(2, value.getId());
+               updateStmt.execute();
+               if (updateStmt.getUpdateCount() == 0) {
+                   insertStmt.setString(1, value.getId());
+                   insertStmt.setDouble(2, value.getTemperature());
+                   insertStmt.execute();
+               }
+           }
+   
+           @Override
+           public void close() throws Exception {
+               insertStmt.close();
+               updateStmt.close();
+               connection.close();
+           }
+       }
+   }
+   ```
+
+6. 运行Flink程序，查看MySQL数据（可以看到MySQL里的数据一直在变动）
+
+   ```shell
+   mysql> SELECT * FROM sensor_temp;
+   +-----------+--------------------+
+   | id        | temp               |
+   +-----------+--------------------+
+   | sensor_3  | 20.489172407885917 |
+   | sensor_10 |  73.01289164711463 |
+   | sensor_4  | 43.402500895809744 |
+   | sensor_1  |  6.894772325662007 |
+   | sensor_2  | 101.79309911751122 |
+   | sensor_7  | 63.070612021580324 |
+   | sensor_8  |  63.82606628090501 |
+   | sensor_5  |  57.67115738487047 |
+   | sensor_6  |  50.84442627975055 |
+   | sensor_9  |  52.58400793021675 |
+   +-----------+--------------------+
+   10 rows in set (0.00 sec)
+   
+   mysql> SELECT * FROM sensor_temp;
+   +-----------+--------------------+
+   | id        | temp               |
+   +-----------+--------------------+
+   | sensor_3  | 19.498209543035923 |
+   | sensor_10 |  71.92981963197121 |
+   | sensor_4  | 43.566017489470426 |
+   | sensor_1  |  6.378208186786803 |
+   | sensor_2  | 101.71010087830145 |
+   | sensor_7  |  62.11402602179431 |
+   | sensor_8  |  64.33196455020062 |
+   | sensor_5  |  56.39071692662006 |
+   | sensor_6  | 48.952784757264894 |
+   | sensor_9  | 52.078086096436685 |
+   +-----------+--------------------+
+   10 rows in set (0.00 sec)
+   ```
+
+## 5.8 Joining
+
+### 5.8.1 Window Join
+
+ A window join joins the elements of two streams that share a common key and lie in the same window. These windows can be defined by using a [window assigner](https://ci.apache.org/projects/flink/flink-docs-release-1.12/zh/dev/stream/operators/windows.html#window-assigners) and are evaluated on elements from both of the streams.
+
+ The elements from both sides are then passed to a user-defined `JoinFunction` or `FlatJoinFunction` where the user can emit results that meet the join criteria.
+
+ The general usage can be summarized as follows:
+
+```java
+stream.join(otherStream)
+    .where(<KeySelector>)
+    .equalTo(<KeySelector>)
+    .window(<WindowAssigner>)
+    .apply(<JoinFunction>)
+```
+
+#### Tumbling Window Join
+
+ When performing a tumbling window join, all elements with a common key and a common tumbling window are joined as pairwise combinations and passed on to a `JoinFunction` or `FlatJoinFunction`. Because this behaves like an inner join, elements of one stream that do not have elements from another stream in their tumbling window are not emitted!
+
+![image-20220221202621588](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\flink\尚硅谷Flink教程笔记.assets\image-20220221202621588.png)
+
+ As illustrated in the figure, we define a tumbling window with the size of 2 milliseconds, which results in windows of the form `[0,1], [2,3], ...`. The image shows the pairwise combinations of all elements in each window which will be passed on to the `JoinFunction`. Note that in the tumbling window `[6,7]` nothing is emitted because no elements exist in the green stream to be joined with the orange elements ⑥ and ⑦.
+
+```java
+import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.time.Time;
+ 
+...
+
+DataStream<Integer> orangeStream = ...
+DataStream<Integer> greenStream = ...
+
+orangeStream.join(greenStream)
+    .where(<KeySelector>)
+    .equalTo(<KeySelector>)
+    .window(TumblingEventTimeWindows.of(Time.milliseconds(2)))
+    .apply (new JoinFunction<Integer, Integer, String> (){
+        @Override
+        public String join(Integer first, Integer second) {
+            return first + "," + second;
+        }
+    });
+```
+
+#### Sliding Window Join
+
+ When performing a sliding window join, all elements with a common key and common sliding window are joined as pairwise combinations and passed on to the `JoinFunction` or `FlatJoinFunction`. Elements of one stream that do not have elements from the other stream in the current sliding window are not emitted! Note that some elements might be joined in one sliding window but not in another!
+
+![image-20220221202633905](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\flink\尚硅谷Flink教程笔记.assets\image-20220221202633905.png)
+
+ In this example we are using sliding windows with a size of two milliseconds and slide them by one millisecond, resulting in the sliding windows `[-1, 0],[0,1],[1,2],[2,3], …`. The joined elements below the x-axis are the ones that are passed to the `JoinFunction` for each sliding window. Here you can also see how for example the orange ② is joined with the green ③ in the window `[2,3]`, but is not joined with anything in the window `[1,2]`.
+
+```java
+import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.time.Time;
+
+...
+
+DataStream<Integer> orangeStream = ...
+DataStream<Integer> greenStream = ...
+
+orangeStream.join(greenStream)
+    .where(<KeySelector>)
+    .equalTo(<KeySelector>)
+    .window(SlidingEventTimeWindows.of(Time.milliseconds(2) /* size */, Time.milliseconds(1) /* slide */))
+    .apply (new JoinFunction<Integer, Integer, String> (){
+        @Override
+        public String join(Integer first, Integer second) {
+            return first + "," + second;
+        }
+    });
+```
+
+#### Session Window Join
+
+ When performing a session window join, all elements with the same key that when *“combined”* fulfill the session criteria are joined in pairwise combinations and passed on to the `JoinFunction` or `FlatJoinFunction`. Again this performs an inner join, so if there is a session window that only contains elements from one stream, no output will be emitted!
+
+![image-20220221202645802](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\flink\尚硅谷Flink教程笔记.assets\image-20220221202645802.png)
+
+ Here we define a session window join where each session is divided by a gap of at least 1ms. There are three sessions, and in the first two sessions the joined elements from both streams are passed to the `JoinFunction`. In the third session there are no elements in the green stream, so ⑧ and ⑨ are not joined!
+
+```java
+import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.streaming.api.windowing.assigners.EventTimeSessionWindows;
+import org.apache.flink.streaming.api.windowing.time.Time;
+ 
+...
+
+DataStream<Integer> orangeStream = ...
+DataStream<Integer> greenStream = ...
+
+orangeStream.join(greenStream)
+    .where(<KeySelector>)
+    .equalTo(<KeySelector>)
+    .window(EventTimeSessionWindows.withGap(Time.milliseconds(1)))
+    .apply (new JoinFunction<Integer, Integer, String> (){
+        @Override
+        public String join(Integer first, Integer second) {
+            return first + "," + second;
+        }
+    });
+```
+
+### 5.8.2 Interval Join
+
+The interval join joins elements of two streams (we’ll call them A & B for now) with a common key and where elements of stream B have timestamps that lie in a relative time interval to timestamps of elements in stream A.
+
+This can also be expressed more formally as `b.timestamp ∈ [a.timestamp + lowerBound; a.timestamp + upperBound]` or `a.timestamp + lowerBound <= b.timestamp <= a.timestamp + upperBound`
+
+where a and b are elements of A and B that share a common key. Both the lower and upper bound can be either negative or positive as long as as the lower bound is always smaller or equal to the upper bound. The interval join currently only performs inner joins.
+
+When a pair of elements are passed to the `ProcessJoinFunction`, they will be assigned with the larger timestamp (which can be accessed via the `ProcessJoinFunction.Context`) of the two elements.
+
+**Note** The interval join currently only supports event time.
+
+![image-20220221202703771](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\flink\尚硅谷Flink教程笔记.assets\image-20220221202703771.png)
+
+In the example above, we join two streams ‘orange’ and ‘green’ with a lower bound of -2 milliseconds and an upper bound of +1 millisecond. Be default, these boundaries are inclusive, but `.lowerBoundExclusive()` and `.upperBoundExclusive` can be applied to change the behaviour.
+
+Using the more formal notation again this will translate to
+
+```
+orangeElem.ts + lowerBound <= greenElem.ts <= orangeElem.ts + upperBound
+```
+
+as indicated by the triangles.
+
+```java
+import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.streaming.api.functions.co.ProcessJoinFunction;
+import org.apache.flink.streaming.api.windowing.time.Time;
+
+...
+
+DataStream<Integer> orangeStream = ...
+DataStream<Integer> greenStream = ...
+
+orangeStream
+    .keyBy(<KeySelector>)
+    .intervalJoin(greenStream.keyBy(<KeySelector>))
+    .between(Time.milliseconds(-2), Time.milliseconds(1))
+    .process (new ProcessJoinFunction<Integer, Integer, String(){
+
+        @Override
+        public void processElement(Integer left, Integer right, Context ctx, Collector<String> out) {
+            out.collect(first + "," + second);
+        }
+    });
+```
 
 
 
 
-Transform （二）
+
+# 6. Flink的Window
+
+## 6.1 Window
+
+### 6.1.1 概述
+
+![image-20220221202109121](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\flink\尚硅谷Flink教程笔记.assets\image-20220221202109121.png)
+
+ streaming流式计算是一种被设计用于处理无限数据集的数据处理引擎，而无限数据集是指一种不断增长的本质上无限的数据集，而**window是一种切割无限数据为有限块进行处理的手段**。
+
+ **Window是无限数据流处理的核心，Window将一个无限的stream拆分成有限大小的”buckets”桶，我们可以在这些桶上做计算操作**。
+
+*举例子：假设按照时间段划分桶，接收到的数据马上能判断放到哪个桶，且多个桶的数据能并行被处理。（迟到的数据也可判断是原本属于哪个桶的）*
+
+### 6.1.2 Window类型
+
+- 时间窗口（Time Window）
+  - 滚动时间窗口
+  - 滑动时间窗口
+  - 会话窗口
+- 计数窗口（Count Window）
+  - 滚动计数窗口
+  - 滑动计数窗口
+
+**TimeWindow：按照时间生成Window**
+
+**CountWindow：按照指定的数据条数生成一个Window，与时间无关**
+
+#### 滚动窗口(Tumbling Windows)
+
+![image-20220221202137536](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\flink\尚硅谷Flink教程笔记.assets\image-20220221202137536.png)
+
+- 依据**固定的窗口长度**对数据进行切分
+- 时间对齐，窗口长度固定，没有重叠
+
+#### [滑动窗口(Sliding Windows)](https://ashiamd.github.io/docsify-notes/#/study/BigData/Flink/尚硅谷Flink入门到实战-学习笔记?id=滑动窗口sliding-windows)
+
+![image-20220221202201621](D:\Dev\SrcCode\spring-boot-climbing\data-climbing-manuscripts\src\main\data\flink\尚硅谷Flink教程笔记.assets\image-20220221202201621.png)
+
+- 由一系列事件组合一个指定时间长度的timeout间隙组成，也就是一段时间没有接收到新数据就会生成新的窗口
+- 特点：时间无对齐
+
+## [6.2 Window API](https://ashiamd.github.io/docsify-notes/#/study/BigData/Flink/尚硅谷Flink入门到实战-学习笔记?id=_62-window-api)
+
+
+
+
 
 
 
