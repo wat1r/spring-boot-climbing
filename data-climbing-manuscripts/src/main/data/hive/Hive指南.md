@@ -288,3 +288,5 @@ Hive官网
  https://blog.csdn.net/lifuxiangcaohui/article/details/50252897 
 
 - [Hive SQL的编译过程](https://tech.meituan.com/2014/02/12/hive-sql-to-mapreduce.html)
+
+- [Hive数据导出的几种方式](https://www.cnblogs.com/sheng-sjk/p/13940642.html)
