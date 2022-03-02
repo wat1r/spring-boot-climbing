@@ -947,3 +947,4 @@ screen -X -S [session # you want to kill] quit
 - [use_vim_as_ide](https://gitcode.net/mirrors/yangyangwithgnu/use_vim_as_ide)
 - [Fuzzy finder(fzf+vim) 使用全指南](https://zhuanlan.zhihu.com/p/41859976)
 - [sed替换^A（\001）,\002,\003等特殊字符](https://blog.csdn.net/qq_16018407/article/details/78901809)
+- [Linux shell利用sed如何批量更改文件名详解](https://cloud.tencent.com/developer/article/1721039)
