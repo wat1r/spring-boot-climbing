@@ -89,6 +89,12 @@ Flink 内部通过 [SlotSharingGroup ](https://github.com/apache/flink/blob/rele
 
 
 
+​         
+
+
+
+
+
 
 
 
@@ -96,5 +102,7 @@ Flink 内部通过 [SlotSharingGroup ](https://github.com/apache/flink/blob/rele
 # Reference
 
 - [Flink 原理架构总结](https://blog.csdn.net/u013560925/article/details/91381822)
-
 - [Flink架构和执行原理](https://zhuanlan.zhihu.com/p/137055447)
+- [Flink架构及其工作原理 ](https://www.cnblogs.com/code2one/p/10123112.html)
+
+- [Flink 从0到1学习—— 分享四本 Flink 国外的书和二十多篇 Paper 论文](https://www.cnblogs.com/zhisheng/p/11299732.html)
