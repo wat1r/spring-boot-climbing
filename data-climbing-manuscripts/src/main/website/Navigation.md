@@ -13,7 +13,7 @@
 | https://zhuanlan.zhihu.com/p/149425451                       | if else替换                                                  |      |
 | https://blog.cloudera.com/how-to-use-hbase-bulk-loading-and-why/ | HBase                                                        |      |
 | Openwrt                                                      | OpenWRT 是一款家用路由器的操作系统，路由器安装了它才能正常的工作 |      |
-|                                                              |                                                              |      |
+| https://refactoringguru.cn/design-patterns                   | 设计模式                                                     |      |
 |                                                              |                                                              |      |
 |                                                              |                                                              |      |
 |                                                              |                                                              |      |

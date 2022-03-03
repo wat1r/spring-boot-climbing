@@ -30,6 +30,31 @@ jenkins发布
 
 
 
+脚本`deploy.sh`
+
+```shell
+#!/bin/sh
+
+echo "=================git pull================="
+git pull
+
+echo "=================gitbook build================="
+gitbook build
+
+echo "=================zip================="
+zip  -r -q _book.zip _book/*
+
+echo "=================move================="
+mv  _book.zip ./target
+
+echo "=================deploy================="
+git add . && git commit -m "deploy" && git push
+```
+
+
+
+
+
 
 
 
