@@ -67,3 +67,4 @@ git add . && git commit -m "deploy" && git push
 
 - [gitbook安装与使用之windows下搭建gitbook平台](https://www.cnblogs.com/Lam7/p/6109872.html)
 - [gitbook安装与使用（含常用插件和book.json配置详解）](https://blog.csdn.net/fghsfeyhdf/article/details/88403548)
+- [使用GitBook+Github编写文档书籍](http://michael728.github.io/2018/09/08/tools-gitbook-hackpythonista-notebook/)
