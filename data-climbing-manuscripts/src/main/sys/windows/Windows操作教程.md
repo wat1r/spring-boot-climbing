@@ -56,3 +56,4 @@ start "" "D:\Program Files (x86)\Navicat Premium 12\navicat.exe"
 ## Reference
 
 - [玩转 Windows Terminal](https://www.cnblogs.com/FlyLolo/p/13222195.html)
+- [电脑一分钟小技巧：win10微信电脑端多开方法](https://zhuanlan.zhihu.com/p/267203275)
