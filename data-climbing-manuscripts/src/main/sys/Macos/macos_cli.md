@@ -26,3 +26,23 @@ GitBook version: 3.2.3
 
 ```
 
+
+
+- Mac OS X 如何使用类似 ubuntu 下的 realpath
+
+```shell
+1. 安装 coreutils
+
+$ brew install coreutils
+
+安装完后，可以使用 realpath / grealpath
+
+2. 在 .bash_profile 追加一个 function
+
+function realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
+
+```
+
