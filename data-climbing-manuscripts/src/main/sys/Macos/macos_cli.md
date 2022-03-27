@@ -46,3 +46,10 @@ function realpath() {
 
 ```
 
+
+
+
+
+### Reference
+
+- [Mac 定时关机、重启、休眠命令](https://www.jianshu.com/p/ec888c3e33dd)
