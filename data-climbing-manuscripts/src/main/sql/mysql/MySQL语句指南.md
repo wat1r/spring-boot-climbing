@@ -235,6 +235,22 @@ WHERE
 
 
 
+#### 表明大小写模式
+
+```mysql
+show variables like '%lower_case_table_name%';
+```
+
+#### SQL_MODE
+
+```mysql
+select @@session.sql_mode;
+```
+
+临时设置session mysqld设置永久的配置
+
+
+
 ### 分组topN
 
 - 按 每一天的，`job_id` 下按`elapsed_time` 取top3

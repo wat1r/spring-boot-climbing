@@ -246,9 +246,14 @@ If you lose this password, please consult the section How to Reset the Root Pass
 查看安装版本
 
 ```shell
+/usr/local/mysql-5.7.29/bin
 ➜  bin mysql -V
 mysql  Ver 14.14 Distrib 5.7.29, for macos10.14 (x86_64) using  EditLine wrapper
 ➜  bin
+配置全局的mysql cli
+vim ~/.bash_profile
+# MySQL
+export PATH=$PATH:/usr/local/mysql-5.7.29/bin
 ```
 
 启动mysql
@@ -449,6 +454,21 @@ https://blog.csdn.net/jackhell2/article/details/79152394
 
 
 ### 60.8.HBase
+
+
+
+
+
+
+
+### 60.9.StarRocks
+
+```shell
+/Users/frankcooper/Dev/StarRocks-2.1.2
+  bin/start_be.sh --daemon 
+```
+
+
 
 
 
