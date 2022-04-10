@@ -949,3 +949,4 @@ screen -X -S [session # you want to kill] quit
 - [sed替换^A（\001）,\002,\003等特殊字符](https://blog.csdn.net/qq_16018407/article/details/78901809)
 - [Linux shell利用sed如何批量更改文件名详解](https://cloud.tencent.com/developer/article/1721039)
 - [linux shell中"2>&1"含义](https://www.cnblogs.com/zhenghongxin/p/7029173.html)
+- [shell中>/dev/null 2>&1](https://www.cnblogs.com/520playboy/p/6275022.html)

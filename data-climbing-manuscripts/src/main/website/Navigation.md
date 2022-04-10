@@ -128,7 +128,7 @@ VisualCode 远程工具：remote插件 + jdk11
 | 快捷生成Entity                         | https://java.bejson.com/generator/                           |                                                              |
 | 说说 Mac 分屏的事(2) - Moom 的10个技巧 | https://zhuanlan.zhihu.com/p/20258341?columnSlug=MacTips#!   |                                                              |
 | windows下的分屏软件                    | https://www.zhihu.com/question/321895945                     | win+↑↓←→ 是分屏快捷键，win+Ctrl+D是新建虚拟桌面，都是win10系统可以正常使用的。 |
-|                                        |                                                              |                                                              |
+| 如何下载Chrome商店的插件crx到本地？    | https://www.bilibili.com/read/cv6619562/                     |                                                              |
 |                                        |                                                              |                                                              |
 |                                        |                                                              |                                                              |
 |                                        |                                                              |                                                              |
