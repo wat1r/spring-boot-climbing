@@ -22,6 +22,7 @@
         <module>spring-boot-websocket</module>
         <module>spring-boot-netty-server</module>
         <module>spring-boot-netty-client</module>
+        <module>spring-boot-elasticsearch</module>
     </modules>
 
     <packaging>pom</packaging>
