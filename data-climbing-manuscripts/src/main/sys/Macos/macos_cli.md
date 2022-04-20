@@ -50,6 +50,12 @@ function realpath() {
 
 
 
+- macos查看ip地址
+
+```java
+ifconfig |  grep "inet " | grep -v 127.0.0.1
+```
+
 
 
 ### Reference
