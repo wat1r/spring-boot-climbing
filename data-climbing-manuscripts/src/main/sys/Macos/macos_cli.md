@@ -68,3 +68,5 @@ ifconfig |  grep "inet " | grep -v 127.0.0.1
 - [系统 10.13.1 (17B48)， Alfred 有些文件和文件夹搜索不到， Spotlight 索引已重置](https://www.v2ex.com/t/406125)
 
 - [Alfred 4常见问题:Alfred找不到我要寻找的文件或应用程序怎么办？](https://mac.orsoon.com/news/838369.html)
+
+- [mac ifconfig详解](https://juejin.cn/post/6844904074303766535)

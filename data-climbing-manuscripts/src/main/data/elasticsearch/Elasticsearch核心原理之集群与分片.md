@@ -1,34 +1,20 @@
 ## Elasticsearch核心原理之集群与分片
 
-
-
 ## 集群
 
 ### 空集群
 
 
 
-![image-20220426215516688](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220426215516688.png)
+![](http://rb4lk45ep.bkt.clouddn.com/bigdata/elasticsearch//image-20220426215516688.png)
 
 启动一个单独的节点，里面不包含任何的数据和索引，集群看起来就是一个上图一样的包含空内容节点的集群。
 
-
-
-
-
 一个运行中的 `Elasticsearch` 实例称为一个节点，而集群是由一个或者多个拥有相同 `cluster.name` 配置的节点组成， 它们共同承担数据和负载的压力。当有节点加入集群中或者从集群中移除节点时，集群将会重新平均分布所有的数据。
 
-当一个节点被选举成为主节点时， 它将负责管理集群范围内的所有变更，例如增加、删除索引，或者增加、删除节点等。 而主节点并不需要涉及到文档级别的变更和搜索等操作，所以当集群只拥有一个主节点的情况下，即使流量的增加它也不会成为瓶颈。 任何节点都可以成为主节点。我们的示例集群就只有一个节点，所以它同时也成为了主节点。
+当一个节点被选举成为主节点时， 它将负责管理集群范围内的所有变更，例如增加、删除索引，或者增加、删除节点等。 而主节点并不需要涉及到文档级别的变更和搜索等操作，所以当集群只拥有一个主节点的情况下，即使流量的增加它也不会成为瓶颈。 任何节点都可以成为主节点。示例集群就只有一个节点，所以它同时也成为了主节点。
 
 作为用户，可以将请求发送到 集群中的任何节点 ，包括主节点。 每个节点都知道任意文档所处的位置，并且能够将我们的请求直接转发到存储我们所需文档的节点。 无论我们将请求发送到哪个节点，它都能负责从各个包含所需文档的节点收集回数据，并将最终结果返回给客户端。 `Elasticsearch` 对这一切的管理都是透明的。
-
-
-
-
-
-
-
-
 
 ### 集群健康
 
@@ -63,8 +49,6 @@ GET /_cluster/health
 
 - `red`:不是所有的主要分片都可用
 
-
-
 ### 添加索引
 
 往`Elasticsearch`添加数据时需要用到**索引** (保存相关数据的地方)。 **索引**实际上是指向一个或者多个物理**分片**的逻辑命名空间 。
@@ -91,7 +75,7 @@ PUT /blogs
 }
 ```
 
-![image-20220426220805661](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220426220805661.png)
+![image-20220426220805661](http://rb4lk45ep.bkt.clouddn.com/bigdata/elasticsearch/image-20220426220805661.png)
 
 可以看出来，在集群中，所有3个主分片都被分配在 `Node 1` 。
 
@@ -121,13 +105,11 @@ PUT /blogs
 
 当前的集群是正常运行的，但是在硬件故障时有丢失数据的风险
 
-
-
 ### 添加故障转移
 
 当集群中只有一个节点在运行时，意味着会有一个单点故障问题。
 
-![image-20220427085712923](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220427085712923.png)
+![image-20220427085712923](http://rb4lk45ep.bkt.clouddn.com/bigdata/elasticsearch/image-20220427085712923.png)
 
 当第二个节点加入到集群后，3个副本分片将会分配到这个节点上——每个主分片对应一个副本分片。 这意味着当集群内任何一个节点出现问题时，我们的数据都完好无损。
 
@@ -155,19 +137,13 @@ PUT /blogs
 }
 ```
 
-
-
 ### 水平扩容
 
-![image-20220427200602453](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220427200602453.png)
+![image-20220427200602453](http://rb4lk45ep.bkt.clouddn.com/bigdata/elasticsearch/image-20220427200602453.png)
 
-`Node 1` 和 `Node 2` 上各有一个分片被迁移到了新的 `Node 3` 节点，现在每个节点上都拥有2个分片，而不是之前的3个。 这表示每个节点的硬件资源（CPU, RAM, I/O）将被更少的分片所共享，每个分片的性能将会得到提升。
+`Node 1` 和 `Node 2` 上各有一个分片被迁移到了新的 `Node 3` 节点，现在每个节点上都拥有2个分片，而不是之前的3个。 这表示每个节点的硬件资源（`CPU, RAM, I/O`）将被更少的分片所共享，每个分片的性能将会得到提升。
 
 分片是一个功能完整的搜索引擎，它拥有使用一个节点上的所有资源的能力。 我们这个拥有6个分片（3个主分片和3个副本分片）的索引可以最大扩容到6个节点，每个节点上存在一个分片，并且每个分片拥有所在节点的全部资源。
-
-
-
-
 
 ### 更多的扩容
 
@@ -184,7 +160,7 @@ PUT /blogs/_settings
 }
 ```
 
-![image-20220427200700470](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220427200700470.png)
+![image-20220427200700470](http://rb4lk45ep.bkt.clouddn.com/bigdata/elasticsearch/image-20220427200700470.png)
 
 
 
@@ -192,23 +168,11 @@ PUT /blogs/_settings
 >
 > 但是更多的副本分片数提高了数据冗余量：按照上面的节点配置，我们可以在失去2个节点的情况下不丢失任何数据。
 
-
-
-
-
-
-
 ### 应对故障
 
 
 
-![image-20220427201719217](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220427201719217.png)
-
-
-
-
-
-
+![image-20220427201719217](http://rb4lk45ep.bkt.clouddn.com/bigdata/elasticsearch/image-20220427201719217.png)
 
 关闭的节点是一个主节点。而集群必须拥有一个主节点来保证正常工作，所以发生的第一件事情就是选举一个新的主节点： `Node 2` 。
 
@@ -218,28 +182,16 @@ PUT /blogs/_settings
 
 为什么我们集群状态是 `yellow` 而不是 `green` 呢？ 虽然我们拥有所有的三个主分片，但是同时设置了每个主分片需要对应2份副本分片，而此时只存在一份副本分片。 所以集群不能为 `green` 的状态，不过我们不必过于担心：如果我们同样关闭了 `Node 2` ，我们的程序 *依然* 可以保持在不丢任何数据的情况下运行，因为 `Node 3` 为每一个分片都保留着一份副本。
 
-如果重新启动 `Node 1` ，集群可以将缺失的副本分片再次进行分配，那么集群的状态也将如上一章节所示。 如果 `Node 1` 依然拥有着之前的分片，它将尝试去重用它们，同时仅从主分片复制发生了修改的数据文件
-
-
-
-
-
-
-
-
+如果重新启动 `Node 1` ，集群可以将缺失的副本分片再次进行分配，那么集群的状态也将如上一章节所示。 如果 `Node 1` 依然拥有着之前的分片，它将尝试去重用它们，同时仅从主分片复制发生了修改的数据文件。
 
 ## 分片与副本
-
-
 
 分片分为主分片（`Primary`）和副本分片（`Replica`）。副本分片主要功能如下：
 
 高可用性：副本分片作为数据备份，当某个主分片发生故障时，副本分片能够成为新的主分片，保证服务的可用性。
 提高性能：副本分片本身也是一个功能齐全的独立的分片(所以才能够随时取代故障的主分片)，当有查询请求时，既可以在主分片中完成查询，也可以在副本分片中完成查询，当然数据添加、更新的操作只能在主分片中完成。
 
-
-
-
+### 准备环境
 
 查看集群的状态
 
@@ -263,10 +215,6 @@ GET http://localhost:2001/_cluster/health
     "active_shards_percent_as_number": 100.0
 }
 ```
-
-
-
-
 
 创建`test`索引（1个分片）
 
@@ -318,11 +266,9 @@ PUT http://localhost:2001/test1
 
 
 
-![image-20220427210035411](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220427210035411.png)
+![image-20220427210035411](http://rb4lk45ep.bkt.clouddn.com/bigdata/elasticsearch/image-20220427210035411.png)
 
 从上面的结果看出，集群节点为3个（`node-2001`，`node-2002`，`node-2003`）,当分片的个数小于等于3的时候，其分布在三个节点或者三个节点的部分节点上，当分片的数量大于3为4的时候，有两个分片分布在其中的一个节点（图中为`node-2001`）
-
-
 
 ### 副本
 
@@ -361,11 +307,9 @@ PUT http://localhost:2001/test5
 }
 ```
 
-![image-20220427211040025](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220427211040025.png)
+![image-20220427211040025](http://rb4lk45ep.bkt.clouddn.com/bigdata/elasticsearch/image-20220427211040025.png)
 
 如上所示我们看到多出一个`Unassigned`的副本，这个副本其实是多余的了，因为每个节点已经包含了分片的本身和其副本，多于这个没有意义。
-
-
 
 创建`test6`索引（默认）
 
@@ -404,13 +348,9 @@ PUT http://localhost:2001/test8
 }
 ```
 
-![image-20220427212129995](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220427212129995.png)
+![image-20220427212129995](http://rb4lk45ep.bkt.clouddn.com/bigdata/elasticsearch/image-20220427212129995.png)
 
 可以看出，分片和副本均匀地分布在每个节点上（粗线框表示分片，细线框表示副本）
-
-
-
-
 
 ### 缩容
 
@@ -418,15 +358,13 @@ PUT http://localhost:2001/test8
 
 原本的`node-2003`节点变成了`Unassigned`，并且注意标注的三个红框内的分片，这三个分片已经随着节点的宕机消息了，这就造成了数据的丢失；反观后面几个，虽然`node-2003`宕机了，但是由于做了分片与备份，索引仍然可以正常的工作，而且`test8`索引上原属于`node-2003`的2号分片转移到`node-2001`节点上。
 
-![image-20220427212855613](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220427212855613.png)
+![image-20220427212855613](http://rb4lk45ep.bkt.clouddn.com/bigdata/elasticsearch/image-20220427212855613.png)
 
 
 
 如果再挂一个节点会出现什么？`node-2002`宕机后，集群已经不可见了，说明只有1个节点的集群不可用。
 
-![image-20220427213112481](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220427213112481.png)
-
-
+![image-20220427213112481](http://rb4lk45ep.bkt.clouddn.com/bigdata/elasticsearch/image-20220427213112481.png)
 
 ### 扩容
 
@@ -448,19 +386,17 @@ PUT http://localhost:2001/test9
 
 
 
-![image-20220427213715951](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220427213715951.png)
+![image-20220427213715951](http://rb4lk45ep.bkt.clouddn.com/bigdata/elasticsearch/image-20220427213715951.png)
 
 当恢复`node-2003`后，集群恢复正常
 
 
 
-![image-20220427214051150](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220427214051150.png)
+![image-20220427214051150](http://rb4lk45ep.bkt.clouddn.com/bigdata/elasticsearch/image-20220427214051150.png)
 
 
 
 但是`node-2003`上的全部是副本，并没有将分片转移到`node-2003`节点上
-
-
 
 ### 索引的路由
 
@@ -475,16 +411,8 @@ shard=hash(routing)%number_of_primary_shards
 `routing` 是一个可变值，默认是文档的 `_id `，也可以设置成一个自定义的值。 `routing` 通过`hash` 函数生成一个数字，然后这个数字再模上 `number_of_primary_shards` （主分片的数量）后得到余数 。这个分布在` 0 `到 `number_of_primary_shards-1` 之间的余数，就是所寻求的文档所在分片的位置。
 
 通过上面的公式，我们理解并且也需要记住一个重要的概念：
- **创建索引的时候就确定好主分片的数量，并且永远不会改变这个数量**
- 数量的改变将导致上述公式的结果变化，最终会导致我们的数据无法被找到。
 
-
-
-
-
-
-
-
+> **创建索引的时候就确定好主分片的数量，并且永远不会改变这个数量**，数量的改变将导致上述公式的结果变化，最终会导致我们的数据无法被找到。
 
 
 

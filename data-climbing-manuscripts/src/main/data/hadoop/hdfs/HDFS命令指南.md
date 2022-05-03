@@ -16,3 +16,12 @@ hdfs dfs -cat /aaaaa/空白文本.txt | tail-100
 hdfs dfs -cat /path/txt | wc -l
 ```
 
+
+
+
+
+### Reference
+
+- [HDFS 命令大全](https://www.cnblogs.com/reycg-blog/p/10087021.html)
+
+- [hadoop命令大全](https://blog.csdn.net/m0_38003171/article/details/79086780)
