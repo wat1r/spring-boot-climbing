@@ -945,6 +945,23 @@ curl cip.cc
 
 
 
+## 25.nc
+
+- [nc命令详解](https://www.cnblogs.com/romatic/p/13344769.html?ivk_sa=1024320u)
+
+- [【linux】linux间传输文件的简便方式 nc传输文件 nc命令教程](https://blog.csdn.net/qq_36268103/article/details/121894234)
+- [nc - 网络工具箱中的「瑞士军刀」](https://www.cnblogs.com/wanng/p/nc-command.html)
+
+```shell
+服务端（接收方）
+注意 : 接收文件的是服务端 可以理解为项目中的前端往服务端发送数据 接收数据的是服务端
+输入命令: nc -l -v 5555 > streamx-console-service-1.2.2-release.tar.gz
+
+客户端（发送方）输入命令
+nc -v 192.168.168.168 5555 < streamx-console-service-1.2.2-release.tar.gz
+
+
+```
 
 
 
@@ -952,6 +969,31 @@ curl cip.cc
 
 
 
+
+
+## 31.top
+
+- [top命令详解](https://www.jianshu.com/p/8a6754f919c5)
+
+```shell
+查看某一进程占用的内存
+top -pid 17434 -l 1 | tail -n 1 | awk '{print $0}'
+说明：【-l 1】表示只执行1次，【tail -n 1】表示取最后一行结果，【awk '{print $8}'】表示取第8列的值（即内存值）。
+Ps：根据应用名（如：Infoflow）查看进程号
+ps -ef | grep Infoflow | grep -v grep | awk '{print $2}'
+```
+
+
+
+
+
+
+
+
+
+## 41.Auth
+
+- [Linux下查看用户列表](https://blog.csdn.net/rainbow702/article/details/50985672)
 
 
 

@@ -325,7 +325,7 @@ case $1 in
         for i in hadoop168
         do
                 echo "-------start $i hadoop cluster-------"
-                ssh $i "sh /opt/hadoop-2.7.2/sbin/start-all.sh"
+                ssh $i "sh /opt/hadoop-2.7.2/sbin/start-dfs.sh"
         done
         for i in hadoop169
         do
@@ -348,7 +348,7 @@ case $1 in
     for i in hadoop168
     do
             echo "-------stop $i hadoop cluster-------"
-            ssh $i "sh /opt/hadoop-2.7.2/sbin/stop-all.sh"
+            ssh $i "sh /opt/hadoop-2.7.2/sbin/stop-dfs.sh"
     done
     for i in hadoop169
     do
@@ -436,6 +436,9 @@ kafka-server-start.sh -daemon /opt/kafka_2.11-2.4.0/config/server.properties
 ./bin/kafka-console-producer.sh --broker-list 192.168.168.169:9092 --topic test
   
   
+./bin/kafka-console-producer.sh --broker-list 192.168.168.168:9092 --topic hotitems
+  
+  
   一键启停kafka集群
   
   #!/bin/bash
@@ -445,7 +448,7 @@ case $1 in
         for i in hadoop168 hadoop169 hadoop170
         do
                 echo "-------start $i kafka-------"
-                ssh $i "cd /opt/kafka_2.11-2.4.0/bin; kafka-server-start.sh -daemon /opt/kafka_2.11-2.4.0/config/server.properties"
+                ssh $i "source /etc/profile; cd /opt/kafka_2.11-2.4.0/bin; ./kafka-server-start.sh -daemon /opt/kafka_2.11-2.4.0/config/server.properties"
         done
 };;
 "stop"){
@@ -458,11 +461,53 @@ case $1 in
         done
 };;
 esac
+  
+  
+单节点启动/停用单个服务
+HDFS：hdfs --daemon start/stop namenode/datanode/secondarynamenode
+Yarn：yarn --daemon start/stop resourcemanager nodemanager
 ```
 
 
 
+hadoop 访问主节点的50070端口
+http://192.168.168.168:50070/
 
+http://192.168.168.169:8088
+
+flink webui访问
+http://192.168.168.168:8081/
+
+Streamx webui访问
+
+http://hadoop168:10000/
+
+
+
+- 节点资源规划表
+
+|           | Version    | hadoop168                                                 | hadoop169                                                 | hadoop170          |
+| --------- | ---------- | --------------------------------------------------------- | --------------------------------------------------------- | ------------------ |
+| HDFS      | 2.7.2      | NameNode<br />DataNode                                    | SecondaryNameNode<br />DataNode                           | DataNode           |
+| Yarn      | 2.7.2      | NodeManager                                               | ResourceManager<br />NodeManager                          | NodeManager        |
+| ZooKeeper | 3.6.1      | QuorumPeerMain                                            | QuorumPeerMain                                            | QuorumPeerMain     |
+| Kafka     | 2.11-2.4.0 | Kafka                                                     | Kafka                                                     | Kafka              |
+| Flink     | 1.12.7     | StandaloneSessionClusterEntrypoint<br />TaskManagerRunner | StandaloneSessionClusterEntrypoint<br />TaskManagerRunner | TaskManagerRunner  |
+|           |            |                                                           |                                                           |                    |
+|           |            |                                                           |                                                           |                    |
+| StreamX   | 1.2.2      | :white_check_mark:                                        |                                                           |                    |
+|           |            |                                                           |                                                           |                    |
+|           |            |                                                           |                                                           |                    |
+| JDK       | 1.8        | :white_check_mark:                                        | :white_check_mark:                                        | :white_check_mark: |
+| MySQL     | 5.7.38     | :white_check_mark:                                        |                                                           |                    |
+| Node      | 16.14.2    | :white_check_mark:                                        |                                                           |                    |
+| Maven     | 3.8.1      | :white_check_mark:                                        |                                                           |                    |
+|           |            |                                                           |                                                           |                    |
+|           |            |                                                           |                                                           |                    |
+|           |            |                                                           |                                                           |                    |
+|           |            |                                                           |                                                           |                    |
+|           |            |                                                           |                                                           |                    |
+|           |            |                                                           |                                                           |                    |
 
 
 
