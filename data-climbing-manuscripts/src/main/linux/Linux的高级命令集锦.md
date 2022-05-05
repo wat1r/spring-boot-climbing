@@ -985,6 +985,18 @@ ps -ef | grep Infoflow | grep -v grep | awk '{print $2}'
 
 
 
+## 32.iftop
+
+```shell
+#查看路由表
+netstat -rt
+#监控网卡
+sudo iftop -i en0
+sudo iftop -i utun2
+```
+
+
+
 
 
 

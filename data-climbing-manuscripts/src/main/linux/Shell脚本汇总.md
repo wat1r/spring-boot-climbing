@@ -152,3 +152,29 @@ done
 
 
 
+
+
+
+
+## 4.修改dns
+
+```shell
+#!/bin/bash
+
+states=$(echo 'list ".*DNS"' | scutil | awk '{print $NF}')
+
+for state in $states
+do
+    dns_output=$(printf "d.init\nget ${state}\nd.show\nquit\n" | scutil)
+
+    if echo "$dns_output" | grep -iq 210
+    then
+        echo -e "__INFO: $state NEED change:\n${dns_output}"
+        echo "__INFO: $state UPDATED:"
+        printf "d.init\nget ${state}\nd.remove ServerAddress\nd.add ServerAddresses * 210.22.70.225 210.22.70.3 192.168.102.81 192.168.102.82\nset ${state}\nd.show\nquit\n" | sudo scutil
+    else
+        :
+    fi
+done%
+```
+
