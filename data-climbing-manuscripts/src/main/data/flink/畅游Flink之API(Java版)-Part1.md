@@ -353,7 +353,7 @@ public class TransformTest4_MultipleStreams {
 
 ##### 2.1.3.会话窗口(Session Windows)
 
-![image-20220505211832471](/Users/frankcooper/Library/Application Support/typora-user-images/image-20220505211832471.png)
+![](https://wat1r-1311637112.cos.ap-shanghai.myqcloud.com/imgs/image-20220505211832471.png)
 
 - 由一系列事件组合一个指定时间长度的timeout间隙组成，也就是一段时间没有接收到新数据就会生成新的窗口
 - 特点：时间无对齐

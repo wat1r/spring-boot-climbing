@@ -43,10 +43,15 @@
 安装Kafka
 
 - https://kafka.apache.org/downloads
-
 - [Centos7 安装kafka集群](https://blog.csdn.net/qq_25763595/article/details/107731706)
-
 - [centos上的kafka集群搭建](https://blog.csdn.net/zhang5324496/article/details/121940840)
+
+
+
+安装ElasticSearch
+
+- [Elasticsearch集群搭建（基于Elasticsearch7.5.1）](https://segmentfault.com/a/1190000021589726)
+- [Linux搭建es集群详细教程（最终版）](https://blog.csdn.net/qq_50227688/article/details/115379121)
 
 
 
@@ -466,6 +471,35 @@ esac
 单节点启动/停用单个服务
 HDFS：hdfs --daemon start/stop namenode/datanode/secondarynamenode
 Yarn：yarn --daemon start/stop resourcemanager nodemanager
+  
+  
+  elastic/elastic123
+  
+  chown -R elastic:elastic  ../elasticsearch-7.8.0/
+    
+# 分开启动    
+    
+#!/bin/bash
+
+case $1 in
+"start"){
+        for i in hadoop168 hadoop169 hadoop170
+        do
+                echo "-------start $i elasticsearch-------"
+                ssh $i "source /etc/profile; cd /opt/elasticsearch-7.8.0; ./bin/elasticsearch"
+        done
+};;
+"stop"){
+                #in后面的是你完全分布式的三个虚拟机的名字
+        for i in hadoop168 hadoop169 hadoop170
+        do
+                echo "-------stop $i elasticsearch-------"
+                ##停止目录以及命令
+                
+        done
+};;
+esac
+  
 ```
 
 
@@ -486,28 +520,115 @@ http://hadoop168:10000/
 
 - 节点资源规划表
 
-|           | Version    | hadoop168                                                 | hadoop169                                                 | hadoop170          |
-| --------- | ---------- | --------------------------------------------------------- | --------------------------------------------------------- | ------------------ |
-| HDFS      | 2.7.2      | NameNode<br />DataNode                                    | SecondaryNameNode<br />DataNode                           | DataNode           |
-| Yarn      | 2.7.2      | NodeManager                                               | ResourceManager<br />NodeManager                          | NodeManager        |
-| ZooKeeper | 3.6.1      | QuorumPeerMain                                            | QuorumPeerMain                                            | QuorumPeerMain     |
-| Kafka     | 2.11-2.4.0 | Kafka                                                     | Kafka                                                     | Kafka              |
-| Flink     | 1.12.7     | StandaloneSessionClusterEntrypoint<br />TaskManagerRunner | StandaloneSessionClusterEntrypoint<br />TaskManagerRunner | TaskManagerRunner  |
-|           |            |                                                           |                                                           |                    |
-|           |            |                                                           |                                                           |                    |
-| StreamX   | 1.2.2      | :white_check_mark:                                        |                                                           |                    |
-|           |            |                                                           |                                                           |                    |
-|           |            |                                                           |                                                           |                    |
-| JDK       | 1.8        | :white_check_mark:                                        | :white_check_mark:                                        | :white_check_mark: |
-| MySQL     | 5.7.38     | :white_check_mark:                                        |                                                           |                    |
-| Node      | 16.14.2    | :white_check_mark:                                        |                                                           |                    |
-| Maven     | 3.8.1      | :white_check_mark:                                        |                                                           |                    |
-|           |            |                                                           |                                                           |                    |
-|           |            |                                                           |                                                           |                    |
-|           |            |                                                           |                                                           |                    |
-|           |            |                                                           |                                                           |                    |
-|           |            |                                                           |                                                           |                    |
-|           |            |                                                           |                                                           |                    |
+|               | Version    | hadoop168                                                 | hadoop169                                                 | hadoop170          |
+| ------------- | ---------- | --------------------------------------------------------- | --------------------------------------------------------- | ------------------ |
+| HDFS          | 2.7.2      | NameNode<br />DataNode                                    | SecondaryNameNode<br />DataNode                           | DataNode           |
+| Yarn          | 2.7.2      | NodeManager                                               | ResourceManager<br />NodeManager                          | NodeManager        |
+| ZooKeeper     | 3.6.1      | QuorumPeerMain                                            | QuorumPeerMain                                            | QuorumPeerMain     |
+| Kafka         | 2.11-2.4.0 | Kafka                                                     | Kafka                                                     | Kafka              |
+| Flink         | 1.12.7     | StandaloneSessionClusterEntrypoint<br />TaskManagerRunner | StandaloneSessionClusterEntrypoint<br />TaskManagerRunner | TaskManagerRunner  |
+| ElasticSearch | 7.8.0      | ElasticSearch                                             | ElasticSearch                                             | ElasticSearch      |
+|               |            |                                                           |                                                           |                    |
+| StreamX       | 1.2.2      | :white_check_mark:                                        |                                                           |                    |
+|               |            |                                                           |                                                           |                    |
+|               |            |                                                           |                                                           |                    |
+| JDK           | 1.8        | :white_check_mark:                                        | :white_check_mark:                                        | :white_check_mark: |
+| MySQL         | 5.7.38     | :white_check_mark:                                        |                                                           |                    |
+| Node          | 16.14.2    | :white_check_mark:                                        |                                                           |                    |
+| Maven         | 3.8.1      | :white_check_mark:                                        |                                                           |                    |
+|               |            |                                                           |                                                           |                    |
+|               |            |                                                           |                                                           |                    |
+|               |            |                                                           |                                                           |                    |
+|               |            |                                                           |                                                           |                    |
+|               |            |                                                           |                                                           |                    |
+|               |            |                                                           |                                                           |                    |
+
+
+
+
+
+- 环境：
+
+  - jdk1.8
+
+  -  centos7.6
+  - elasticsearch7.8
+
+config/elasticsearch.yml
+
+- hadoop168:
+
+```yml
+cluster.name: elasticsearch-cluster
+node.name: hadoop168
+node.master: true
+node.data: true
+node.max_local_storage_nodes: 3
+path.data: /opt/elasticsearch-7.8.0/data
+path.logs: /opt/elasticsearch-7.8.0/logs
+network.host: 192.168.168.168
+http.port: 9200
+transport.tcp.port: 9300
+discovery.seed_hosts: ["192.168.168.168:9300", "192.168.168.169:9300", "192.168.168.170:9300"]
+cluster.initial_master_nodes: ["192.168.168.168", "192.168.168.169", "192.168.168.170"]
+xpack.monitoring.collection.enabled: true
+
+```
+
+- hadoop169:
+
+```yml
+cluster.name: elasticsearch-cluster
+node.name: hadoop169
+node.master: true
+node.data: true
+node.max_local_storage_nodes: 3
+path.data: /opt/elasticsearch-7.8.0/data
+path.logs: /opt/elasticsearch-7.8.0/logs
+network.host: 192.168.168.169
+http.port: 9200
+transport.tcp.port: 9300
+discovery.seed_hosts: ["192.168.168.168:9300", "192.168.168.169:9300", "192.168.168.170:9300"]
+cluster.initial_master_nodes: ["192.168.168.168", "192.168.168.169", "192.168.168.170"]
+xpack.monitoring.collection.enabled: true
+```
+
+- hadoop170
+
+```yml
+cluster.name: elasticsearch-cluster
+node.name: hadoop170
+node.master: true
+node.data: true
+node.max_local_storage_nodes: 3
+path.data: /opt/elasticsearch-7.8.0/data
+path.logs: /opt/elasticsearch-7.8.0/logs
+network.host: 192.168.168.170
+http.port: 9200
+http.port: 9200
+transport.tcp.port: 9300
+discovery.seed_hosts: ["192.168.168.168:9300", "192.168.168.169:9300", "192.168.168.170:9300"]
+cluster.initial_master_nodes: ["192.168.168.168", "192.168.168.169", "192.168.168.170"]
+xpack.monitoring.collection.enabled: true
+```
+
+报错信息：
+
+```log
+[2022-05-06T20:39:16,429][INFO ][o.e.n.Node               ] [hadoop168] initialized
+[2022-05-06T20:39:16,429][INFO ][o.e.n.Node               ] [hadoop168] starting ...
+[2022-05-06T20:39:16,666][INFO ][o.e.t.TransportService   ] [hadoop168] publish_address {192.168.168.168:9300}, bound_addresses {192.168.168.168:9300}
+[2022-05-06T20:39:16,974][INFO ][o.e.b.BootstrapChecks    ] [hadoop168] bound or publishing to a non-loopback address, enforcing bootstrap checks
+[2022-05-06T20:39:26,987][WARN ][o.e.c.c.ClusterFormationFailureHelper] [hadoop168] master not discovered yet, this node has not previously joined a bootstrapped (v7+) cluster, and this node must discover master-eligible nodes [192.168.168.168, 192.168.168.169, 192.168.168.170] to bootstrap a cluster: have discovered [{hadoop168}{2Lz7sEkTTRWz61t3JmQMBg}{eE-SlHtOQCOKNcowSyrW2Q}{192.168.168.168}{192.168.168.168:9300}{dilmrt}{ml.machine_memory=1910075392, xpack.installed=true, transform.node=true, ml.max_open_jobs=20}]; discovery will continue using [192.168.168.169:9300, 192.168.168.170:9300] from hosts providers and [{hadoop168}{2Lz7sEkTTRWz61t3JmQMBg}{eE-SlHtOQCOKNcowSyrW2Q}{192.168.168.168}{192.168.168.168:9300}{dilmrt}{ml.machine_memory=1910075392, xpack.installed=true, transform.node=true, ml.max_open_jobs=20}] from last-known cluster state; node term 0, last-accepted version 0 in term 0
+```
+
+上面的warning日志不影响集群，不要使用启动，分开启动
+
+
+
+http://192.168.168.168:9200/_cat/health?v
+
+![](https://wat1r-1311637112.cos.ap-shanghai.myqcloud.com/imgs/20220506213948.png)
 
 
 
