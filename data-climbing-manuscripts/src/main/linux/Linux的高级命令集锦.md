@@ -763,6 +763,18 @@ $ ls -lhS
      【把*替换为具体的文件名，会给出具体文件的大小】
 ```
 
+## 13.mv
+
+- 批量修改文件名
+
+```java
+for f in `ls`; do mv $f `echo $f | sed -E 's/(.*)--(.*).mp4/\1.mp4/'`; done
+  
+for f in `ls`; do mv $f `echo $f | sed -E 's/(.*)BV1uK411P7JE(.*).mp4/\1.mp4/'`; done
+```
+
+
+
 
 
 
@@ -1078,4 +1090,5 @@ sudo iftop -i utun2
 - [Linux shell利用sed如何批量更改文件名详解](https://cloud.tencent.com/developer/article/1721039)
 - [linux shell中"2>&1"含义](https://www.cnblogs.com/zhenghongxin/p/7029173.html)
 - [shell中>/dev/null 2>&1](https://www.cnblogs.com/520playboy/p/6275022.html)
+- [批量重命名的三种方法：内置 + sed 或 rename + 正则表达式【Mac&Linux】](https://blog.csdn.net/qq_33177268/article/details/119766446)
 
