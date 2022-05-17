@@ -673,6 +673,8 @@ find -type f -size +100M  -print0 | xargs -0 du -h | sort -nr
 
 - `netstat -ntpl` (TCP类型的端口)
 
+- `netstat -anp | grep 1992`查询1992端口程序，查不到pid的话可能和用户权限有关，
+
 - 使用 lsof 命令来查看某一端口是否开放。查看端口可以这样来使用，我就以80端口为例：
   `lsof -i:80`
 
