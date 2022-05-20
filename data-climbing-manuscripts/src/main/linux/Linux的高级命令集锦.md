@@ -730,7 +730,8 @@ tcp        0      0 0.0.0.0:46727           0.0.0.0:*               LISTEN      
 netstat -nap | grep [pid]
 ```
 
-
+- telnet
+  - [Linux书签（03）用linux telnet命令监测服务器端口号](https://blog.csdn.net/itanping/article/details/96481668)
 
 
 
