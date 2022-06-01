@@ -324,6 +324,17 @@ WHERE
 
 
 
+#### 删除原来的索引，让起始值从1开始
+
+```mysql
+alter table system_app_info drop id; -- 删除原来的主键值
+alter table system_app_info add id int not null primary key auto_increment first;
+```
+
+
+
+
+
 
 
 
