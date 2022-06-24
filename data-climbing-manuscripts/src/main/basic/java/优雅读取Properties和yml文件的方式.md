@@ -488,6 +488,38 @@ Properties.AAP_CODE;
 
 
 
+#### 如何配置map类型的数据映射
+
+```properties
+storage.catalog={\
+    "sr":"STARROCKS",\
+    "oracle":"ORACLE",\
+    "kafka":"KAFKA",\
+    "hbase":"HBASE",\
+    "hive":"HIVE",\
+    "mysql":"MYSQL"\
+}
+catalog.knowledge={\
+ "rpt":"MYSQL",\
+ "dw":"HIVE",\
+ "dm":"HIVE",\
+ "temp":"HIVE",\
+ "bigbang":"HIVE"\
+}
+```
+
+使用
+
+```java
+    @Value("#{${storage.catalog}}")
+    private Map<String, String> storageCatalogs;
+
+    @Value("#{${catalog.knowledge}}")
+    private Map<String, String> catalogKnowledge;
+```
+
+
+
  
 
 
