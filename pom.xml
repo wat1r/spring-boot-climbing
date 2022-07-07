@@ -24,6 +24,7 @@
         <module>spring-boot-netty-client</module>
         <module>spring-boot-elasticsearch</module>
         <module>bigdata-flink-grab</module>
+        <module>rookie-processor-tool</module>
     </modules>
 
     <packaging>pom</packaging>
