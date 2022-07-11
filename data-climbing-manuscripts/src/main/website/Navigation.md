@@ -156,6 +156,50 @@ VisualCode 远程工具：remote插件 + jdk11
 
 
 
+## GitHub开源项目
+
+### 正式版本
+
+| 名称                                                         | 语言 | 描述 |
+| ------------------------------------------------------------ | ---- | ---- |
+| **[JSqlParser](https://github.com/JSQLParser/JSqlParser)**   |      |      |
+| **[sqlparse](https://github.com/andialbrecht/sqlparse)**     |      |      |
+| **[calcite](https://github.com/apache/calcite)**             |      |      |
+| **[sqllineage](https://github.com/reata/sqllineage)**        |      |      |
+| **[sqlflow_public](https://github.com/sqlparser/sqlflow_public)** |      |      |
+|                                                              |      |      |
+|                                                              |      |      |
+|                                                              |      |      |
+|                                                              |      |      |
+|                                                              |      |      |
+
+### Tourial
+
+| 名称                                                         | 语言 | 描述                    |
+| ------------------------------------------------------------ | ---- | ----------------------- |
+| [apache-calcite-tutorial](https://github.com/quxiucheng/apache-calcite-tutorial) |      | Apache Calcite 学习文档 |
+|                                                              |      |                         |
+|                                                              |      |                         |
+|                                                              |      |                         |
+|                                                              |      |                         |
+|                                                              |      |                         |
+|                                                              |      |                         |
+|                                                              |      |                         |
+|                                                              |      |                         |
+|                                                              |      |                         |
+
+
+
+
+
+
+
+
+
+
+
+
+
 - [个人主页](https://blog.csdn.net/wat1r/article/details/117533156)
 
 
