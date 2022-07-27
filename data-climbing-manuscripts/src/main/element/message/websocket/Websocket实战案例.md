@@ -317,3 +317,13 @@ public class StompUserInterceptor implements ChannelInterceptor {
         </dependency>
 ```
 
+
+
+### Reference
+
+- [Nginx配置WebSocket 【支持wss与ws连接】](https://blog.csdn.net/qq_35808136/article/details/89677749)
+
+- [Springboot 整合 WebSocket ，使用STOMP协议 ，前后端整合实战 （一）](https://blog.csdn.net/qq_35387940/article/details/119817167)
+
+
+
