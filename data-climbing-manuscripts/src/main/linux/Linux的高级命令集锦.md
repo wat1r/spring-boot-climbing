@@ -778,6 +778,11 @@ $ ls -lhS
 2、（方法二）du -sh *也会列出当前文件夹下所有文件对应的大小
 
      【把*替换为具体的文件名，会给出具体文件的大小】
+     
+du -s /usr/* | sort -rn   从大到小
+
+du -s /usr/* | sort -n    从小到大
+
 ```
 
 ## 13.mv
@@ -882,7 +887,11 @@ lrwxrwxrwx 1 hadoop hadoop 0 May 14 14:06 cwd -> /app/hadoop/jerry/powerjob/serv
 /proc/pid/statm 包含了进程的内存使用信息。
 ```
 
+- 查询多个日志文件下的关键词，并显示来源自哪个文件
 
+```shell
+find . -type f -name "*" | xargs grep "579f3ab7-02ee-454b-acf1-65068757874f"
+```
 
 
 
@@ -893,7 +902,7 @@ lrwxrwxrwx 1 hadoop hadoop 0 May 14 14:06 cwd -> /app/hadoop/jerry/powerjob/serv
 ## 20.Maven命令
 
 - 输出Maven项目的目录结构:`tree >> D:/tree.txt`
-- 输出maven依赖结构：`mvn dependency:tree >D:/aa.txt `
+- 输出maven依赖结构：mvn dependency:tree >D:/aa.txt 
 - 跳过测试构建:`mvn clean install -DskipTests`
 
 
