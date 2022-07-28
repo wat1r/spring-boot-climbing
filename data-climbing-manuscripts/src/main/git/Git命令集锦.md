@@ -137,3 +137,4 @@ git reset --hard origin/master
 - [Support for password authentication was removed](https://blog.csdn.net/weixin_41010198/article/details/119698015)
 - [git add时出现Filename too long、Function not implemente的解决办法](https://blog.csdn.net/weixin_45623615/article/details/108747989)
 - [fork后保持与源仓的同步](https://blog.csdn.net/weixin_40040404/article/details/106438386)
+- [git pull遇到错误：error: Your local changes to the following files would be overwritten by merge:](https://blog.csdn.net/misakaqunianxiatian/article/details/51103734)

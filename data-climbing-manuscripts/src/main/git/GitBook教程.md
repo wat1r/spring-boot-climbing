@@ -16,6 +16,9 @@ $ gitbook serve
 
 $ SUMMRY下写好目录，gitbook init 生成文件，图片注意相对路径
 
+gitbook install 
+
+
 # 单命令安装插件
 cnpm install gitbook-plugin-search-pro
 
