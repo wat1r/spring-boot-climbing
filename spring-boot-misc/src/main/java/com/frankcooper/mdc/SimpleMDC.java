@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -15,6 +16,7 @@ import java.util.UUID;
  * @date: 2022/7/28 16:50
  * @description:
  */
+@Slf4j
 public class SimpleMDC {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleMDC.class);
@@ -27,6 +29,7 @@ public class SimpleMDC {
 
 
     private static void test1() {
+        log.info("test1=======");
         for (int i = 0; i < 1; i++) {
             MDC.put(REQ_ID, UUID.randomUUID().toString());
             logger.info("开始调用服务A，进行业务处理");
@@ -38,6 +41,7 @@ public class SimpleMDC {
 
 
     private static void test2() {
+        log.info("test2=======");
         for (int i = 0; i < 1; i++) {
             MDC.put(REQ_ID, JSON.toJSONString(new Person(18, "Alice")));
             logger.info("开始调用服务A，进行业务处理");

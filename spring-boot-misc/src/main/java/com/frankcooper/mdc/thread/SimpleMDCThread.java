@@ -38,7 +38,7 @@ class BizHandle extends Thread {
         MDC.put(REQ_ID, UUID.randomUUID().toString());
         logger.info("开始调用服务{}，进行业务处理", funCode);
         try {
-            Thread.sleep(10000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             logger.info(e.getMessage());
         }
