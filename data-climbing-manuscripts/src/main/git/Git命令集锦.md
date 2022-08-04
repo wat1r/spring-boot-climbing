@@ -48,6 +48,7 @@ git checkout test
 git push origin test
 #一句命令:
 git checkout -b issue-13 && git push origin issue-13
+git checkout -b dev-kafka && git push origin dev-kafka
 git checkout -b dev && git push origin dev
 #切到master分支上，去单独的拿feature分支点的62ecb3 代码
 git checkout master  
@@ -114,7 +115,11 @@ git reset --hard origin/master
 
 
 # 如果想放弃本地的文件修改，可以使用git reset --hard FETCH_HEAD，FETCH_HEAD表示上一次成功git pull之后形成的commit点。然后git pull.
-
+#重命名本地分支
+#在当前分支时
+git branch -m new_branch_name
+#当不在当前分支时
+git branch -m old_branch_name new_branch_name
 
 ```
 
@@ -138,3 +143,4 @@ git reset --hard origin/master
 - [git add时出现Filename too long、Function not implemente的解决办法](https://blog.csdn.net/weixin_45623615/article/details/108747989)
 - [fork后保持与源仓的同步](https://blog.csdn.net/weixin_40040404/article/details/106438386)
 - [git pull遇到错误：error: Your local changes to the following files would be overwritten by merge:](https://blog.csdn.net/misakaqunianxiatian/article/details/51103734)
+- [Git 分支重命名 git rename branch](https://blog.csdn.net/qq_37148270/article/details/107106392)
