@@ -797,6 +797,14 @@ for f in `ls`; do mv $f `echo $f | sed -E 's/(.*)BV1uK411P7JE(.*).mp4/\1.mp4/'`;
 
 
 
+## 16.xargs
+
+```shell
+jps  | grep "bigbang-server" | grep -v grep | awk '{print $1}'  | xargs echo
+```
+
+
+
 
 
 
@@ -1055,6 +1063,10 @@ sudo iftop -i utun2
 
 
 
+## 33.ipset
+
+- [Linux常用命令-ipset](https://www.linuxtop.cn/command/ipset.html)
+
 
 
 
@@ -1118,3 +1130,5 @@ sudo iftop -i utun2
 - [shell中>/dev/null 2>&1](https://www.cnblogs.com/520playboy/p/6275022.html)
 - [批量重命名的三种方法：内置 + sed 或 rename + 正则表达式【Mac&Linux】](https://blog.csdn.net/qq_33177268/article/details/119766446)
 
+- [将Linux命令的结果作为下一个命令的参数](https://blog.csdn.net/permike/article/details/51957003)
+- [Linux基础之cd无法进入xargs管道输出的目录问题解决方法](https://cloud.tencent.com/developer/article/1377673)
