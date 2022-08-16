@@ -795,6 +795,26 @@ for f in `ls`; do mv $f `echo $f | sed -E 's/(.*)--(.*).mp4/\1.mp4/'`; done
 for f in `ls`; do mv $f `echo $f | sed -E 's/(.*)BV1uK411P7JE(.*).mp4/\1.mp4/'`; done
 ```
 
+- 筛选文件并移动文件
+
+```shell
+find . -name '10-*.dat' -exec mv {} ../ \;
+ => -exec mv {} /mnt/mp3 \; - 运行mv命令。
+ => {} - 字符 '{}' 代表find到的所有内容。
+=>../表示当前用户目录的上一级目录
+ => \; - 结束 /bin/mv 命令。
+ 
+ find . -name  "*.mkv"   -exec  mv {} ~/Data/09Movies \;
+ 
+ #当前目录下的文件，排除当前目录下的子目录
+ find . -maxdepth 1  -name  "*.mkv"   -exec  mv  {} ./03movies \;
+ 
+```
+
+
+
+
+
 
 
 ## 16.xargs
