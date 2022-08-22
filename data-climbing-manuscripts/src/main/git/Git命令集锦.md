@@ -73,7 +73,7 @@ git branch -d [branch-name]
 git push origin --delete [branch-name]
      git branch -dr [remote/branch]
 ## 删除本地分支并且删除远程分支
- git branch -d issue-18  && git push origin -d  issue-18
+ git branch -d master-issue-122  && git push origin -d  master-issue-122
 
 ====log
  git log --pretty=oneline
@@ -82,6 +82,7 @@ git push origin --delete [branch-name]
 # tag 推送到远程分支上，需要另外执行 tag 的推送命令
 git tag <tagName>   -m "this is a test " //创建本地tag
 git push origin <tagName> //推送到远程仓库
+git tag v2022.08.01 &&  git push origin v2022.08.01
 # 存在很多未推送的本地标签，你想一次全部推送的话，可以使用一下的命令：
 git push origin --tags  
 # 查看本地某个 tag 的详细信息：
