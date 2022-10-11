@@ -213,6 +213,34 @@ SELECT CONCAT('truncate table ',TABLE_NAME,';') AS a FROM INFORMATION_SCHEMA.TAB
 
 
 
+#### mysql根据逗号将一行数据拆分成多行数据
+
+- https://blog.csdn.net/qq_43511677/article/details/107210163
+
+```mysql
+SELECT
+a.id,
+	substring_index(
+		substring_index(
+			a.rel_tenant_ids,
+			',',
+			b.help_topic_id + 1
+		),
+		',' ,- 1
+	) AS tenant_id
+FROM
+	sys_user a
+JOIN mysql.help_topic b ON b.help_topic_id < (
+	length(a.rel_tenant_ids) - length(
+		REPLACE (a.rel_tenant_ids, ',', '')
+	) + 1
+)
+WHERE a.id = 32
+ORDER BY tenant_id asc
+```
+
+
+
 
 
 
@@ -351,6 +379,8 @@ alter table system_app_info add id int not null primary key auto_increment first
 - [mysql服务启动、停止、重启](https://www.cnblogs.com/lhj588/p/3268614.html)
 - [mysql show variables sql_mode_详解mysql的sql_mode模式](https://blog.csdn.net/weixin_33582311/article/details/113299848)
 - [低版本mysql 利用@变量实现row_number() over(partition by order by )排序功能](https://blog.csdn.net/shammy_feng/article/details/112308170)
+
+- [mysql拆分字符串作为查询条件](https://www.cnblogs.com/sunankang/p/16445918.html)
 
 
 
