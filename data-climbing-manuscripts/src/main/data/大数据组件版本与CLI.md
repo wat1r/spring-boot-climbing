@@ -14,6 +14,38 @@ Hive自带函数
 
 
 
+## 2.HBase
+
+
+
+```shell
+
+scan 'abc', { COLUMN => 'a:b', TIMERANGE => [1634101200000, 1634223600000]}"
+
+扫描所有数据,并用TIMERANGE限制,表示的是”>=开始时间 and <结束时间“
+scan 'scores',{TIMERANGE=>[1599461946117, 1667892773000]}
+
+扫描所有数据,只显示某列,并指定时间戳
+scan 'scores', {COLUMNS => 'grade', TIMESTAMP=> 1667892773000}
+
+
+
+
+
+```
+
+
+
+
+
+
+
+[HBase命令操作大全](https://blog.csdn.net/xiaoxaoyu/article/details/111312468)
+
+[Hbase shell命令使用 get，scan，时间戳，过滤器，版本等参数详细使用说明](https://blog.csdn.net/qq_41712271/article/details/108465612)
+
+
+
 
 
 
