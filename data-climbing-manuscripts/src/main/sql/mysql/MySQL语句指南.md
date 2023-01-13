@@ -253,6 +253,9 @@ SET func_method = func_name
 WHERE
 	func_method IS NULL 
 	AND engine_type = 'presto'
+	
+	
+update name=cast(name as binary);
 ```
 
 

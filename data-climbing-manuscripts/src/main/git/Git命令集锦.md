@@ -145,3 +145,5 @@ git branch -m old_branch_name new_branch_name
 - [fork后保持与源仓的同步](https://blog.csdn.net/weixin_40040404/article/details/106438386)
 - [git pull遇到错误：error: Your local changes to the following files would be overwritten by merge:](https://blog.csdn.net/misakaqunianxiatian/article/details/51103734)
 - [Git 分支重命名 git rename branch](https://blog.csdn.net/qq_37148270/article/details/107106392)
+
+- [项目开发中git代码回滚和解决冲突总结](https://blog.csdn.net/weixin_43924228/article/details/102653358)

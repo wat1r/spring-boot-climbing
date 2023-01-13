@@ -30,7 +30,10 @@ scan 'scores', {COLUMNS => 'grade', TIMESTAMP=> 1667892773000}
 
 
 
+list ‘abc.*’ #显示abc开头的表
 
+#查询表是否存在
+exists 'table_name'
 
 ```
 
