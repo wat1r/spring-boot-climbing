@@ -8,23 +8,23 @@ import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 public class JasyptUtils {
     /**
      * {@link StringEncryptor} 加解密。
-     * 同一个密钥（secretKey）对同一个内容执行加密，生成的密文都是不一样的，但是根据根据这些密文解密成明文都是可以.
+     * 同一个密钥（salt）对同一个内容执行加密，生成的密文都是不一样的，但是根据根据这些密文解密成明文都是可以.
      * 1、Jasypt 默认使用 {@link StringEncryptor} 来解密全局配置文件中的属性，所以提供密文时，也需要提供 {@link StringEncryptor} 加密的密文
      * 2、{@link StringEncryptor} 接口有很多的实现类，比如常用的 {@link PooledPBEStringEncryptor}
      * 3、setConfig(final PBEConfig config)：为对象设置 {@link PBEConfig} 配置对象
-     * 4、encrypt(final String message)：加密内容
+     * 4、encrypt(final String password)：加密内容
      * 5、decrypt(final String encryptedMessage)：解密内容
      *
-     * @param secretKey ：密钥。加/解密必须使用同一个密钥
-     * @param message   ：加/解密的内容
+     * @param salt      ：密钥。加/解密必须使用同一个密钥
+     * @param password  ：加/解密的内容
      * @param isEncrypt ：true 表示加密、false 表示解密
      * @return
      */
-    public static String stringEncryptor(String secretKey, String message, boolean isEncrypt) {
+    public static String stringEncryptor(String salt, String password, boolean isEncrypt) {
         PooledPBEStringEncryptor pooledPBEStringEncryptor = new PooledPBEStringEncryptor();
-        pooledPBEStringEncryptor.setConfig(getSimpleStringPBEConfig(secretKey));
-//        pooledPBEStringEncryptor.setConfig(jasyptStringEncryptor(secretKey));
-        String result = isEncrypt ? pooledPBEStringEncryptor.encrypt(message) : pooledPBEStringEncryptor.decrypt(message);
+        pooledPBEStringEncryptor.setConfig(getSimpleStringPBEConfig(salt));
+//        pooledPBEStringEncryptor.setConfig(jasyptStringEncryptor(salt));
+        String result = isEncrypt ? pooledPBEStringEncryptor.encrypt(password) : pooledPBEStringEncryptor.decrypt(password);
         return result;
     }
 
@@ -40,14 +40,15 @@ public class JasyptUtils {
      * 8、setIvGeneratorClassName：设置 IV 发生器
      * 9、setStringOutputType：设置字符串输出的编码形式。可用的编码类型有 base64、hexadecimal
      *
-     * @param secretKey
+     * @param salt
      * @return
      */
-    private static SimpleStringPBEConfig getSimpleStringPBEConfig(String secretKey) {
+    private static SimpleStringPBEConfig getSimpleStringPBEConfig(String salt) {
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
-        config.setPassword(secretKey);
+        config.setPassword(salt);
         config.setPoolSize("1");
-        config.setAlgorithm("PBEWithMD5AndDES");
+//        config.setAlgorithm("PBEWithMD5AndDES");
+        config.setAlgorithm("PBEWITHHMACSHA512ANDAES_256");
         config.setKeyObtentionIterations("1000");
         config.setProviderName("SunJCE");
         config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
@@ -71,14 +72,14 @@ public class JasyptUtils {
 
 
     public static void main(String[] args) throws Exception {
-        String message = "xxxx";
-        String password = "xxx";
+        String salt = "salt";
+        String password = "12345";
 
         //一个同样的密码和秘钥，每次执行加密，密文都是不一样的。但是解密是没问题的。
-        String jasyptEncrypt = stringEncryptor(password, message, true);
+        String jasyptEncrypt = stringEncryptor(salt, password, true);
         System.out.println(jasyptEncrypt);
 
-        String jasyptEncrypt1 = stringEncryptor(password, "Nf0zQvYEYXNHNYhln4caCgQLLyNIxfzbo4R9mipCLZ4=", false);
-        System.out.println(jasyptEncrypt1);
+        String jasyptDecrypt = stringEncryptor(salt, jasyptEncrypt, false);
+        System.out.println(jasyptDecrypt);
     }
 }
