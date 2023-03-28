@@ -14,6 +14,7 @@ import java.util.Date;
 public class UserInfoEntity implements Serializable {
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "first_name", nullable = true, length = 100)
     private String firstName;
@@ -25,9 +26,11 @@ public class UserInfoEntity implements Serializable {
     private Date createTime;
     @Column(name = "version", nullable = true)
     private String version;
-    @OneToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(referencedColumnName = "id", name = "address_id", nullable = false)
-    @Fetch(FetchMode.JOIN)
-    private UserReceivingAddressEntity addressEntity;
+    @Column(name = "address_id", nullable = true)
+    private Integer addressId;
+//    @OneToOne(optional = false, fetch = FetchType.EAGER)
+//    @JoinColumn(referencedColumnName = "id", name = "address_id", nullable = false)
+//    @Fetch(FetchMode.JOIN)
+//    private UserReceivingAddressEntity addressEntity;
 }
 

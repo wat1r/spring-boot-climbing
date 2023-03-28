@@ -15,8 +15,8 @@ public class JpaController {
 
     @Autowired
     private StuRepository stuRepository;
-    @Autowired
-    private UserRepository userRepository;
+//    @Autowired
+//    private UserRepository userRepository;
 
 
     @GetMapping("/student/add")

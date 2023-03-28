@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserInfoRequest {
     private String firstName;
+    private String lastName;
     private String telephone;
     private String version;
     private String beginCreateTime;

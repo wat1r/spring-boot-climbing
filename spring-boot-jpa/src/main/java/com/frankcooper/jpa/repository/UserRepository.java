@@ -1,10 +1,10 @@
 package com.frankcooper.jpa.repository;
 
 import com.frankcooper.jpa.entity.UserInfoEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends JpaSpecificationExecutor<UserInfoEntity> {
+public interface UserRepository extends JpaRepository<UserInfoEntity, Long>, JpaSpecificationExecutor<UserInfoEntity> {
 
 }
 
