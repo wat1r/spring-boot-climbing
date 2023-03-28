@@ -28,6 +28,7 @@
         <module>spring-boot-misc</module>
         <module>spring-boot-sample</module>
         <module>spring-boot-jasypt</module>
+        <module>spring-boot-jpa</module>
     </modules>
 
     <packaging>pom</packaging>

@@ -19,7 +19,7 @@ $ SUMMRY下写好目录，gitbook init 生成文件，图片注意相对路径
 gitbook install 
 
 
-# 单命令安装插件
+# 单命令安装插件-注意gitbook-plugin-前缀
 cnpm install gitbook-plugin-search-pro
 
 
@@ -28,6 +28,10 @@ gitbook build
 _book文件夹 打包zip文件 
 target文件夹 push上去
 jenkins发布
+
+
+# npm查询包的版本
+npm view gitbook-plugin-prism versions --json 
 
 ```
 
