@@ -8,6 +8,7 @@ import com.frankcooper.jpa.manager.UserInfoManager;
 import com.frankcooper.jpa.repository.StuRepository;
 import com.frankcooper.jpa.repository.UserRepository;
 import com.frankcooper.jpa.request.UserInfoRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class JpaApplicationTest {
@@ -61,6 +63,12 @@ public class JpaApplicationTest {
     public void queryUserInfoTwo() {
         userInfoManager.findUsersByLike( "Jack");
     }
+    @Test
+    public void findByFirstNameAndLastName() {
+        List<UserInfoEntity> list = userRepository.findByFirstNameAndLastName("LeBorn", "James");
+        log.info("result:{}",JSONObject.toJSONString(list));
+    }
+
 
 
 
