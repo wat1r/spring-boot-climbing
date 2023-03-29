@@ -362,6 +362,13 @@ alter table system_app_info drop id; -- 删除原来的主键值
 alter table system_app_info add id int not null primary key auto_increment first;
 ```
 
+- 或者通过如下的方式：
+
+```mysql
+truncate table test;
+--然后navicat设计表中改小索引
+```
+
 
 
 
