@@ -54,7 +54,7 @@ git checkout -b dev && git push origin dev
 git checkout master  
 git cherry-pick 62ecb3
 # 重命名本地分支并且推到远程仓
-# 本地分支重命名
+# 本地分支重命名：q
  git branch -m oldName  newName
 # 将重命名后的分支推送到远程
 git push origin newName
