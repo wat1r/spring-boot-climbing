@@ -502,7 +502,41 @@ esac
   
 ```
 
+#### 安装mysql
 
+```java
+ 初始化Mysql
+
+# ./bin/mysqld --initialize --user=mysql --basedir=/opt/mysql-5.7.28/ --datadir=/opt/mysql-5.7.28/data/
+```
+
+mysql数据库密码 root/123456
+
+[解决linux mysql命令 bash: mysql: command not found 的方法](https://cloud.tencent.com/developer/article/1679891)
+
+[Linux下安装mysql-5.7.28详细步骤](https://www.cnblogs.com/wendy-0901/p/12673705.html)
+
+
+
+
+
+#### 安装hive
+
+```java
+export HADOOP_HOME=/opt/hadoop-2.7.2
+export HIVE_CONF_DIR=/opt/hive-3.1.3/conf
+export HIVE_AUX_JARS_PATH=/opt/hive-3.1.3/lib
+```
+
+[Hive3.1.3 安装配置](https://blog.csdn.net/qq_37056683/article/details/126386142)
+
+- 按上面的配置后，beeline客户端为配置
+
+
+
+
+
+-----
 
 hadoop 访问主节点的50070端口
 http://192.168.168.168:50070/
@@ -516,7 +550,7 @@ Streamx webui访问
 
 http://hadoop168:10000/
 
-
+虚拟机的账户是frankcooper密码同mac密码
 
 - 节点资源规划表
 
@@ -533,7 +567,7 @@ http://hadoop168:10000/
 |               |            |                                                           |                                                           |                    |
 |               |            |                                                           |                                                           |                    |
 | JDK           | 1.8        | :white_check_mark:                                        | :white_check_mark:                                        | :white_check_mark: |
-| MySQL         | 5.7.38     | :white_check_mark:                                        |                                                           |                    |
+| MySQL         | 5.7.28     | :white_check_mark:                                        |                                                           |                    |
 | Node          | 16.14.2    | :white_check_mark:                                        |                                                           |                    |
 | Maven         | 3.8.1      | :white_check_mark:                                        |                                                           |                    |
 |               |            |                                                           |                                                           |                    |
