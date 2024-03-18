@@ -579,6 +579,42 @@ zcat java.gz > java.java
 
 
 
+返回结果，如果是json打印，pretty展示
+
+方法1：
+
+```shell
+curl -k -u elastic:gV4pgxNCTi5y*80GmoqN https://localhost:9200?pretty=true
+```
+
+方法2：
+
+```python
+curl https://news-at.zhihu.com/api/4/news/latest | python -m json.tool
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  3901  100  3901    0     0  33333      0 --:--:-- --:--:-- --:--:-- 33629
+{
+    "date": "20171014",
+    "stories": [
+        {
+            "ga_prefix": "101417",
+            "id": 9651211,
+            "images": [
+                "https://pic3.zhimg.com/v2-471f6f1170fcb7d491ba54404acaf30a.jpg"
+            ],
+            "multipic": true,
+            "title": "\u8fd9\u4e9b\u6709\u6545\u4e8b\u7684 DOTA \u804c\u4e1a\u9009\u624b\u5916\u53f7\uff08\u56fd\u5916\u7bc7\uff09",
+            "type": 0
+        }]
+}        
+  
+```
+
+
+
+
+
 
 
 
