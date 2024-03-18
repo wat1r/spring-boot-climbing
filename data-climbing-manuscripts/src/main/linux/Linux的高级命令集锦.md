@@ -811,6 +811,9 @@ find . -name '10-*.dat' -exec mv {} ../ \;
  
 ```
 
+- find+mv筛选批量移动文件
+- https://stackoverflow.com/questions/22388480/how-to-pipe-the-results-of-find-to-mv-in-linux
+
 
 
 
