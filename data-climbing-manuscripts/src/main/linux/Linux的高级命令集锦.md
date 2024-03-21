@@ -620,6 +620,34 @@ zip -f mytxt.zip t3.txt。
 
 
 
+## 5.查看系统信息
+
+```shell
+# 查看系统配置：
+
+uname -a：显示系统信息，包括内核名称、主机名、内核版本号、内核发行日期等。
+lsb_release -a：显示Linux标准基础（LSB）和特定发行版的信息。注意：并非所有Linux发行版都支持这个命令。
+cat /etc/os-release 或 cat /etc/*release*：查看操作系统名称、版本号等信息。
+hostnamectl：显示关于系统主机名、内核、操作系统等信息。
+hwinfo --cpu：显示CPU的详细信息（需要安装hwinfo包）。
+lscpu：显示CPU架构信息。
+free -m：查看内存使用情况。
+df -h：查看磁盘空间使用情况。
+
+# 查看CPU信息：
+
+lscpu：显示CPU的详细信息，包括型号、核心数、线程数等。
+cat /proc/cpuinfo：显示CPU的详细信息，包括每个CPU核心的详细信息。
+top 或 htop：在运行时查看CPU使用情况，htop是top的一个增强版本，提供了更友好的界面。
+
+# 查看系统版本：
+
+cat /etc/os-release：查看操作系统的名称、版本号等。
+lsb_release -a：在支持LSB的发行版中，可以显示更详细的发行版信息。
+```
+
+
+
 
 
 

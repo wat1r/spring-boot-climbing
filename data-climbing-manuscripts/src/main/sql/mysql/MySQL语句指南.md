@@ -1,6 +1,10 @@
 ##  MySQL语句指南
 
+### 安装
 
+[CentOS7安装mysql详细过程（tar解压方式）](https://blog.csdn.net/yin_zh0522/article/details/107383010)
+
+[Centos7环境下安装MySQL8（基于tar.gz压缩文件安装）](https://blog.csdn.net/threelifeadv/article/details/122610308)
 
 ### DDL操作
 
