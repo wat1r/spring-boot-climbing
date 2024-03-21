@@ -1,5 +1,49 @@
 ##  MySQL语句指南
 
+
+
+### DDL操作
+
+#### 创建用户、赋权
+
+```mysql
+-- 创建新用户
+CREATE USER 'hadoop'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'root'@'%' IDENTIFIED BY '123456';
+
+-- 赋予所有权限在特定数据库上
+GRANT ALL PRIVILEGES ON database_name.* TO 'hadoop'@'localhost';
+
+-- 赋予特定权限在特定数据库上
+GRANT SELECT, INSERT, UPDATE ON database_name.* TO 'hadoop'@'localhost';
+
+-- 刷新权限，使更改生效
+FLUSH PRIVILEGES;
+```
+
+删除用户，移除权限
+
+```mysql
+-- 移除特定权限在特定数据库上
+REVOKE SELECT, INSERT, UPDATE ON database_name.* FROM 'hadoop'@'localhost';
+
+-- 移除所有权限在特定数据库上
+REVOKE ALL PRIVILEGES ON database_name.* FROM 'hadoop'@'localhost';
+
+-- 刷新权限，使更改生效
+FLUSH PRIVILEGES;
+
+-- 删除用户
+DROP USER 'hadoop'@'localhost';
+
+-- 刷新权限，使更改生效
+FLUSH PRIVILEGES;
+```
+
+
+
+
+
 ### Meta表
 
 #### 查询表的字段

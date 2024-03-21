@@ -1,3 +1,5 @@
+
+
 ## Linux的高级命令集锦
 
 
@@ -546,24 +548,48 @@ dG
 
 ## 4.compress/uncompress
 
+### tar
+
  .**tar.gz** 使用tar命令进行解压
 
-```
+```shell
  tar -zxvf java.tar.gz
 
 解压到指定的文件夹
 	tar -zxvf java.tar.gz  -C /usr/java
 ```
 
+tar参数介绍
+
+```shell
+-c：创建新的tar文件。
+-x：解开tar文件。
+-t：列出tar文件中包含的文件信息。
+-r：附加新的文件到tar文件中。
+-u：用已打包的文件的较新版本更新tar文件。
+-A：将tar文件作为一个整体追加到另一个tar文件中。
+-d：将文件系统里的文件和tar文件里的文件进行比较。
+-k：保留原有文件不覆盖。
+-f：指定要处理的文件名。
+-P：使用绝对路径。
+-v：显示详细的tar处理过程。
+-p：保留备份数据的原本权限与属性。
+-m：不使用新的时间戳。
+-j：调用bzip2执行压缩或解压缩。
+-C：指定路径。
+```
+
+### gzip
+
 **gz**文件的解压 gzip 命令
 
-```
+```shell
  	gzip -d java.gz
 ```
 
 也可使用**zcat** 命令，然后将标准输出 保存文件
 
-```
+```shell
 zcat java.gz > java.java
 ```
 
@@ -571,9 +597,25 @@ zcat java.gz > java.java
 
 ### zip
 
-```
+```shell
 # 压缩harry文件夹下的所有文件及文件夹
 zip -r harry.zip  harry
+```
+
+
+
+```shell
+# 将文件log.txt、test.txt和目录test/压缩到test.zip文件中，命令：
+zip -r test.zip log.txt test/ test.txt。
+#从压缩包test.zip中删除log.txt文件，命令：
+zip -d test.zip log.txt。
+# 更新压缩包mytxt.zip中的t3.txt文件，命令：
+zip -f mytxt.zip t3.txt。
+
+-r：压缩目录和文件。
+-q：压缩文件时不显示压缩过程的详细信息。
+-d：从现有的ZIP文件中删除指定的文件或目录。
+-f：用于刷新（更新）现有ZIP文件中的指定文件
 ```
 
 
