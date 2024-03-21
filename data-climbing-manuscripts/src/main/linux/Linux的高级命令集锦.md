@@ -569,6 +569,17 @@ zcat java.gz > java.java
 
 
 
+### zip
+
+```
+# 压缩harry文件夹下的所有文件及文件夹
+zip -r harry.zip  harry
+```
+
+
+
+
+
 
 
 
@@ -1222,7 +1233,8 @@ sudo iftop -i utun2
 - [Linux shell利用sed如何批量更改文件名详解](https://cloud.tencent.com/developer/article/1721039)
 - [linux shell中"2>&1"含义](https://www.cnblogs.com/zhenghongxin/p/7029173.html)
 - [shell中>/dev/null 2>&1](https://www.cnblogs.com/520playboy/p/6275022.html)
+- [2>/dev/null和>/dev/null 2>&1和2>&1>/dev/null的区别](https://blog.csdn.net/longgeaisisi/article/details/90519690)
 - [批量重命名的三种方法：内置 + sed 或 rename + 正则表达式【Mac&Linux】](https://blog.csdn.net/qq_33177268/article/details/119766446)
-
 - [将Linux命令的结果作为下一个命令的参数](https://blog.csdn.net/permike/article/details/51957003)
 - [Linux基础之cd无法进入xargs管道输出的目录问题解决方法](https://cloud.tencent.com/developer/article/1377673)
+- [shell 文件表达式 参数[-e -d -f -h -eq -ne -lt -ne.....]](https://blog.csdn.net/u014472548/article/details/99831875)

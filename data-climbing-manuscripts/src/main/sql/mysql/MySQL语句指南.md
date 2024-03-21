@@ -389,8 +389,10 @@ truncate table test;
 - [mysql服务启动、停止、重启](https://www.cnblogs.com/lhj588/p/3268614.html)
 - [mysql show variables sql_mode_详解mysql的sql_mode模式](https://blog.csdn.net/weixin_33582311/article/details/113299848)
 - [低版本mysql 利用@变量实现row_number() over(partition by order by )排序功能](https://blog.csdn.net/shammy_feng/article/details/112308170)
-
 - [mysql拆分字符串作为查询条件](https://www.cnblogs.com/sunankang/p/16445918.html)
+- [【MySQL精通】七、MySQL创建用户、赋予权限](https://zhuanlan.zhihu.com/p/656667425)
+- [MySQL8.0 ERROR 1410 (42000): You are not allowed to create a user with GRANT](https://blog.csdn.net/gmaaa123/article/details/127690504)
+- [Linux下MySQL服务状态查看的几种办法](https://zhuanlan.zhihu.com/p/668438225)
 
 
 
