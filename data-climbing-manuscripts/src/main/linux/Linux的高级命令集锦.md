@@ -4,7 +4,30 @@
 
 
 
+## 0.安装命令
 
+```shell
+## rpm（RedHat Package Manager）
+# rpm 全称 Red-Hat Package Manager。是一种底层的包管理工具，使用rpm 可以进行软件的安装、查询、卸载、升级等工作。在安装软件的时候只会安装指定的软件，而不会安装依赖性文件，若所安装的软件无依赖性或者依赖性文件被解决了，那么就会正常安装，否则会保错。
+
+https://www.cnblogs.com/LiuChunfu/p/8052890.html
+
+## yum
+# yum 全称 Yellow dog Updater，Modified，是一个基于rpm的上层软件包管理器。yum在服务器端存有所有的 rpm 包，并将各个包之间的依赖关系记录在文件中。使用 yum 安装 rpm 包的时候，能够从指定的服务器自动下载 rpm 包并且安装，可以自动处理软件包之间的依赖关系，并且一次安装所有依赖的软件包。yum提供了查找、安装、删除某一个 /一组 / 甚至全部软件包的命令。
+# yum 拥有 rpm 的功能，还具备了从网络上下载 rpm 包和依赖包的功能
+
+Yum是rpm的前端程序，主要目的是设计用来自动解决rpm的依赖关系
+
+## apt-get
+
+apt-get属于ubuntu、Debian的包管理工具
+
+yum则属于Redhat、Centos包管理工具
+
+## homebrew
+
+是mac的包管理工具
+```
 
 
 
