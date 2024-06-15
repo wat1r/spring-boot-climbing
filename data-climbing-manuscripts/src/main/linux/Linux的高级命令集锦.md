@@ -2,7 +2,7 @@
 
 ## Linux的高级命令集锦
 
-
+# A.Linux内置命令
 
 ## 0.安装命令
 
@@ -250,6 +250,13 @@ s ：取代，可以直接进行取代的工作哩！通常这个 s 的动作可
 - 替换文件的`_MODIFY`为`_UPDATE`：` sed -e  's/_MODIFY/_UPDATE/' passwd.txt  > passwd_update.txt`
 - 替换文件的字符串：` sed -i "s/my/Hao Chen's/g" pets.txt   `   其中 `/g` 是全局模式表示每一行出现的符合规则的都被替换掉
 - 删除第2行到末尾行：`sed '2,$d' my.txt`
+- 在每一行的开头和结尾都添加
+
+```shell
+sed  's/^/git branch -d /; s/$/ \&\& git push origin -d /' git_branch.txt
+```
+
+
 
 
 
@@ -956,6 +963,44 @@ find . -name '10-*.dat' -exec mv {} ../ \;
 
 
 
+## 14.yum
+
+```shell
+# 查看yum的版本信息命令
+yum info yum
+# 查看具体安装包信息
+rpm -qi centos-release-6-10.el6.centos.12.3.x86_64
+# 查找yum可以安装的安装包
+yum search ftp
+
+
+命令：
+#查看软件包
+  yum list all                     ##列出yum源仓库里面的所有可用的安装包 
+  yum list installed               ##列出所有已经安装的安装包  
+  yum list available               ##列出没有安装的安装包
+ #安装软件
+  yum install softwarename         ##安装指定的软件
+  yum reinstall softarename        ##重新安装指定的软件
+  yum localinstall 第三方software   ##安装第三方文件并且会解决软件的依赖关系
+  yum remove  softwarename         ##卸装指定的软件
+ #查找软件的信息  
+  yum info software                ##查看软的信息
+  yum search keywords              ##根据关键字查找到相关安装包软件的信息
+  yum whatprovides filename        ##查找包含指定文件的相关安装包
+ #对于软件组
+   yum groups list             ##列出软件组
+   yum groups install         ##安装一个软件组
+   yum group remove           ##卸载一个软件组
+
+#开始之前看一下查看一下当前的配置里面有什么已经安装好的yum源仓库 
+yum repolist
+
+```
+
+[快速查看yum的版本信息和yum仓库地址，安装包版本信息](https://blog.csdn.net/SwTesting/article/details/84718260)
+[Linux系统的yum命令及yum源的设定](https://blog.csdn.net/hello_xiaozhuang/article/details/80112380)
+
 
 
 
@@ -1272,6 +1317,129 @@ sudo iftop -i utun2
 ## 41.Auth
 
 - [Linux下查看用户列表](https://blog.csdn.net/rainbow702/article/details/50985672)
+
+
+
+
+
+
+
+# B.Docker
+
+Docker 是一个开源的容器化平台，允许开发者将应用及其依赖打包到一个轻量级、可移植的容器中，然后发布到任何支持 Docker 的系统上。以下是一些 Docker 的基础命令：
+
+1. **安装 Docker**：访问 Docker 官方网站获取安装指南。
+
+2. **启动 Docker 服务**：
+   ```bash
+   systemctl start docker
+   ```
+
+3. **设置 Docker 开机自启**：
+   ```bash
+   systemctl enable docker
+   ```
+
+4. **拉取一个镜像**：
+   ```bash
+   docker pull [OPTIONS] NAME[:TAG|@DIGEST]
+   ```
+   例如，拉取最新的 Ubuntu 镜像：
+   ```bash
+   docker pull ubuntu:latest
+   ```
+
+5. **查看当前已下载的镜像**：
+   ```bash
+   docker images
+   ```
+
+6. **运行一个容器**：
+   ```bash
+   docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
+   ```
+   例如，运行一个 Ubuntu 容器并启动一个 shell：
+   ```bash
+   docker run -it ubuntu:latest /bin/bash
+   ```
+
+7. **列出正在运行的容器**：
+   ```bash
+   docker ps
+   ```
+
+8. **停止一个运行中的容器**：
+   ```bash
+   docker stop CONTAINER
+   ```
+
+9. **重启一个容器**：
+   ```bash
+   docker restart CONTAINER
+   ```
+
+10. **删除一个容器**：
+    ```bash
+    docker rm CONTAINER
+    ```
+
+11. **删除一个镜像**：
+    ```bash
+    docker rmi IMAGE
+    ```
+
+12. **查看容器的日志**：
+    ```bash
+    docker logs CONTAINER
+    ```
+
+13. **进入一个运行中的容器**：
+    ```bash
+    docker exec -it CONTAINER /bin/bash
+    ```
+
+14. **构建一个镜像**：
+    ```bash
+    docker build -t NAME .
+    ```
+    或者使用 Dockerfile：
+    ```bash
+    docker build -t NAME .
+    ```
+
+15. **保存镜像为 tar 文件**：
+    ```bash
+    docker save -o FILENAME IMAGE
+    ```
+
+16. **从 tar 文件加载镜像**：
+    ```bash
+    docker load -i FILENAME
+    ```
+
+17. **搜索 Docker Hub 上的镜像**：
+    ```bash
+    docker search NAME
+    ```
+
+18. **退出容器**：
+    ```bash
+    exit
+    ```
+
+19. **查看 Docker 的信息**：
+    ```bash
+    docker info
+    ```
+
+20. **查看 Docker 的版本**：
+    ```bash
+    docker version
+    ```
+
+这些命令覆盖了 Docker 的基本操作，包括镜像和容器的创建、运行、停止、删除等。在使用 Docker 时，建议阅读 Docker 的官方文档以获得更深入的理解和学习高级功能。
+
+
 
 
 
