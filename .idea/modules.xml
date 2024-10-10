@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../tech-climbing-common/basic-concurrent-service/basic-concurrent-service.iml" filepath="$PROJECT_DIR$/../tech-climbing-common/basic-concurrent-service/basic-concurrent-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../tech-climbing-common/basic-tech-bigdata/basic-tech-bigdata.iml" filepath="$PROJECT_DIR$/../tech-climbing-common/basic-tech-bigdata/basic-tech-bigdata.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../tech-climbing-common/spark-catalyst-explore/spark-catalyst-explore.iml" filepath="$PROJECT_DIR$/../tech-climbing-common/spark-catalyst-explore/spark-catalyst-explore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-boot-apollo/spring-boot-apollo.iml" filepath="$PROJECT_DIR$/spring-boot-apollo/spring-boot-apollo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-boot-elasticsearch/spring-boot-elasticsearch.iml" filepath="$PROJECT_DIR$/spring-boot-elasticsearch/spring-boot-elasticsearch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-boot-jasypt/spring-boot-jasypt.iml" filepath="$PROJECT_DIR$/spring-boot-jasypt/spring-boot-jasypt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-boot-jpa/spring-boot-jpa.iml" filepath="$PROJECT_DIR$/spring-boot-jpa/spring-boot-jpa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-boot-netty-client/spring-boot-netty-client.iml" filepath="$PROJECT_DIR$/spring-boot-netty-client/spring-boot-netty-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-boot-netty-server/spring-boot-netty-server.iml" filepath="$PROJECT_DIR$/spring-boot-netty-server/spring-boot-netty-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-boot-rabbitmq/spring-boot-rabbitmq-direct/spring-boot-rabbitmq-direct.iml" filepath="$PROJECT_DIR$/spring-boot-rabbitmq/spring-boot-rabbitmq-direct/spring-boot-rabbitmq-direct.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-boot-rabbitmq/spring-boot-rabbitmq-singlepoint/spring-boot-rabbitmq-singlepoint.iml" filepath="$PROJECT_DIR$/spring-boot-rabbitmq/spring-boot-rabbitmq-singlepoint/spring-boot-rabbitmq-singlepoint.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-boot-redis/spring-boot-redis.iml" filepath="$PROJECT_DIR$/spring-boot-redis/spring-boot-redis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-boot-websocket/spring-boot-websocket.iml" filepath="$PROJECT_DIR$/spring-boot-websocket/spring-boot-websocket.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../tech-climbing-common/tech-climbing-common.iml" filepath="$PROJECT_DIR$/../tech-climbing-common/tech-climbing-common.iml" />
+    </modules>
+  </component>
+</project>
