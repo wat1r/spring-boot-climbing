@@ -44,6 +44,20 @@ DROP USER 'hadoop'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
+查看用户权限
+
+```mysql
+# 查看当前用户权限
+show grants;
+
+show grants for hadoop@localhost; 
+
+```
+
+
+
+[mysql用户权限管理：查看用户权限、授予用户权限、收回用户权限](https://blog.csdn.net/chushiyan/article/details/107586971)
+
 
 
 
