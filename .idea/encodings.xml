@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/../geek-algorithm-leetcode/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../geek-algorithm-leetcode/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bigdata-flink-grab/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bigdata-flink-grab/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/data-climbing-manuscripts/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rookie-processor-tool/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-apollo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-apollo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-elasticsearch/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-elasticsearch/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-jasypt/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-jpa/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-misc/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-misc/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-netty-client/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-netty-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-rabbitmq/spring-boot-rabbitmq-direct/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-rabbitmq/spring-boot-rabbitmq-direct/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-rabbitmq/spring-boot-rabbitmq-singlepoint/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-rabbitmq/spring-boot-rabbitmq-singlepoint/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-rabbitmq/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-rabbitmq/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-redis/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-redis/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-sample/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-sample/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-websocket/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-websocket/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../tech-climbing-common/basic-concurrent-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../tech-climbing-common/basic-concurrent-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../tech-climbing-common/basic-tech-bigdata/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../tech-climbing-common/basic-tech-bigdata/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../tech-climbing-common/basic-tech-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../tech-climbing-common/basic-tech-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../tech-climbing-common/spark-catalyst-explore/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../tech-climbing-common/spark-catalyst-explore/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../tech-climbing-common/tech-geek-component/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../tech-climbing-common/tech-geek-component/src/main/resources" charset="UTF-8" />
+  </component>
+</project>
